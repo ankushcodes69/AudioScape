@@ -1,0 +1,18 @@
+{
+  "name": "music-player-with-synced-lyrics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mp3.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "python-shell": "^5.0.0",
+    "youtube-mp3-downloader": "^0.7.11",
+    "ytdl-core": "^4.11.5",
+    "ytmusic-api": "^4.4.0"
+  }
+}

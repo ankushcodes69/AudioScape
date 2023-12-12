@@ -1,0 +1,6 @@
+/.syncedlyrics
+/node_modules
+song.mp3
+lyrics.lrc
+lyricsData.json
+package-lock.json
