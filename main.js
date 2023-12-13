@@ -56,7 +56,10 @@ async function playSongAndPrintLyrics() {
         var time = 0;
         while (flag && i < lyricsData.length) {
             await delay((lyricsData[i].time - time) * 1000);
-            console.log(lyricsData[i].line);
+            if (lyricsData[i].line == "" || lyricsData[i].line == " ")
+                console.log('♪');
+            else
+                console.log(lyricsData[i].line);
             time = lyricsData[i].time;
             i++;
         }
