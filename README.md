@@ -34,8 +34,9 @@ Synced Lyrics Player is a command-line tool that allows users to download a song
 
 4. Follow the on-screen instructions to:
 
-   • Enter the name of the song you want to download.\n
-   • Enjoy the song with synced lyrics!
+    *• Enter the name of the song you want to download.
+
+    *• Enjoy the song with synced lyrics!
 
 
 # To-Do List:
