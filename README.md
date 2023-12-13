@@ -16,7 +16,7 @@ Music Player With Synced Lyrics is a command-line tool that allows users to down
 - [Node.js](https://nodejs.org/en/download) installed on your machine.
 - [Python](https://www.python.org/downloads) installed on your machine.
 
-*Also Don't Forget To Add To Path All Of These Programs*
+_*Also Don't Forget To Add To Path All Of These Programs*_
 
 ### Getting Started
 
