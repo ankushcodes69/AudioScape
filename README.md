@@ -20,7 +20,7 @@ Synced Lyrics Player is a command-line tool that allows users to download a song
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/synced-lyrics-player.git
+   git clone https://github.com/ankushcodes69/Music-Player-With-Synced-Lyrics.git
 
 2. Navigate to the project directory:
 
