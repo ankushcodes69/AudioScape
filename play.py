@@ -20,7 +20,6 @@ def play_mp3(file_path):
     # Clean up
     player.stop()
 
-# Replace 'path/to/your/file.mp3' with the actual path to your MP3 file
 mp3_file_path = 'song.mp3'
 
 # Play the MP3 file
