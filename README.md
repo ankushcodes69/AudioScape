@@ -40,7 +40,6 @@ Synced Lyrics Player is a command-line tool that allows users to download a song
    ```bash
    pip install -r requirements.txt
 
-
 5. Run the main.js file using Node:
 
    ```bash
