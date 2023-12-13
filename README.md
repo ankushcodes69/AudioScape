@@ -53,7 +53,7 @@ Music Player With Synced Lyrics is a command-line tool that allows users to down
 
 # To-Do List:
 | Feature  | Status |
-| ------------- | ------------- |
+| ------------- | :-------------: |
 | Implement basic functionality. | ✅ |
 | Download songs in MP3 format. | ✅ |
 | Retrieve and display synced lyrics. | ✅ |
