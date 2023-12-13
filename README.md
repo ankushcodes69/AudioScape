@@ -12,8 +12,11 @@ Synced Lyrics Player is a command-line tool that allows users to download a song
 
 ### Prerequisites
 
+- Git installed on your machine.
 - Node.js installed on your machine.
 - Python installed on your machine.
+
+*Also Don't Forget To Add To Path All Of These Programs*
 
 ### Getting Started
 
