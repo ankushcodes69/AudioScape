@@ -28,7 +28,7 @@ Synced Lyrics Player is a command-line tool that allows users to download a song
 2. Navigate to the project directory:
 
    ```bash
-   cd synced-lyrics-player
+   cd Music-Player-With-Synced-Lyrics
 
 3. Install required packages for node:
    
