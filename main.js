@@ -41,9 +41,9 @@ async function main() {
 main();
 
 async function playSongAndPrintLyrics() {
-    const aiScript = './play.py';
+    const playScript = './play.py';
     let lyricsData = JSON.parse(fs.readFileSync('./lyricsData.json'));
-    const pyShell = new PythonShell(aiScript, options);
+    const pyShell = new PythonShell(playScript, options);
     var flag = true;
 
     pyShell.on('close', () => {

@@ -1,13 +1,13 @@
 {
   "name": "music-player-with-synced-lyrics",
   "version": "1.0.3",
-  "description": "",
+  "description": "Music Player With Synced Lyrics is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python and JavaScript.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node main.js"
   },
-  "author": "",
+  "author": "ankushcodes69",
   "license": "ISC",
   "dependencies": {
     "ffmpeg-static": "^5.2.0",

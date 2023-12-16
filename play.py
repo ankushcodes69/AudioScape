@@ -13,7 +13,7 @@ def play_mp3(file_path):
     # Start playing
     player.play()
 
-    # Wait for the playback to finish (you can remove this if you want non-blocking behavior)
+    # Wait for the playback to finish
     while player.get_state() != vlc.State.Ended:
         time.sleep(1)
 
