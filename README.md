@@ -2,6 +2,9 @@
 
 Music Player With Synced Lyrics is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python and JavaScript.
 
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main)
+
+
 ## Features
 
 - Download songs in MP3 format.
