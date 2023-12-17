@@ -2,12 +2,12 @@
 
 Music Player With Synced Lyrics is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python and JavaScript.
 
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&labelColor=black&color=39ff14)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&labelColor=black&label=Last%20Commit&color=39ff14)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Total%20Commits&color=ff3131)
 ![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Languages%20Used&labelColor=black&color=1f51ff)
-![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&color=ff3131)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&color=39ff14)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&color=1f51fc)
+![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Issues&color=ff3131)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Pull%20Requests&color=39ff14)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Code%20Size&color=1f51fc)
 
 
 ## Features
