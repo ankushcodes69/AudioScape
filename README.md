@@ -66,6 +66,7 @@ Music Player With Synced Lyrics is a command-line tool that allows users to down
 | Download songs in MP3 format. | ✅ |
 | Retrieve and display synced lyrics. | ✅ |
 | Play the song with synchronized lyrics display. | ✅ |
+| Give This Project/App An Actual Name. |   | 
 | Use Better Api For Lyrics (lrclib.net) |   |
 | Add GUI |   |
 | Ability To Download Songs And Stream Offline With Lyrics. |   |
