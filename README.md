@@ -1,6 +1,6 @@
-## Music-Player-With-Synced-Lyrics
+## Audioscape
 
-Music Player With Synced Lyrics is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python and JavaScript.
+Audioscape is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python and JavaScript.
 
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&labelColor=black&label=Last%20Commit&color=39ff14)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Total%20Commits&color=ff3131)
@@ -31,12 +31,12 @@ Music Player With Synced Lyrics is a command-line tool that allows users to down
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/ankushcodes69/Music-Player-With-Synced-Lyrics.git
+   git clone https://github.com/ankushcodes69/Audioscape.git
 
 2. Navigate to the project directory:
 
    ```bash
-   cd Music-Player-With-Synced-Lyrics
+   cd Audioscape
 
 3. Install required packages for node:
    
@@ -66,7 +66,7 @@ Music Player With Synced Lyrics is a command-line tool that allows users to down
 | Download songs in MP3 format. | ✅ |
 | Retrieve and display synced lyrics. | ✅ |
 | Play the song with synchronized lyrics display. | ✅ |
-| Give This Project/App An Actual Name. |   |
+| Give This Project/App An Actual Name. | ✅ |
 | Switch To Complete Python Backend. |   |
 | Use Better Api For Lyrics (lrclib.net) |   |
 | Add GUI Using Flask |   |
