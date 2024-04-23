@@ -27,7 +27,7 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
 **_Also Don't Forget To Add To Path All Of These Programs_**  
 (Usually There Is A Add To Path Check Box During Installation, Just Check It And If You Forgot To Do So Just Watch A Tutorial On YouTube On How To Add Any Of These Programs To PATH)
 
-### Getting Started
+### Getting Started (New Installation)
 
 1. Open Termial On Your Device And Clone the repository:
 
@@ -46,9 +46,9 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
    - Step 1:
 
       - On Linux / MacOS:
-      ```bash
-      python3 -m venv env
-      ```
+         ```bash
+         python3 -m venv env
+         ```
 
       - On Windows:
          ```bash
@@ -84,6 +84,7 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
     - Enter the name of the song you want to download.
     - Enjoy the song with synced lyrics!
 
+### If The Above Steps Are Done For The First Time From The Next Time Onwards You Just Need To Do Point 3 Step 2 (If You Have Setup Python Virtual Environment) And Then Just Point 5
 
 # To-Do List:
 | Task | Status |
