@@ -1,7 +1,3 @@
-/.syncedlyrics
-/node_modules
-song.mp3
-lyrics.lrc
-lyricsData.json
-package-lock.json
-/frontend
+/env
+/MP3/*
+!/MP3/.gitkeep

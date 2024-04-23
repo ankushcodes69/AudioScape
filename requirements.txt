@@ -1,2 +1,5 @@
-syncedlyrics
 python-vlc
+requests
+pytube
+moviepy
+youtube-search-python
