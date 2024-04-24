@@ -1,27 +1,23 @@
 import os
 from pytube import YouTube
-from youtubesearchpython import VideosSearch
 import requests
 from moviepy.editor import *
 import re
 import time
 import vlc
 import threading
+import YouTubeMusicAPI
 
 def search_song(song_name):
     print('Searching Song...')
 
-    videosSearch = VideosSearch(song_name, limit = 1)
-    result = videosSearch.result()
-    if len(result['result']) > 0:
-        top_result = result['result'][0]
-        video_url = top_result['link']
+    result = YouTubeMusicAPI.search(song_name)
 
-        return video_url
+    if result:
+        return result['url']
     else:
-        print("No Search Results Found For The Song:", song_name)
-
         return "null"
+
 
 def download_song(youtube_url, output_folder):
     print('Downloading Song...')
@@ -83,6 +79,7 @@ def parse_lrc(lrc_data):
             time = minutes * 60 + seconds
             text = match.group(3).strip()
             lyrics[time] = text
+            
     return lyrics
 
 
@@ -91,7 +88,10 @@ def print_lyrics(lyrics):
     start_time = 0
     for timestamp in timestamps:
         time.sleep(timestamp - start_time)
-        print(lyrics[timestamp])
+        if(lyrics[timestamp] == "" or lyrics[timestamp] == " "):
+            print('♪')
+        else:
+            print(lyrics[timestamp])
         start_time = timestamp
 
 
