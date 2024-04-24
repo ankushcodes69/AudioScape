@@ -16,7 +16,6 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
 - Retrieve synced lyrics for the selected song.
 - Play the song with synchronized lyrics display.
 
-## Usage
 
 ### Prerequisites
 
@@ -24,20 +23,21 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
 - [Python](https://www.python.org/downloads) installed on your machine.
 - [Ffmpeg](https://ffmpeg.org/download.html) installed on your machine. (Choose Your OS And Install Any Build)
 
+> [!Note]
 **_Also Don't Forget To Add To Path All Of These Programs_**  
 (Usually There Is A Add To Path Check Box During Installation, Just Check It And If You Forgot To Do So Just Watch A Tutorial On YouTube On How To Add Any Of These Programs To PATH)
 
-### Getting Started (New Installation)
+### 🛠️ Getting Started (New Installation)
 
 1. Open Termial On Your Device And Clone the repository:
 
-   ```bash
+   ```sh
    git clone https://github.com/ankushcodes69/Audioscape.git
    ```
 
 2. Navigate to the project directory:
 
-   ```bash
+   ```sh
    cd Audioscape
    ```
 
@@ -46,36 +46,36 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
    - Step 1:
 
       - On Linux / MacOS:
-         ```bash
+         ```sh
          python3 -m venv env
          ```
 
       - On Windows:
-         ```bash
+         ```sh
          python -m venv env
          ```
 
    - Step 2:
 
       - On Linux / MacOS:
-         ```bash
+         ```sh
          source env/bin/activate
          ```
 
       - On Windows:
-         ```bash
+         ```sh
          .\env\Scripts\activate
          ```
 
 4. Install required packages for python:
 
-   ```bash
+   ```sh
    pip install -r requirements.txt
    ```
 
 5. Run the main.py file using Python:
 
-   ```bash
+   ```sh
    python main.py
    ```
 
@@ -84,20 +84,19 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
     - Enter the name of the song you want to download.
     - Enjoy the song with synced lyrics!
 
-### If The Above Steps Are Done For The First Time From The Next Time Onwards You Just Need To Do Point 3 Step 2 (If You Have Setup Python Virtual Environment) And Then Just Point 5
+> [!Note]
+**If The Above Steps Are Done** For The First Time From The Next Time Onwards You Just Need To *Activate The Virtual Environment* (Point 3 Step 2)[If You Have Setup Python Virtual Environment] And Then Just Run The *main.py* File (Point 5)
 
-# To-Do List:
-| Task | Status |
-| :-------------: | :-------------: |
-| Implement basic functionality. | ✅ |
-| Download songs in MP3 format. | ✅ |
-| Retrieve and display synced lyrics. | ✅ |
-| Play the song with synchronized lyrics display. | ✅ |
-| Give This Project/App An Actual Name. | ✅ |
-| Switch To Complete Python Backend. | ✅ |
-| Use Better Api For Lyrics (lrclib.net) | ✅ |
-| Ability To Use YouTube Video Or Playlist Link. |   |
-| Add GUI Using Kivy. |   |
-| Ability To Download Songs And Stream Offline With Lyrics. |   |
-| Improve error handling. |   |
-| Enhance user interface. |   |
+## To-Do List:
+- [x] Implement basic functionality.
+- [x] Download songs in MP3 format.
+- [x] Retrieve and display synced lyrics.
+- [x] Play the song with synchronized lyrics display.
+- [x] Give This Project/App An Actual Name.
+- [x] Switch To Complete Python Backend.
+- [x] Use Better Api For Lyrics (lrclib.net)
+- [ ] Ability To Use YouTube Video Or Playlist Link.
+- [ ] Add GUI Using Kivy.
+- [ ] Ability To Download Songs And Stream Offline With Lyrics.
+- [ ] Improve error handling.
+- [ ] Enhance user interface.
