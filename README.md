@@ -1,6 +1,6 @@
-## Audioscape
+## AudioScape
 
-Audioscape is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.
+AudioScape is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.
 
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&labelColor=black&label=Last%20Commit&color=39ff14)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Total%20Commits&color=ff3131)
@@ -32,13 +32,13 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
 1. Open Termial On Your Device And Clone the repository:
 
    ```sh
-   git clone https://github.com/ankushcodes69/Audioscape.git
+   git clone https://github.com/ankushcodes69/AudioScape.git
    ```
 
 2. Navigate to the project directory:
 
    ```sh
-   cd Audioscape
+   cd AudioScape
    ```
 
 3. Setup Python Virtual Environment (Optional but recommended. You can skip this and go to next step):
