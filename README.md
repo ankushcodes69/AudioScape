@@ -23,7 +23,7 @@ Audioscape is a command-line tool that allows users to download a song in MP3 fo
 - [Python](https://www.python.org/downloads) installed on your machine.
 - [Ffmpeg](https://ffmpeg.org/download.html) installed on your machine. (Choose Your OS And Install Any Build)
 
-> [!Note]
+> [!Important]
 **_Also Don't Forget To Add To Path All Of These Programs_**  
 (Usually There Is A Add To Path Check Box During Installation, Just Check It And If You Forgot To Do So Just Watch A Tutorial On YouTube On How To Add Any Of These Programs To PATH)
 
