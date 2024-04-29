@@ -3,3 +3,5 @@ requests
 pytube
 moviepy
 YouTubeMusicAPI
+Kivy
+httpx

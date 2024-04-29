@@ -1,0 +1,18 @@
+<AudioScape>:
+    orientation: 'vertical'
+    Label:
+        text: "Enter Song Name Along With Artist:"
+        font_name: "OpenSans"
+    TextInput:
+        id: song_input
+        multiline: False
+    Button:
+        text: 'Play'
+        font_name: "OpenSans"
+        on_press: root.play_song()
+    ScrollView:
+        Label:
+            id: lyrics_label
+            text: ''
+            halign: 'center'
+            font_name: "Comic"

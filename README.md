@@ -95,8 +95,9 @@ AudioScape is a command-line tool that allows users to download a song in MP3 fo
 - [x] Give This Project/App An Actual Name.
 - [x] Switch To Complete Python Backend.
 - [x] Use Better Api For Lyrics (lrclib.net)
+- [x] Add Simple GUI Using Kivy.
+- [x] Make GUI Much Better And Colourful.
 - [ ] Ability To Use YouTube Video Or Playlist Link.
-- [ ] Add GUI Using Kivy.
 - [ ] Ability To Download Songs And Stream Offline With Lyrics.
 - [ ] Improve error handling.
 - [ ] Enhance user interface.
