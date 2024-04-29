@@ -10,14 +10,14 @@ AudioScape is a command-line tool that allows users to download a song in MP3 fo
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Code%20Size&color=1f51fc)
 
 
-## Features
+## ⚙️ Features
 
 - Download songs in MP3 format.
 - Retrieve synced lyrics for the selected song.
 - Play the song with synchronized lyrics display.
 
 
-### Prerequisites
+### 📜 Prerequisites
 
 - [Git](https://git-scm.com/downloads) installed on your machine.
 - [Python](https://www.python.org/downloads) installed on your machine.
@@ -78,14 +78,30 @@ AudioScape is a command-line tool that allows users to download a song in MP3 fo
    ```sh
    python main.py
    ```
-
+   
 6. Follow the on-screen instructions to:
 
     - Enter the name of the song you want to download.
     - Enjoy the song with synced lyrics!
 
-> [!Note]
-**If The Above Steps Are Done** For The First Time From The Next Time Onwards You Just Need To *Activate The Virtual Environment* (Point 3 Step 2)[If You Have Setup Python Virtual Environment] And Then Just Run The *main.py* File (Point 5)
+### 💡 Usage
+1. Activate Python Virtual Environment (If You Have Setup Python Virtual Environment During First Installation)
+ 
+   - On Linux / MacOS:
+       ```sh
+       source env/bin/activate
+       ```
+     
+   - On Windows:
+       ```sh
+       .\env\Scripts\activate
+       ```
+     
+2. Run the main.py file using Python:
+
+   ```sh
+   python main.py
+   ```
 
 ## To-Do List:
 - [x] Implement basic functionality.
