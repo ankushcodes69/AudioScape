@@ -19,7 +19,7 @@ import YouTubeMusicAPI
 Builder.load_file('app.kv')
 
 LabelBase.register(name='OpenSans', 
-                   fn_regular='OpenSans-SemiBold.ttf')
+                   fn_regular='./fonts/OpenSans-Regular.ttf')
 
 class AudioScape(BoxLayout):
     def play_song(self):
@@ -31,9 +31,9 @@ class AudioScape(BoxLayout):
         if video_url != "null":
             song_path = self.download_song(video_url, output_folder)
 
-            artist_name, track_name, album_name, duration = self.get_song_info(video_url)
+            artist_name, track_name, duration = self.get_song_info(video_url)
             
-            api_response = self.get_synced_lyrics(artist_name, track_name, album_name, duration)
+            api_response = self.get_synced_lyrics(artist_name, track_name, duration)
             
             lyrics = self.parse_lrc(api_response)
             
@@ -75,25 +75,25 @@ class AudioScape(BoxLayout):
 
         artist_name = yt.author
         track_name = yt.title
-        album_name = "null"
         duration = yt.length
 
-        return artist_name, track_name, album_name, duration
+        return artist_name, track_name, duration
 
-    def get_synced_lyrics(self, artist_name, track_name, album_name, duration):
+    def get_synced_lyrics(self, artist_name, track_name, duration):
         print('Getting Lyrics...')
         params = {
             'artist_name': artist_name,
-            'track_name': track_name,
-            'album_name': album_name,
-            'duration': duration
+            'track_name': track_name
         }
 
-        response = requests.get('https://lrclib.net/api/get', params=params)
+        response = requests.get('https://lrclib.net/api/search', params=params)
 
         if response.status_code == 200:
             data = response.json()
-            return data['syncedLyrics']
+            for lyricsData in data:
+                if duration == lyricsData['duration'] :
+                    return lyricsData['syncedLyrics']
+            return "null"
         else:
             return "Failed to retrieve synced lyrics. Status code: {}".format(response.status_code)
 
@@ -123,18 +123,20 @@ class AudioScape(BoxLayout):
                 app.update_lyrics(lyrics[timestamp])
             start_time = timestamp
 
+    instance = vlc.Instance()
+    player = instance.media_player_new() 
+
     def play_mp3(self, file_path):
         print('Here We Go...')
-        instance = vlc.Instance()
-        player = instance.media_player_new()
-        media = instance.media_new(file_path)
-        player.set_media(media)
-        player.play()
 
-        while player.get_state() != vlc.State.Ended:
+        media = self.instance.media_new(file_path)
+        self.player.set_media(media)
+        self.player.play()
+
+        while self.player.get_state() != vlc.State.Ended:
             time.sleep(1)
 
-        player.stop()
+        self.player.stop()
 
 class AudioScapeApp(App):
     def build(self):
@@ -142,6 +144,9 @@ class AudioScapeApp(App):
 
     def update_lyrics(self, text):
         self.root.ids.lyrics_label.text = text
+
+    def on_stop(self):
+        self.root.player.stop()
 
 if __name__ == "__main__":
     AudioScapeApp().run()
