@@ -1,6 +1,6 @@
 ## AudioScape
 
-AudioScape is a command-line tool that allows users to download a song in MP3 format, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.
+AudioScape is a command-line tool that allows users to download a song, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.
 
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&labelColor=black&label=Last%20Commit&color=39ff14)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Total%20Commits&color=ff3131)
@@ -12,7 +12,7 @@ AudioScape is a command-line tool that allows users to download a song in MP3 fo
 
 ## ⚙️ Features
 
-- Download songs in MP3 format.
+- Download songs.
 - Retrieve synced lyrics for the selected song.
 - Play the song with synchronized lyrics display.
 
@@ -105,7 +105,7 @@ AudioScape is a command-line tool that allows users to download a song in MP3 fo
 
 ## To-Do List:
 - [x] Implement basic functionality.
-- [x] Download songs in MP3 format.
+- [x] Download songs in webm format.
 - [x] Retrieve and display synced lyrics.
 - [x] Play the song with synchronized lyrics display.
 - [x] Give This Project/App An Actual Name.

@@ -1,7 +1,6 @@
 python-vlc
 requests
 pytube
-moviepy
 YouTubeMusicAPI
 Kivy
 httpx

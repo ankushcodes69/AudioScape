@@ -1,3 +1,4 @@
 /env
-/MP3/*
-!/MP3/.gitkeep
+/Audio/*
+!/Audio/.gitkeep
+/tests

@@ -6,13 +6,16 @@ import re
 import time
 from pytube import YouTube
 from kivy.app import App
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.config import Config
 from kivy.core.text import LabelBase
-from moviepy.editor import AudioFileClip
+from kivy.uix.image import Image
+import io
+import sys
 import YouTubeMusicAPI
 
 
@@ -22,28 +25,26 @@ LabelBase.register(name='OpenSans',
                    fn_regular='./fonts/OpenSans-Regular.ttf')
 
 class AudioScape(BoxLayout):
-    def play_song(self):
+    def main(self):
         song_name = self.ids.song_input.text
-        output_folder = "./MP3"
+        output_folder = "./Audio"
 
         video_url = self.search_song(song_name)
         
         if video_url != "null":
             song_path = self.download_song(video_url, output_folder)
 
-            artist_name, track_name, duration = self.get_song_info(video_url)
+            artist_name, track_name, duration =  self.get_song_info(video_url)
             
-            api_response = self.get_synced_lyrics(artist_name, track_name, duration)
-            
-            lyrics = self.parse_lrc(api_response)
+            lyrics =  self.get_synced_lyrics(artist_name, track_name, duration)
             
             self.ids.lyrics_label.text = ''
-            
+ 
             print_lyrics_thread = threading.Thread(target=self.print_lyrics, args=(lyrics,))
-            play_mp3_thread = threading.Thread(target=self.play_mp3, args=(song_path,))
+            play_audio_thread = threading.Thread(target=self.play_audio, args=(song_path,))
 
             print_lyrics_thread.start()
-            play_mp3_thread.start()
+            play_audio_thread.start()
 
     def search_song(self, song_name):
         print('Searching Song...')
@@ -56,22 +57,15 @@ class AudioScape(BoxLayout):
 
     def download_song(self, youtube_url, output_folder):
         print('Downloading Song...')
-        yt = YouTube(youtube_url)
-        audio = yt.streams.filter(only_audio=True).first()
-        out_file = audio.download(output_folder)
+        yt =  YouTube(youtube_url)
+        audio =  yt.streams.filter(mime_type="audio/webm").asc().last()
+        out_file =  audio.download(output_folder)
 
-        base, ext = os.path.splitext(out_file)
-
-        video = AudioFileClip(os.path.join(output_folder, out_file))
-        video.write_audiofile(os.path.join(output_folder, f"{base}.mp3"), verbose=False, logger=None)
-
-        os.remove(os.path.join(output_folder, out_file))
-
-        return os.path.join(output_folder, f"{base}.mp3")
+        return os.path.join(output_folder, out_file)
 
     def get_song_info(self, youtube_url):
         print('Getting Song Info...')
-        yt = YouTube(youtube_url)
+        yt =  YouTube(youtube_url)
 
         artist_name = yt.author
         track_name = yt.title
@@ -86,19 +80,15 @@ class AudioScape(BoxLayout):
             'track_name': track_name
         }
 
-        response = requests.get('https://lrclib.net/api/search', params=params)
+        response =  requests.get('https://lrclib.net/api/search', params=params)
+        data =  response.json()
+        lrc_data = ""
+        for lyricsData in data:
+            if lyricsData['syncedLyrics'] != None and lyricsData['duration'] == duration :
+                lrc_data = lyricsData['syncedLyrics']
 
-        if response.status_code == 200:
-            data = response.json()
-            for lyricsData in data:
-                if duration == lyricsData['duration'] :
-                    return lyricsData['syncedLyrics']
-            return "null"
-        else:
-            return "Failed to retrieve synced lyrics. Status code: {}".format(response.status_code)
-
-    def parse_lrc(self, lrc_data):
         lyrics = {}
+
         lines = lrc_data.split('\n')
         for line in lines:
             match = re.match(r'\[(\d+):(\d+\.\d+)\](.*)', line)
@@ -108,7 +98,7 @@ class AudioScape(BoxLayout):
                 time = minutes * 60 + seconds
                 text = match.group(3).strip()
                 lyrics[time] = text
-               
+        
         return lyrics
 
     def print_lyrics(self, lyrics):
@@ -126,7 +116,7 @@ class AudioScape(BoxLayout):
     instance = vlc.Instance()
     player = instance.media_player_new() 
 
-    def play_mp3(self, file_path):
+    def play_audio(self, file_path):
         print('Here We Go...')
 
         media = self.instance.media_new(file_path)
@@ -138,15 +128,17 @@ class AudioScape(BoxLayout):
 
         self.player.stop()
 
+
 class AudioScapeApp(App):
     def build(self):
         return AudioScape()
 
-    def update_lyrics(self, text):
-        self.root.ids.lyrics_label.text = text
-
+    
     def on_stop(self):
         self.root.player.stop()
+
+    def update_lyrics(self, text):      
+        self.root.ids.lyrics_label.text = text
 
 if __name__ == "__main__":
     AudioScapeApp().run()
