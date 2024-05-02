@@ -1,7 +1,7 @@
 <div align="center">
     <img src="./res/logo512.png" width="256" height="256" style="display: block; margin: 0 auto"/>
     <h1>AudioScape</h1>
-    <p>AudioScape is a command-line tool that allows users to download a song, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.</p>
+    <p>AudioScape is a app that allows users to download a song, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.</p>
     
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&label=Last%20Commit&labelColor=76d748&color=99db46)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Total%20Commits&labelColor=76d748&color=99db46)
