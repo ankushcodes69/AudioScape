@@ -22,7 +22,6 @@
 
 - [Git](https://git-scm.com/downloads) installed on your machine.
 - [Python](https://www.python.org/downloads) installed on your machine.
-- [Ffmpeg](https://ffmpeg.org/download.html) installed on your machine. (Choose Your OS And Install Any Build)
 
 > [!Important]
 **_Also Don't Forget To Add To Path All Of These Programs_**  

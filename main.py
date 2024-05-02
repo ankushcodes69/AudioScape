@@ -14,8 +14,6 @@ from kivy.uix.textinput import TextInput
 from kivy.config import Config
 from kivy.core.text import LabelBase
 from kivy.uix.image import Image
-import io
-import sys
 import YouTubeMusicAPI
 
 
