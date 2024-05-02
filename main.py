@@ -22,7 +22,7 @@ import YouTubeMusicAPI
 Builder.load_file('app.kv')
 
 LabelBase.register(name='OpenSans', 
-                   fn_regular='./fonts/OpenSans-Regular.ttf')
+                   fn_regular='./res/fonts/OpenSans-Regular.ttf')
 
 class AudioScape(BoxLayout):
     def main(self):
@@ -130,9 +130,10 @@ class AudioScape(BoxLayout):
 
 
 class AudioScapeApp(App):
+    icon = './res/logo256.png'
+
     def build(self):
         return AudioScape()
-
     
     def on_stop(self):
         self.root.player.stop()

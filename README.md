@@ -1,14 +1,15 @@
-## AudioScape
-
-AudioScape is a command-line tool that allows users to download a song, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.
-
+<div align="center">
+    <img src="./res/logo512.png" width="256" height="256" style="display: block; margin: 0 auto"/>
+    <h1>AudioScape</h1>
+    <p>AudioScape is a command-line tool that allows users to download a song, retrieve synced lyrics, and play the song along with the synchronized lyrics display. This project is implemented using Python.</p>
+    
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&labelColor=black&label=Last%20Commit&color=39ff14)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Total%20Commits&color=ff3131)
 ![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Languages%20Used&labelColor=black&color=1f51ff)
 ![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Issues&color=ff3131)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Pull%20Requests&color=39ff14)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&labelColor=black&label=Code%20Size&color=1f51fc)
-
+</div>
 
 ## ⚙️ Features
 
