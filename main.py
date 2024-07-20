@@ -13,9 +13,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.config import Config
 from kivy.core.text import LabelBase
-from kivy.uix.image import Image
 import YouTubeMusicAPI
-
 
 Builder.load_file('app.kv')
 
