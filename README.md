@@ -1,7 +1,7 @@
 <div align="center">
     <img src="./assets/images/icon.png" width="256" height="256" style="display: block; margin: 0 auto"/>
     <h1>AudioScape</h1>
-    <p>AudioScape is a music app to emulate a add-free version of youtube music.</p>
+    <p>AudioScape is a music app to emulate a ad-free version of youtube music.</p>
     
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&label=Last%20Commit&labelColor=ce5601&color=ce6c01)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Total%20Commits&labelColor=ce5601&color=ce6c01)
