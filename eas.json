@@ -9,7 +9,10 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "applicationArchivePath": "./builds/*.apk"
+      }
     },
     "production": {
       "autoIncrement": true
