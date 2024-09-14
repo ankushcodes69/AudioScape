@@ -136,10 +136,9 @@ export default function HomeScreen() {
       setIsLoading(true);
 
       const yt = await innertube;
-      const info = await yt.getBasicInfo(youtubeUrl);
-      const streamUrl = `${info.streaming_data?.formats[0].decipher(
-        yt.session.player
-      )}`;
+      const info = await yt.music.getInfo(youtubeUrl);
+      const format = info.chooseFormat({ type: "audio", quality: "best" });
+      const streamUrl = `${format?.decipher(yt.session.player)}`;
 
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: streamUrl },
@@ -206,8 +205,12 @@ export default function HomeScreen() {
             style={styles.currentThumbnail}
           />
           <ThemedView style={styles.currentSongInfo}>
-            <ThemedText style={styles.currentTitle}>{currentSong.title}</ThemedText>
-            <ThemedText style={styles.currentArtist}>{currentSong.artist}</ThemedText>
+            <ThemedText style={styles.currentTitle}>
+              {currentSong.title}
+            </ThemedText>
+            <ThemedText style={styles.currentArtist}>
+              {currentSong.artist}
+            </ThemedText>
           </ThemedView>
           <TouchableOpacity
             style={styles.playPauseButton}
