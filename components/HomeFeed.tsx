@@ -26,8 +26,8 @@ interface HomeFeedProps {
 
 export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
   const screenWidth = Dimensions.get("window").width;
-  const itemWidth = screenWidth * 0.4; // 40% of screen width
-  const itemHeight = itemWidth + 50; // Add some space for text
+  const itemWidth = screenWidth * 0.3;
+  const itemHeight = itemWidth + 40; 
 
   const renderItem = (item: SearchResult) => (
     <TouchableOpacity
@@ -72,14 +72,14 @@ export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
-    marginLeft:15
+    marginVertical: 20,
+    marginLeft:15,
   },
   header: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    marginLeft: 10,
+    marginLeft: 5,
   },
   rowsContainer: {
     flexDirection: "column",

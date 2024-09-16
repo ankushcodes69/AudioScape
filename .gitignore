@@ -10,6 +10,8 @@ npm-debug.*
 *.orig.*
 web-build/
 
+app/(tabs)/test.tsx
+app/(tabs)/testData.json
 # macOS
 .DS_Store
 

@@ -19,7 +19,6 @@ interface SearchResult {
   thumbnail: string;
 }
 
-// Define the shape of your homeFeed object
 interface HomeFeed {
   sections?: (MusicCarouselShelf | MusicTasteBuilderShelf)[];
 }
@@ -29,7 +28,6 @@ interface MusicCarouselShelf {
 }
 
 interface MusicTasteBuilderShelf {
-  // Add properties if needed
 }
 
 function isMusicCarouselShelf(
@@ -41,8 +39,7 @@ function isMusicCarouselShelf(
 type SoundType = Audio.Sound | null;
 
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [homeFeedResults, setHomeFeedResults] = useState<SearchResult[]>([]);
   const [youtubeVideoId, setYoutubeVideoId] = useState<string>("");
   const [sound, setSound] = useState<SoundType>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -73,13 +70,13 @@ export default function HomeScreen() {
                   item.thumbnail?.contents?.[0]?.url ??
                   "https://via.placeholder.com/50",
               }));
-            setSearchResults(formattedResults);
+              setHomeFeedResults(formattedResults);
           } else {
-            setSearchResults([]);
+            setHomeFeedResults([]);
             Alert.alert("No results", "No songs found in the home feed.");
           }
         } else {
-          setSearchResults([]);
+          setHomeFeedResults([]);
           Alert.alert("No results", "Unable to fetch home feed.");
         }
       } catch (error) {
@@ -174,7 +171,7 @@ export default function HomeScreen() {
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
-        <HomeFeed results={searchResults} onItemClick={handleSongSelect} />
+        <HomeFeed results={homeFeedResults} onItemClick={handleSongSelect} />
       )}
       {currentSong && (
         <ThemedView style={styles.currentSong}>
@@ -209,7 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: 20,
+    paddingTop: 50,
   },
   title: {
     fontSize: 24,
