@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {
+  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   Image,
+  FlatList,
   Alert,
 } from "react-native";
-import { HomeFeed } from "@/components/HomeFeed";
+import { Audio } from "expo-av";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { Audio } from "expo-av";
 import innertube from "@/components/yt";
+
+type SoundType = Audio.Sound | null;
 
 interface SearchResult {
   id: string;
@@ -19,28 +22,7 @@ interface SearchResult {
   thumbnail: string;
 }
 
-// Define the shape of your homeFeed object
-interface HomeFeed {
-  sections?: (MusicCarouselShelf | MusicTasteBuilderShelf)[];
-}
-
-interface MusicCarouselShelf {
-  contents?: any[];
-}
-
-interface MusicTasteBuilderShelf {
-  // Add properties if needed
-}
-
-function isMusicCarouselShelf(
-  section: MusicCarouselShelf | MusicTasteBuilderShelf
-): section is MusicCarouselShelf {
-  return "contents" in section;
-}
-
-type SoundType = Audio.Sound | null;
-
-export default function HomeScreen() {
+export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [youtubeVideoId, setYoutubeVideoId] = useState<string>("");
@@ -50,49 +32,6 @@ export default function HomeScreen() {
   const [currentSong, setCurrentSong] = useState<SearchResult | null>(null);
 
   useEffect(() => {
-    const getHomeFeed = async () => {
-      setIsLoading(true);
-      try {
-        const yt = await innertube;
-        const homeFeed: HomeFeed = await yt.music.getHomeFeed();
-
-        if (homeFeed?.sections && homeFeed.sections.length > 0) {
-          const firstSection = homeFeed.sections[0];
-
-          if (
-            isMusicCarouselShelf(firstSection) &&
-            Array.isArray(firstSection.contents)
-          ) {
-            const formattedResults: SearchResult[] = firstSection.contents
-              .filter((item: any) => item?.id && item?.title)
-              .map((item: any) => ({
-                id: item.id,
-                title: item.title,
-                artist: item.artists?.[0]?.name ?? "Unknown Artist",
-                thumbnail:
-                  item.thumbnail?.contents?.[0]?.url ??
-                  "https://via.placeholder.com/50",
-              }));
-            setSearchResults(formattedResults);
-          } else {
-            setSearchResults([]);
-            Alert.alert("No results", "No songs found in the home feed.");
-          }
-        } else {
-          setSearchResults([]);
-          Alert.alert("No results", "Unable to fetch home feed.");
-        }
-      } catch (error) {
-        Alert.alert(
-          "Error",
-          "An error occurred while fetching the home feed. Please try again."
-        );
-      }
-      setIsLoading(false);
-    };
-
-    getHomeFeed();
-
     const configureAudio = async () => {
       try {
         await Audio.setAudioModeAsync({
@@ -113,6 +52,56 @@ export default function HomeScreen() {
       }
     };
   }, []);
+
+  const handleSearch = async () => {
+    if (!searchQuery) return;
+
+    setIsLoading(true);
+    try {
+      const yt = await innertube;
+      const searchResults = await yt.music.search(searchQuery, {
+        type: "song",
+      });
+
+      if (
+        searchResults &&
+        searchResults.contents &&
+        Array.isArray(searchResults.contents) &&
+        searchResults.contents.length > 0 &&
+        searchResults.contents[0].contents
+      ) {
+        const formattedResults: SearchResult[] =
+          searchResults.contents[0].contents
+            .filter((item: any) => item && item.id && item.title)
+            .map((item: any) => ({
+              id: item.id,
+              title: item.title,
+              artist:
+                item.artists && item.artists[0]
+                  ? item.artists[0].name
+                  : "Unknown Artist",
+              thumbnail:
+                item.thumbnail &&
+                item.thumbnail.contents &&
+                item.thumbnail.contents[0]
+                  ? item.thumbnail.contents[0].url
+                  : "https://via.placeholder.com/50",
+            }));
+
+        setSearchResults(formattedResults);
+      } else {
+        setSearchResults([]);
+        Alert.alert("No results", "No songs found for your search query.");
+      }
+    } catch (error) {
+      console.error("Error searching:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while searching. Please try again."
+      );
+    }
+    setIsLoading(false);
+  };
 
   const handleSongSelect = (song: SearchResult) => {
     setYoutubeVideoId(song.id);
@@ -169,12 +158,43 @@ export default function HomeScreen() {
     }
   };
 
+  const renderSearchResult = ({ item }: { item: SearchResult }) => (
+    <TouchableOpacity
+      style={styles.searchResult}
+      onPress={() => handleSongSelect(item)}
+    >
+      <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
+      <ThemedView style={styles.resultText}>
+        <ThemedText style={styles.resultTitle}>{item.title}</ThemedText>
+        <ThemedText style={styles.resultArtist}>{item.artist}</ThemedText>
+      </ThemedView>
+    </TouchableOpacity>
+  );
+
   return (
     <ThemedView style={styles.container}>
+      <ThemedText style={styles.title}>YouTube Music Player</ThemedText>
+      <ThemedView style={styles.searchContainer}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          placeholder="Search for a song"
+          placeholderTextColor="#999"
+        />
+        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+          <ThemedText style={styles.buttonText}>Search</ThemedText>
+        </TouchableOpacity>
+      </ThemedView>
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
-        <HomeFeed results={searchResults} onItemClick={handleSongSelect} />
+        <FlatList
+          data={searchResults}
+          renderItem={renderSearchResult}
+          keyExtractor={(item) => item.id}
+          style={styles.searchResults}
+        />
       )}
       {currentSong && (
         <ThemedView style={styles.currentSong}>
