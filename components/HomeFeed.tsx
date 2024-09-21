@@ -26,8 +26,8 @@ interface HomeFeedProps {
 
 export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
   const screenWidth = Dimensions.get("window").width;
-  const itemWidth = screenWidth * 0.3;
-  const itemHeight = itemWidth + 40; 
+  const itemWidth = screenWidth * 0.27;
+  const itemHeight = itemWidth + 50; 
 
   const renderItem = (item: SearchResult) => (
     <TouchableOpacity
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
   },
   playButton: {
     position: "absolute",
-    right: 10,
-    bottom: 10,
+    right: 5,
+    bottom: 5,
     backgroundColor: "white",
     borderRadius: 15,
     width: 30,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   playButtonText: {
     fontSize: 18,
-    bottom: 2,
+    bottom: 1.5,
     left: 1,
     color: "black",
   },
