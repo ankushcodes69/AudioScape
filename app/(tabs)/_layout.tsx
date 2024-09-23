@@ -5,14 +5,9 @@ import { View } from "react-native";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import {
-  MusicPlayerProvider,
-  useMusicPlayer,
-} from "@/components/MusicPlayerContext";
 
 function TabLayoutContent() {
   const colorScheme = useColorScheme();
-  const { currentSong } = useMusicPlayer();
 
   return (
     <View style={{ flex: 1 }}>
@@ -20,7 +15,6 @@ function TabLayoutContent() {
         screenOptions={{
           tabBarStyle: {
             backgroundColor: Colors[colorScheme ?? "light"].background,
-            paddingBottom: currentSong ? 60 : 0, // Add padding when a song is playing
           },
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
           headerShown: false,
@@ -57,9 +51,5 @@ function TabLayoutContent() {
 }
 
 export default function TabLayout() {
-  return (
-    <MusicPlayerProvider>
-      <TabLayoutContent />
-    </MusicPlayerProvider>
-  );
+  return <TabLayoutContent />;
 }

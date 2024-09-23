@@ -8,10 +8,10 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import { ThemedView } from "../../components/ThemedView";
-import { ThemedText } from "../../components/ThemedText";
-import { useMusicPlayer } from "../../components/MusicPlayerContext";
-import innertube from "../../components/yt";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import innertube from "@/components/yt";
 
 interface SearchResult {
   id: string;

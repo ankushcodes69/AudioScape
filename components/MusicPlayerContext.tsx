@@ -1,15 +1,9 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  ReactNode,
-} from "react";
-import { Audio } from "expo-av";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import innertube from "@/components/yt";
+import TrackPlayer, { State } from "react-native-track-player";
 
 interface SearchResult {
   id: string;
@@ -45,39 +39,12 @@ interface MusicPlayerProviderProps {
 export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   children,
 }) => {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [currentSong, setCurrentSong] = useState<SearchResult | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const configureAudio = async () => {
-      try {
-        await Audio.setAudioModeAsync({
-          staysActiveInBackground: true,
-          shouldDuckAndroid: true,
-          playThroughEarpieceAndroid: false,
-        });
-      } catch (error) {
-        console.error("Error configuring audio mode:", error);
-      }
-    };
-
-    configureAudio();
-
-    return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
-  }, []);
-
   const playAudio = async (song: SearchResult) => {
     try {
-      if (sound) {
-        await sound.unloadAsync();
-      }
-
       setIsLoading(true);
       setCurrentSong(song);
 
@@ -85,38 +52,36 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       const info = await yt.music.getInfo(song.id);
       const format = info.chooseFormat({ type: "audio", quality: "best" });
       const streamUrl = `${format?.decipher(yt.session.player)}`;
+      const item = info.basic_info;
 
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: streamUrl },
-        { shouldPlay: true }
-      );
+      await TrackPlayer.add({
+        id: song.id,
+        url: streamUrl,
+        title: info.basic_info.title,
+        artwork:
+          item.thumbnail && item.thumbnail[0]
+            ? item.thumbnail[0].url
+            : "https://via.placeholder.com/50",
+      });
 
-      setSound(newSound);
+      await TrackPlayer.play();
+
       setIsPlaying(true);
       setIsLoading(false);
-
-      newSound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded) {
-          setIsPlaying(status.isPlaying);
-        }
-      });
     } catch (error) {
-      console.error("Error playing audio:", error);
       setIsLoading(false);
     }
   };
 
   const togglePlayPause = async () => {
-    if (sound) {
-      if (isPlaying) {
-        await sound.pauseAsync();
-        setIsPlaying(false);
-      } else {
-        await sound.playAsync();
-        setIsPlaying(true);
-      }
-    } else if (currentSong) {
-      await playAudio(currentSong);
+    const currentState = (await TrackPlayer.getPlaybackState()).state;
+
+    if (currentState === State.Playing) {
+      await TrackPlayer.pause();
+      setIsPlaying(false);
+    } else {
+      await TrackPlayer.play();
+      setIsPlaying(true);
     }
   };
 
@@ -131,13 +96,6 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       }}
     >
       {children}
-      {currentSong && (
-        <CurrentSongBar
-          song={currentSong}
-          isPlaying={isPlaying}
-          onPlayPause={togglePlayPause}
-        />
-      )}
     </MusicPlayerContext.Provider>
   );
 };
@@ -168,11 +126,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#222",
   },
   currentThumbnail: {
     width: 50,
