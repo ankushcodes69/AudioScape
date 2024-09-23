@@ -15,7 +15,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.2",
+    "@expo/vector-icons": "^14.0.3",
     "@react-navigation/native": "^6.0.2",
     "base-64": "^1.0.0",
     "event-target-polyfill": "^0.0.4",
