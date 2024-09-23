@@ -54,6 +54,8 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       const streamUrl = `${format?.decipher(yt.session.player)}`;
       const item = info.basic_info;
 
+      await TrackPlayer.reset();
+
       await TrackPlayer.add({
         id: song.id,
         url: streamUrl,
