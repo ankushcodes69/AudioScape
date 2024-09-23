@@ -12,7 +12,7 @@ interface SearchResult {
   thumbnail: string;
 }
 
-interface HomeFeed {
+interface HomeFeedType {
   sections?: (MusicCarouselShelf | MusicTasteBuilderShelf)[];
 }
 
@@ -38,7 +38,7 @@ export default function HomeScreen() {
       setIsLoading(true);
       try {
         const yt = await innertube;
-        const homeFeed: HomeFeed = await yt.music.getHomeFeed();
+        const homeFeed: HomeFeedType = await yt.music.getHomeFeed();
 
         if (homeFeed?.sections && homeFeed.sections.length > 0) {
           const firstSection = homeFeed.sections[0];
