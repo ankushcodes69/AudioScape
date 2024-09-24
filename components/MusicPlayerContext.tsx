@@ -54,17 +54,22 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       const streamUrl = `${format?.decipher(yt.session.player)}`;
       const item = info.basic_info;
 
-      await TrackPlayer.reset();
+      const currentTrackIndex = (await TrackPlayer.getActiveTrackIndex()) || -1;
 
-      await TrackPlayer.add({
-        id: song.id,
-        url: streamUrl,
-        title: info.basic_info.title,
-        artwork:
-          item.thumbnail && item.thumbnail[0]
-            ? item.thumbnail[0].url
-            : "https://via.placeholder.com/50",
-      });
+      await TrackPlayer.add(
+        {
+          id: song.id,
+          url: streamUrl,
+          title: info.basic_info.title,
+          artwork:
+            item.thumbnail && item.thumbnail[0]
+              ? item.thumbnail[0].url
+              : "https://via.placeholder.com/50",
+        },
+        currentTrackIndex + 1
+      );
+
+      await TrackPlayer.skipToNext();
 
       await TrackPlayer.play();
 

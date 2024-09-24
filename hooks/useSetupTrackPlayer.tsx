@@ -3,6 +3,7 @@ import TrackPlayer, {
   Capability,
   RatingType,
   RepeatMode,
+  AppKilledPlaybackBehavior,
 } from "react-native-track-player";
 
 const setupPlayer = async () => {
@@ -11,6 +12,12 @@ const setupPlayer = async () => {
   });
 
   await TrackPlayer.updateOptions({
+    android: {
+      appKilledPlaybackBehavior:
+        AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+    },
+    forwardJumpInterval: 10,
+    backwardJumpInterval: 10,
     ratingType: RatingType.Heart,
     capabilities: [
       Capability.Play,
@@ -19,6 +26,8 @@ const setupPlayer = async () => {
       Capability.SkipToPrevious,
       Capability.Stop,
       Capability.SeekTo,
+      Capability.JumpForward,
+      Capability.JumpBackward,
     ],
   });
 

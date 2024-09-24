@@ -28,7 +28,8 @@ export default function RootLayout() {
   });
   const [trackPlayerLoaded, setTrackPlayerLoaded] = useState(false);
 
-  const handleTrackPlayerLoaded = useCallback(() => {
+  const handleTrackPlayerLoaded = useCallback(async () => {
+    await TrackPlayer.reset();
     setTrackPlayerLoaded(true);
   }, []);
 
