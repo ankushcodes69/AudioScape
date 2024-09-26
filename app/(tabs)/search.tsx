@@ -95,7 +95,6 @@ export default function SearchScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>YouTube Music Player</ThemedText>
       <ThemedView style={styles.searchContainer}>
         <TextInput
           style={styles.input}
@@ -128,6 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     padding: 20,
+    paddingTop: 40
   },
   title: {
     fontSize: 24,

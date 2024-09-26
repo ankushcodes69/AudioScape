@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ActivityIndicator, Alert } from "react-native";
+import {
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  Image,
+  View,
+  Text,
+} from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import { ThemedView } from "@/components/ThemedView";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import innertube from "@/components/yt";
+import { ThemedText } from "@/components/ThemedText";
 
 interface SearchResult {
   id: string;
@@ -84,6 +92,13 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <ThemedView style={styles.header}>
+        <Image
+          source={require("@/assets/images/transparent-icon.png")}
+          style={styles.logo}
+        />
+        <ThemedText type="title" >AudioScape</ThemedText>
+      </ThemedView>
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
@@ -97,7 +112,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
+    paddingTop: 30,
+  },
+  header: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingTop: 50,
+    padding: 10,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginRight: 5,
+    borderRadius: 50
   },
 });
