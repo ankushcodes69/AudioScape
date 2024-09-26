@@ -22,7 +22,15 @@
         "FOREGROUND_SERVICE"
       ],
       "icon": "./assets/images/icon.png",
-      "package": "com.ankushsarkar.audioscape"
+      "package": "com.ankushsarkar.audioscape",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon-foreground.png",
+        "backgroundImage": "./assets/images/adaptive-icon-background.png"
+      },
+      "backgroundColor": "#252525"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#252525"
     },
     "web": {
       "bundler": "metro",
