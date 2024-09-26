@@ -16,6 +16,7 @@ const setupPlayer = async () => {
       appKilledPlaybackBehavior:
         AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
     },
+    icon: require("@/assets/images/transparent-icon.png"),
     forwardJumpInterval: 10,
     backwardJumpInterval: 10,
     ratingType: RatingType.Heart,

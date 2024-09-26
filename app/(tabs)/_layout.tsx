@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-
+import { FloatingPlayer } from "@/components/FloatingPlayer";
 
 function TabLayoutContent() {
   const colorScheme = useColorScheme();
@@ -47,6 +47,15 @@ function TabLayoutContent() {
           }}
         />
       </Tabs>
+
+      <FloatingPlayer
+        style={{
+          position: "absolute",
+          left: 8,
+          right: 8,
+          bottom: 70,
+        }}
+      />
     </View>
   );
 }

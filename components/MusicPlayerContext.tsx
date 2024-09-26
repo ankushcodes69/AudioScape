@@ -1,7 +1,4 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { StyleSheet, TouchableOpacity, Image } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 import innertube from "@/components/yt";
 import TrackPlayer, { State } from "react-native-track-player";
 
@@ -61,6 +58,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
           id: song.id,
           url: streamUrl,
           title: info.basic_info.title,
+          artist: info.basic_info.author,
           artwork:
             item.thumbnail && item.thumbnail[0]
               ? item.thumbnail[0].url
@@ -106,60 +104,3 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
     </MusicPlayerContext.Provider>
   );
 };
-
-const CurrentSongBar: React.FC<{
-  song: SearchResult;
-  isPlaying: boolean;
-  onPlayPause: () => void;
-}> = ({ song, isPlaying, onPlayPause }) => {
-  return (
-    <ThemedView style={styles.currentSong}>
-      <Image source={{ uri: song.thumbnail }} style={styles.currentThumbnail} />
-      <ThemedView style={styles.currentSongInfo}>
-        <ThemedText style={styles.currentTitle}>{song.title}</ThemedText>
-        <ThemedText style={styles.currentArtist}>{song.artist}</ThemedText>
-      </ThemedView>
-      <TouchableOpacity style={styles.playPauseButton} onPress={onPlayPause}>
-        <ThemedText style={styles.buttonText}>
-          {isPlaying ? "Pause" : "Play"}
-        </ThemedText>
-      </TouchableOpacity>
-    </ThemedView>
-  );
-};
-
-const styles = StyleSheet.create({
-  currentSong: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  currentThumbnail: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  currentSongInfo: {
-    flex: 1,
-  },
-  currentTitle: {
-    color: "white",
-    fontSize: 16,
-  },
-  currentArtist: {
-    color: "#999",
-    fontSize: 14,
-  },
-  playPauseButton: {
-    backgroundColor: "#4CAF50",
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-  },
-});

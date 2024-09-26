@@ -3,9 +3,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Image,
-  View,
-  Text,
+  Image
 } from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import { ThemedView } from "@/components/ThemedView";
