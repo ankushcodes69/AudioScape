@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./assets/images/icon.png" width="256" height="256" style="display: block; margin: 0 auto"/>
+    <img src="./assets/images/transparent-icon.png" width="150" height="150" style="display: block; margin: 0 auto"/>
     <h1>AudioScape</h1>
     <p>AudioScape is a music app to emulate a ad-free version of youtube music.</p>
     
