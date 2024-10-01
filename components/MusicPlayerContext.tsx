@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import innertube from "@/components/yt";
-import TrackPlayer, { State } from "react-native-track-player";
+import TrackPlayer, { State, Track } from "react-native-track-player";
+import { Helpers } from "youtubei.js";
 
 interface SearchResult {
   id: string;
@@ -21,6 +22,12 @@ const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(
   undefined
 );
 
+const isValidUpNextItem = (
+  item: Helpers.YTNode
+): item is Helpers.YTNode & { video_id: string } => {
+  return "video_id" in item && typeof item.video_id === "string";
+};
+
 export const useMusicPlayer = () => {
   const context = useContext(MusicPlayerContext);
   if (!context) {
@@ -31,6 +38,26 @@ export const useMusicPlayer = () => {
 
 interface MusicPlayerProviderProps {
   children: ReactNode;
+}
+
+async function getInfo(inid: string): Promise<Track> {
+  const yt = await innertube;
+  const info = await yt.music.getInfo(inid);
+  const format = info.chooseFormat({ type: "audio", quality: "best" });
+  const streamUrl = `${format?.decipher(yt.session.player)}`;
+  const item = info.basic_info;
+
+  const res = {
+    id: inid,
+    url: streamUrl,
+    title: info.basic_info.title,
+    artist: info.basic_info.author,
+    artwork:
+      item.thumbnail && item.thumbnail[0]
+        ? item.thumbnail[0].url
+        : "https://via.placeholder.com/50",
+  };
+  return res;
 }
 
 export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
@@ -46,30 +73,26 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       setCurrentSong(song);
 
       const yt = await innertube;
-      const info = await yt.music.getInfo(song.id);
-      const format = info.chooseFormat({ type: "audio", quality: "best" });
-      const streamUrl = `${format?.decipher(yt.session.player)}`;
-      const item = info.basic_info;
 
-      const currentTrackIndex = (await TrackPlayer.getActiveTrackIndex()) || -1;
+      await TrackPlayer.reset();
 
-      await TrackPlayer.add(
-        {
-          id: song.id,
-          url: streamUrl,
-          title: info.basic_info.title,
-          artist: info.basic_info.author,
-          artwork:
-            item.thumbnail && item.thumbnail[0]
-              ? item.thumbnail[0].url
-              : "https://via.placeholder.com/50",
-        },
-        currentTrackIndex + 1
-      );
-
-      await TrackPlayer.skipToNext();
+      await TrackPlayer.add(await getInfo(song.id));
 
       await TrackPlayer.play();
+
+      const upNext = (await yt.music.getUpNext(song.id)).contents;
+
+      if (upNext && Array.isArray(upNext) && upNext.length > 0) {
+        for (let i = 1; i < upNext.length; i++) {
+          const item = upNext[i];
+          if (isValidUpNextItem(item)) {
+            const id = item.video_id;
+            const info = await getInfo(id);
+            console.log(info.title);
+            await TrackPlayer.add(info);
+          }
+        }
+      }
 
       setIsPlaying(true);
       setIsLoading(false);
