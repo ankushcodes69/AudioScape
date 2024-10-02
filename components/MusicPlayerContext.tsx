@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useRef,
+} from "react";
 import innertube from "@/components/yt";
 import TrackPlayer, { State, Track } from "react-native-track-player";
 import { Helpers } from "youtubei.js";
@@ -11,7 +17,6 @@ interface SearchResult {
 }
 
 interface MusicPlayerContextType {
-  currentSong: SearchResult | null;
   isPlaying: boolean;
   isLoading: boolean;
   playAudio: (song: SearchResult) => Promise<void>;
@@ -63,41 +68,74 @@ async function getInfo(inid: string): Promise<Track> {
 export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   children,
 }) => {
-  const [currentSong, setCurrentSong] = useState<SearchResult | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const isAddingToQueueRef = useRef<boolean>(false);
 
   const playAudio = async (song: SearchResult) => {
     try {
       setIsLoading(true);
-      setCurrentSong(song);
+
+      // Stop any ongoing queue additions
+      if (isAddingToQueueRef.current) {
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort();
+        }
+        isAddingToQueueRef.current = false;
+      }
+
+      // Create a new AbortController for this playback
+      abortControllerRef.current = new AbortController();
 
       const yt = await innertube;
 
+      // Reset the player and add the new song
       await TrackPlayer.reset();
-
       await TrackPlayer.add(await getInfo(song.id));
-
       await TrackPlayer.play();
 
+      setIsPlaying(true);
+
+      // Start adding up-next songs
+      isAddingToQueueRef.current = true;
       const upNext = (await yt.music.getUpNext(song.id)).contents;
 
       if (upNext && Array.isArray(upNext) && upNext.length > 0) {
         for (let i = 1; i < upNext.length; i++) {
+          // Check if we should stop adding to the queue
+          if (
+            !isAddingToQueueRef.current ||
+            abortControllerRef.current.signal.aborted
+          ) {
+            console.log("Up-next addition stopped");
+            break;
+          }
+
           const item = upNext[i];
           if (isValidUpNextItem(item)) {
             const id = item.video_id;
             const info = await getInfo(id);
-            console.log(info.title);
+            console.log(`Adding to queue: ${info.title}`);
             await TrackPlayer.add(info);
           }
         }
       }
 
-      setIsPlaying(true);
+      isAddingToQueueRef.current = false;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          console.log("Playback aborted");
+        } else {
+          console.error("Error in playAudio:", error.message);
+        }
+      } else {
+        console.error("An unknown error occurred in playAudio");
+      }
+    } finally {
       setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
+      isAddingToQueueRef.current = false;
     }
   };
 
@@ -116,7 +154,6 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   return (
     <MusicPlayerContext.Provider
       value={{
-        currentSong,
         isPlaying,
         isLoading,
         playAudio,

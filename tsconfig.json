@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "lib": ["dom"],
     "strict": true,
     "paths": {
       "@/*": [
