@@ -4,12 +4,14 @@
   "version": "1.2.0",
   "scripts": {
     "start": "expo start",
+    "dev": "APP_VARIANT=development npx expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "build": "eas build --platform android --profile preview --local"
+    "build": "eas build --platform android --profile preview --local",
+    "build-dev": "eas build --platform android --profile development --local"
   },
   "jest": {
     "preset": "jest-expo"
