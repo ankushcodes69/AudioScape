@@ -95,7 +95,7 @@ export default function HomeScreen() {
           source={require("@/assets/images/transparent-icon.png")}
           style={styles.logo}
         />
-        <ThemedText type="title" >AudioScape</ThemedText>
+        <ThemedText type="subtitle" >AudioScape</ThemedText>
       </ThemedView>
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     marginRight: 5,
     borderRadius: 50
   },

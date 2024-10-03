@@ -28,9 +28,9 @@ function TabLayoutContent() {
               style={{
                 ...StyleSheet.absoluteFillObject,
                 overflow: "hidden",
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-                backgroundColor: "#252525",
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                backgroundColor: "#1d1d1d",
               }}
             />
           ),
@@ -66,9 +66,9 @@ function TabLayoutContent() {
       <FloatingPlayer
         style={{
           position: "absolute",
-          left: 8,
-          right: 8,
-          bottom: 60,
+          left: 0,
+          right: 0,
+          bottom: 50,
         }}
       />
     </View>

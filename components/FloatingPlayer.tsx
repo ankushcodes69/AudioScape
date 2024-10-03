@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#252525",
+    backgroundColor: "#1d1d1d",
     padding: 8,
-    borderRadius: 12,
+    borderRadius: 0,
     paddingVertical: 10,
   },
   trackArtworkImage: {
@@ -89,15 +89,15 @@ const styles = StyleSheet.create({
   },
   trackArtist: {
     color: "#fff",
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "300",
     paddingLeft: 10,
   },
   trackControlsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    columnGap: 15,
+    columnGap: 20,
     marginRight: 5,
-    paddingLeft: 8,
+    paddingLeft: 6,
   },
 });

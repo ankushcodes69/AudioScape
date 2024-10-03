@@ -11,7 +11,7 @@ export default {
   splash: {
     image: "./assets/images/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#252525"
+    backgroundColor: "#1d1d1d"
   },
   ios: {
     supportsTablet: true,
@@ -29,10 +29,10 @@ export default {
       foregroundImage: "./assets/images/adaptive-icon-foreground.png",
       backgroundImage: "./assets/images/adaptive-icon-background.png"
     },
-    backgroundColor: "#252525"
+    backgroundColor: "#1d1d1d"
   },
   androidNavigationBar: {
-    backgroundColor: "#252525"
+    backgroundColor: "#1d1d1d"
   },
   web: {
     bundler: "metro",
