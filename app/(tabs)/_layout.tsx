@@ -19,7 +19,10 @@ function TabLayoutContent() {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             borderTopWidth: 0,
-            paddingTop: 8,
+            paddingTop: 2,
+          },
+          tabBarLabelStyle: {
+            fontSize: 10,
           },
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
           headerShown: false,

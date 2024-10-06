@@ -5,23 +5,21 @@ import {
 } from "@/components/PlayerControls";
 import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
 import { useRouter } from "expo-router";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewProps,
-  Image,
-} from "react-native";
+import { StyleSheet, View, ViewProps, Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useActiveTrack } from "react-native-track-player";
 import { MovingText } from "@/components/MovingText";
 
 export const FloatingPlayer = ({ style }: ViewProps) => {
   const activeTrack = useActiveTrack();
   const lastActiveTrack = useLastActiveTrack();
+  const router = useRouter();
 
   const displayedTrack = activeTrack ?? lastActiveTrack;
 
-  const handlePress = () => {};
+  const handlePress = () => {
+    router.navigate("/player");
+  };
 
   if (!displayedTrack) return null;
 
@@ -43,12 +41,12 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
           <MovingText
             style={styles.trackTitle}
             text={displayedTrack.title ?? ""}
-            animationThreshold={25}
+            animationThreshold={20}
           />
           <MovingText
             style={styles.trackArtist}
             text={displayedTrack.artist ?? ""}
-            animationThreshold={25}
+            animationThreshold={20}
           />
         </View>
 
@@ -69,12 +67,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#1d1d1d",
     padding: 8,
     borderRadius: 0,
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
   trackArtworkImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     borderRadius: 8,
+    marginLeft: 8,
   },
   trackTitleContainer: {
     flex: 1,
@@ -82,16 +81,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   trackTitle: {
-    color: "#fff",
+    color: "#f2f2f0",
     fontSize: 18,
     fontWeight: "600",
-    paddingLeft: 10,
+    paddingLeft: 0,
   },
   trackArtist: {
-    color: "#fff",
+    color: "#a9a9a9",
     fontSize: 12,
-    fontWeight: "300",
-    paddingLeft: 10,
+    fontWeight: "500",
+    paddingLeft: 0,
   },
   trackControlsContainer: {
     flexDirection: "row",

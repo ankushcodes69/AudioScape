@@ -4,6 +4,7 @@ import React, {
   useContext,
   ReactNode,
   useRef,
+  useCallback,
 } from "react";
 import innertube from "@/components/yt";
 import TrackPlayer, { State, Track } from "react-native-track-player";
@@ -26,6 +27,10 @@ interface MusicPlayerContextType {
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(
   undefined
 );
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const isValidUpNextItem = (
   item: Helpers.YTNode
@@ -72,82 +77,119 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const isAddingToQueueRef = useRef<boolean>(false);
+  const currentSongIdRef = useRef<string | null>(null);
+
+  const log = useCallback((message: string) => {
+    console.log(`[MusicPlayer] ${message}`);
+  }, []);
+
+  const resetPlayerState = useCallback(async () => {
+    log("Resetting player state");
+    if (isAddingToQueueRef.current) {
+      log("Stopping ongoing queue additions");
+      isAddingToQueueRef.current = false;
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    }
+    // Wait for any ongoing operations to complete
+    await delay(200);
+    await TrackPlayer.reset();
+    currentSongIdRef.current = null;
+  }, [log]);
+
+  const addUpNextSongs = useCallback(
+    async (songId: string) => {
+      log(`Starting to add up-next songs for ${songId}`);
+      isAddingToQueueRef.current = true;
+      abortControllerRef.current = new AbortController();
+
+      try {
+        const yt = await innertube;
+        const upNext = (await yt.music.getUpNext(songId)).contents;
+
+        if (upNext && Array.isArray(upNext) && upNext.length > 0) {
+          for (let i = 1; i < upNext.length; i++) {
+            if (
+              !isAddingToQueueRef.current ||
+              abortControllerRef.current.signal.aborted
+            ) {
+              log("Up-next addition stopped");
+              break;
+            }
+
+            const item = upNext[i];
+            if (isValidUpNextItem(item)) {
+              const id = item.video_id;
+              const info = await getInfo(id);
+              log(`Adding to queue: ${info.title}`);
+              await TrackPlayer.add(info);
+            }
+
+            // Add a small delay between each addition to allow for interruption
+            await delay(100);
+          }
+        }
+      } catch (error) {
+        log(
+          `Error adding up-next songs: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`
+        );
+      } finally {
+        isAddingToQueueRef.current = false;
+        log("Finished adding up-next songs");
+      }
+    },
+    [log]
+  );
 
   const playAudio = async (song: SearchResult) => {
     try {
+      log(`Starting playback for song: ${song.title}`);
       setIsLoading(true);
 
-      // Stop any ongoing queue additions
-      if (isAddingToQueueRef.current) {
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort();
-        }
-        isAddingToQueueRef.current = false;
-      }
+      await resetPlayerState();
 
-      // Create a new AbortController for this playback
-      abortControllerRef.current = new AbortController();
-
-      const yt = await innertube;
-
-      // Reset the player and add the new song
-      await TrackPlayer.reset();
-      await TrackPlayer.add(await getInfo(song.id));
+      const info = await getInfo(song.id);
+      await TrackPlayer.add(info);
       await TrackPlayer.play();
 
       setIsPlaying(true);
+      currentSongIdRef.current = song.id;
 
-      // Start adding up-next songs
-      isAddingToQueueRef.current = true;
-      const upNext = (await yt.music.getUpNext(song.id)).contents;
-
-      if (upNext && Array.isArray(upNext) && upNext.length > 0) {
-        for (let i = 1; i < upNext.length; i++) {
-          // Check if we should stop adding to the queue
-          if (
-            !isAddingToQueueRef.current ||
-            abortControllerRef.current.signal.aborted
-          ) {
-            console.log("Up-next addition stopped");
-            break;
-          }
-
-          const item = upNext[i];
-          if (isValidUpNextItem(item)) {
-            const id = item.video_id;
-            const info = await getInfo(id);
-            console.log(`Adding to queue: ${info.title}`);
-            await TrackPlayer.add(info);
-          }
-        }
-      }
-
-      isAddingToQueueRef.current = false;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        if (error.name === "AbortError") {
-          console.log("Playback aborted");
-        } else {
-          console.error("Error in playAudio:", error.message);
-        }
-      } else {
-        console.error("An unknown error occurred in playAudio");
-      }
+      // Start adding up-next songs after a short delay
+      setTimeout(() => addUpNextSongs(song.id), 1000);
+    } catch (error) {
+      log(
+        `Error in playAudio: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     } finally {
       setIsLoading(false);
-      isAddingToQueueRef.current = false;
     }
   };
 
   const togglePlayPause = async () => {
-    const currentState = (await TrackPlayer.getPlaybackState()).state;
+    try {
+      const currentState = (await TrackPlayer.getPlaybackState()).state;
 
-    if (currentState === State.Playing) {
-      await TrackPlayer.pause();
-      setIsPlaying(false);
-    } else {
-      await TrackPlayer.play();
-      setIsPlaying(true);
+      if (currentState === State.Playing) {
+        await TrackPlayer.pause();
+        setIsPlaying(false);
+        log("Playback paused");
+      } else {
+        await TrackPlayer.play();
+        setIsPlaying(true);
+        log("Playback resumed");
+      }
+    } catch (error) {
+      log(
+        `Error in togglePlayPause: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   };
 
