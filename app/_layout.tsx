@@ -13,6 +13,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useSetupTrackPlayer } from "@/hooks/useSetupTrackPlayer";
 import { useLogTrackPlayerState } from "@/hooks/useLogTrackPlayerState";
+import useNotificationClickHandler from "@/hooks/useNotificationClickHandler";
 import TrackPlayer from "react-native-track-player";
 import { playbackService } from "@/constants/playbackService";
 import { MusicPlayerProvider } from "@/components/MusicPlayerContext";
@@ -39,6 +40,7 @@ export default function RootLayout() {
   });
 
   useLogTrackPlayerState();
+  useNotificationClickHandler();
 
   // Effect to hide the splash screen once both the fonts and TrackPlayer have loaded
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function RootLayout() {
               <Stack.Screen
                 name="player"
                 options={{
-                  presentation: "card",
+                  presentation: "transparentModal",
                   gestureEnabled: true,
                   gestureDirection: "vertical",
                   animationDuration: 400,

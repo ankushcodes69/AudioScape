@@ -1,47 +1,54 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
+import React, { ReactNode } from "react";
+import { StyleSheet, Dimensions } from "react-native";
+import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
+  useAnimatedGestureHandler,
   useAnimatedStyle,
+  withTiming,
   withSpring,
   runOnJS,
-  useAnimatedGestureHandler,
+  Easing,
 } from "react-native-reanimated";
+import { useRouter } from "expo-router";
 
-type Props = {
-  children: React.ReactNode;
-};
+const { height } = Dimensions.get("window");
 
-type ContextType = {
-  startY: number;
-};
+interface SwipeToDismissPlayerProps {
+  children: ReactNode;
+}
 
-const VerticalSwipeGesture: React.FC<Props> = ({ children }) => {
-  const router = useRouter();
+const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
+  children,
+}) => {
   const translateY = useSharedValue(0);
+  const router = useRouter();
 
-  const gestureHandler = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    ContextType
-  >({
-    onStart: (_, context) => {
-      context.startY = translateY.value;
-    },
-    onActive: (event, context) => {
-      translateY.value = context.startY + event.translationY;
+  const goBack = () => {
+    router.back();
+  };
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onActive: (event) => {
+      if (event.translationY > 0) {
+        translateY.value = event.translationY;
+      }
     },
     onEnd: (event) => {
-      if (event.translationY > 150) {
-        runOnJS(router.back)();
-      } else if (event.translationY < -150) {
-        runOnJS(router.navigate)("/player");
+      if (event.translationY > height * 0.2) {
+        translateY.value = withTiming(
+          height + 100,
+          {
+            duration: 1000,
+            easing: Easing.out(Easing.exp),
+          },
+          () => {
+            runOnJS(goBack)();
+          }
+        );
+      } else {
+        translateY.value = withSpring(0);
       }
-      translateY.value = withSpring(0);
     },
   });
 
@@ -63,9 +70,7 @@ const VerticalSwipeGesture: React.FC<Props> = ({ children }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 
-export default VerticalSwipeGesture;
+export default SwipeToDismissPlayer;

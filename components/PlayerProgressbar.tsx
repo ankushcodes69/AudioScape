@@ -1,4 +1,4 @@
-import {fontSize } from "@/constants/tokens";
+import { fontSize } from "@/constants/tokens";
 import { Colors } from "@/constants/Colors";
 import { formatSecondsToMinutes } from "@/helpers/miscellaneous";
 import { defaultStyles, utilsStyles } from "@/styles";
