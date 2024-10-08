@@ -5,10 +5,18 @@ import {
 } from "@/components/PlayerControls";
 import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
 import { useRouter } from "expo-router";
-import { StyleSheet, View, ViewProps, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  StyleSheet,
+  View,
+  ViewProps,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { useActiveTrack } from "react-native-track-player";
 import { MovingText } from "@/components/MovingText";
+
+const screenWidth = Dimensions.get("window").width;
 
 export const FloatingPlayer = ({ style }: ViewProps) => {
   const activeTrack = useActiveTrack();
@@ -24,12 +32,8 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
   if (!displayedTrack) return null;
 
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      activeOpacity={0.9}
-      style={[styles.container, style]}
-    >
-      <>
+    <View style={[styles.container, style]}>
+      <TouchableOpacity onPress={handlePress} activeOpacity={0.5} style={styles.touchableArea}>
         <Image
           source={{
             uri: displayedTrack.artwork,
@@ -46,17 +50,17 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
           <MovingText
             style={styles.trackArtist}
             text={displayedTrack.artist ?? ""}
-            animationThreshold={20}
+            animationThreshold={50}
           />
         </View>
+      </TouchableOpacity>
 
-        <View style={styles.trackControlsContainer}>
-          <SkipToPreviousButton iconSize={22} />
-          <PlayPauseButton iconSize={24} />
-          <SkipToNextButton iconSize={22} />
-        </View>
-      </>
-    </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.5} style={styles.trackControlsContainer}>
+        <SkipToPreviousButton iconSize={22} />
+        <PlayPauseButton iconSize={22} />
+        <SkipToNextButton iconSize={22} />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -68,6 +72,12 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 0,
     paddingVertical: 8,
+    width: screenWidth,
+  },
+  touchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: screenWidth - 120,
   },
   trackArtworkImage: {
     width: 50,
@@ -95,8 +105,8 @@ const styles = StyleSheet.create({
   trackControlsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    columnGap: 20,
-    marginRight: 5,
-    paddingLeft: 6,
+    columnGap: 18,
+    marginRight: 3,
+    paddingLeft: 2,
   },
 });

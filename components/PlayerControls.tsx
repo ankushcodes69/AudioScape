@@ -1,16 +1,13 @@
-import { FontAwesome6 } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
+import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
-import TrackPlayer, { useIsPlaying } from "react-native-track-player";
-
-export const colors = {
-  primary: "#fc3c44",
-  background: "#000",
-  text: "#fff",
-  textMuted: "#9ca3af",
-  icon: "#fff",
-  maximumTrackTintColor: "rgba(255,255,255,0.4)",
-  minimumTrackTintColor: "rgba(255,255,255,0.6)",
-};
+import TrackPlayer, {
+  useIsPlaying,
+  RepeatMode,
+} from "react-native-track-player";
+import { useTrackPlayerRepeatMode } from "@/hooks/useTrackPlayerRepeatMode";
+import { ComponentProps } from "react";
+import { match } from "ts-pattern";
 
 type PlayerControlsProps = {
   style?: ViewStyle;
@@ -30,6 +27,8 @@ export const PlayerControls = ({ style }: PlayerControlsProps) => {
         <PlayPauseButton />
 
         <SkipToNextButton />
+
+        <RepeatToggle />
       </View>
     </View>
   );
@@ -44,13 +43,13 @@ export const PlayPauseButton = ({
   return (
     <View style={[{ height: iconSize }, style]}>
       <TouchableOpacity
-        activeOpacity={0.85}
+        activeOpacity={0.5}
         onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
       >
         <FontAwesome6
           name={playing ? "pause" : "play"}
           size={iconSize}
-          color={colors.text}
+          color={Colors.dark.text}
         />
       </TouchableOpacity>
     </View>
@@ -60,10 +59,10 @@ export const PlayPauseButton = ({
 export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={0.5}
       onPress={() => TrackPlayer.skipToNext()}
     >
-      <FontAwesome6 name="forward" size={iconSize} color={colors.text} />
+      <FontAwesome6 name="forward" size={iconSize} color={Colors.dark.text} />
     </TouchableOpacity>
   );
 };
@@ -71,17 +70,64 @@ export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
 export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={0.5}
       onPress={() => TrackPlayer.skipToPrevious()}
     >
-      <FontAwesome6 name={"backward"} size={iconSize} color={colors.text} />
+      <FontAwesome6
+        name={"backward"}
+        size={iconSize}
+        color={Colors.dark.text}
+      />
     </TouchableOpacity>
+  );
+};
+
+type RepeatIconProps = Omit<
+  ComponentProps<typeof MaterialCommunityIcons>,
+  "name"
+>;
+type RepeatIconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
+
+const repeatOrder = [
+  RepeatMode.Off,
+  RepeatMode.Track,
+  RepeatMode.Queue,
+] as const;
+
+export const RepeatToggle = ({ ...iconProps }: RepeatIconProps) => {
+  const { repeatMode, changeRepeatMode } = useTrackPlayerRepeatMode();
+
+  const toggleRepeatMode = () => {
+    if (repeatMode == null) return;
+
+    const currentIndex = repeatOrder.indexOf(repeatMode);
+    const nextIndex = (currentIndex + 1) % repeatOrder.length;
+
+    changeRepeatMode(repeatOrder[nextIndex]);
+  };
+
+  const icon = match(repeatMode)
+    .returnType<RepeatIconName>()
+    .with(RepeatMode.Off, () => "repeat-off")
+    .with(RepeatMode.Track, () => "repeat-once")
+    .with(RepeatMode.Queue, () => "repeat")
+    .otherwise(() => "repeat-off");
+
+  return (
+    <MaterialCommunityIcons
+      name={icon}
+      onPress={toggleRepeatMode}
+      color={Colors.dark.text}
+      size={30}
+      {...iconProps}
+    />
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    marginLeft: 37.5,
   },
   row: {
     flexDirection: "row",

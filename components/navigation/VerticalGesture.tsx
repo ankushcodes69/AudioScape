@@ -35,12 +35,12 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
       }
     },
     onEnd: (event) => {
-      if (event.translationY > height * 0.2) {
+      if (event.translationY > height * 0.1) {
         translateY.value = withTiming(
           height + 100,
           {
-            duration: 1000,
-            easing: Easing.out(Easing.exp),
+            duration: 600,
+            easing: Easing.out(Easing.linear),
           },
           () => {
             runOnJS(goBack)();

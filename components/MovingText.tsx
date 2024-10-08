@@ -32,8 +32,8 @@ export const MovingText = ({
     translateX.value = withDelay(
       1000,
       withRepeat(
-        withTiming(-textWidth, {
-          duration: 5000,
+        withTiming(-textWidth-70, {
+          duration: 6000,
           easing: Easing.linear,
         }),
         -1,
