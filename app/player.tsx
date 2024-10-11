@@ -4,10 +4,11 @@ import { PlayerProgressBar } from "@/components/PlayerProgressbar";
 import { fontSize, screenPadding } from "@/constants/tokens";
 import { Colors } from "@/constants/Colors";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
-//import { useTrackPlayerFavorite } from "@/hooks/useTrackPlayerFavorite";
-import { defaultStyles, utilsStyles } from "@/styles";
+import { useTrackPlayerFavorite } from "@/hooks/useTrackPlayerFavorite";
+import { defaultStyles } from "@/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import FastImage from "react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
@@ -21,7 +22,7 @@ const PlayerScreen = () => {
 
   const { top, bottom } = useSafeAreaInsets();
 
-  //const { isFavorite, toggleFavorite } = useTrackPlayerFavorite();
+  const { isFavorite, toggleFavoriteFunc } = useTrackPlayerFavorite();
 
   if (!activeTrack) {
     return (
@@ -75,14 +76,17 @@ const PlayerScreen = () => {
                       />
                     </View>
 
-                    {/* Favorite button icon
-                  <FontAwesome
-                    name={isFavorite ? "heart" : "heart-o"}
-                    size={20}
-                    color={isFavorite ? colors.primary : colors.icon}
-                    style={{ marginHorizontal: 14 }}
-                    onPress={toggleFavorite}
-                  />*/}
+                    {/* Favorite button icon*/}
+                    <FontAwesome
+                      name={isFavorite ? "heart" : "heart-o"}
+                      size={20}
+                      color={isFavorite ? "#ff0000" : Colors.dark.icon}
+                      style={{ marginHorizontal: 14 }}
+                      onPress={() => {
+                        console.log("Heart pressed");
+                        toggleFavoriteFunc();
+                      }}
+                    />
                   </View>
 
                   {/* Track artist */}

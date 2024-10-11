@@ -21,6 +21,7 @@ export default {
     permissions: [
       "READ_EXTERNAL_STORAGE",
       "WRITE_EXTERNAL_STORAGE",
+      "MANAGE_EXTERNAL_STORAGE", 
       "FOREGROUND_SERVICE"
     ],
     icon: "./assets/images/icon.png",

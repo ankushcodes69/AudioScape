@@ -17,8 +17,9 @@ import useNotificationClickHandler from "@/hooks/useNotificationClickHandler";
 import TrackPlayer from "react-native-track-player";
 import { playbackService } from "@/constants/playbackService";
 import { MusicPlayerProvider } from "@/components/MusicPlayerContext";
+import { initializeLibrary, store } from "@/store/library";
+import { Provider } from "react-redux";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 TrackPlayer.registerPlaybackService(() => playbackService);
@@ -42,11 +43,16 @@ export default function RootLayout() {
   useLogTrackPlayerState();
   useNotificationClickHandler();
 
-  // Effect to hide the splash screen once both the fonts and TrackPlayer have loaded
+  // Effect to initialize the library and hide the splash screen
   useEffect(() => {
-    if (fontsLoaded && trackPlayerLoaded) {
-      SplashScreen.hideAsync();
-    }
+    const initialize = async () => {
+      await initializeLibrary();
+      if (fontsLoaded && trackPlayerLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    };
+
+    initialize();
   }, [fontsLoaded, trackPlayerLoaded]);
 
   if (!fontsLoaded || !trackPlayerLoaded) {
@@ -54,29 +60,31 @@ export default function RootLayout() {
   }
 
   return (
-    <MusicPlayerProvider>
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="player"
-                options={{
-                  presentation: "transparentModal",
-                  gestureEnabled: true,
-                  gestureDirection: "vertical",
-                  animationDuration: 400,
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </ThemeProvider>
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
-    </MusicPlayerProvider>
+    <Provider store={store}>
+      <MusicPlayerProvider>
+        <SafeAreaProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="player"
+                  options={{
+                    presentation: "transparentModal",
+                    gestureEnabled: true,
+                    gestureDirection: "vertical",
+                    animationDuration: 400,
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </ThemeProvider>
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
+      </MusicPlayerProvider>
+    </Provider>
   );
 }
