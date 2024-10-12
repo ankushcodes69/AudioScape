@@ -4,6 +4,7 @@ export default {
   name: IS_DEV ? "AudioScape (Dev)" : "AudioScape",
   slug: "AudioScape",
   version: "1.2.0",
+  platforms: ["android"],
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   scheme: IS_DEV ? "audioscape-dev" : "audioscape",
@@ -13,16 +14,12 @@ export default {
     resizeMode: "contain",
     backgroundColor: "#1d1d1d"
   },
-  ios: {
-    supportsTablet: true,
-    bundleIdentifier: IS_DEV ? "com.ankushsarkar.audioscape.dev" : "com.ankushsarkar.audioscape",
-  },
   android: {
     permissions: [
-      "READ_EXTERNAL_STORAGE",
-      "WRITE_EXTERNAL_STORAGE",
-      "MANAGE_EXTERNAL_STORAGE", 
-      "FOREGROUND_SERVICE"
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.MANAGE_EXTERNAL_STORAGE",
+      "android.permission.FOREGROUND_SERVICE"
     ],
     icon: "./assets/images/icon.png",
     package: IS_DEV ? "com.ankushsarkar.audioscape.dev" : "com.ankushsarkar.audioscape",
@@ -34,11 +31,6 @@ export default {
   },
   androidNavigationBar: {
     backgroundColor: "#1d1d1d"
-  },
-  web: {
-    bundler: "metro",
-    output: "static",
-    favicon: "./assets/images/favicon.png"
   },
   plugins: ["expo-router"],
   experiments: {
