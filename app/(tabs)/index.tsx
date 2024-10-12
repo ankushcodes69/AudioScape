@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-  Image
-} from "react-native";
+import { StyleSheet, ActivityIndicator, Alert, Image } from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import { ThemedView } from "@/components/ThemedView";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import innertube from "@/components/yt";
 import { ThemedText } from "@/components/ThemedText";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { useRouter } from "expo-router";
 
-interface SearchResult {
+interface FeedResult {
   id: string;
   title: string;
   artist: string;
@@ -35,9 +32,10 @@ function isMusicCarouselShelf(
 }
 
 export default function HomeScreen() {
-  const [homeFeedResults, setHomeFeedResults] = useState<SearchResult[]>([]);
+  const [homeFeedResults, setHomeFeedResults] = useState<FeedResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { playAudio } = useMusicPlayer();
+  const router = useRouter();
 
   useEffect(() => {
     const getHomeFeed = async () => {
@@ -53,7 +51,7 @@ export default function HomeScreen() {
             isMusicCarouselShelf(firstSection) &&
             Array.isArray(firstSection.contents)
           ) {
-            const formattedResults: SearchResult[] = firstSection.contents
+            const formattedResults: FeedResult[] = firstSection.contents
               .filter((item: any) => item?.id && item?.title)
               .map((item: any) => ({
                 id: item.id,
@@ -84,7 +82,7 @@ export default function HomeScreen() {
     getHomeFeed();
   }, []);
 
-  const handleSongSelect = (song: SearchResult) => {
+  const handleSongSelect = (song: FeedResult) => {
     playAudio(song);
   };
 
@@ -95,7 +93,16 @@ export default function HomeScreen() {
           source={require("@/assets/images/transparent-icon.png")}
           style={styles.logo}
         />
-        <ThemedText type="subtitle" >AudioScape</ThemedText>
+        <ThemedText type="subtitle">AudioScape</ThemedText>
+        <EvilIcons
+          name={"search"}
+          color={"white"}
+          style={{ marginLeft: 165 }}
+          size={35}
+          onPress={() => {
+            router.navigate("/search");
+          }}
+        />
       </ThemedView>
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
@@ -121,6 +128,6 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     marginRight: 5,
-    borderRadius: 50
+    borderRadius: 50,
   },
 });
