@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import * as NavigationBar from "expo-navigation-bar";
 import { useActiveTrack } from "react-native-track-player";
 import { MovingText } from "@/components/MovingText";
 
@@ -27,13 +28,19 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 
   const handlePress = () => {
     router.navigate("/player");
+    NavigationBar.setVisibilityAsync("hidden");
+    NavigationBar.setBehaviorAsync("overlay-swipe");
   };
 
   if (!displayedTrack) return null;
 
   return (
     <View style={[styles.container, style]}>
-      <TouchableOpacity onPress={handlePress} activeOpacity={0.5} style={styles.touchableArea}>
+      <TouchableOpacity
+        onPress={handlePress}
+        activeOpacity={0.5}
+        style={styles.touchableArea}
+      >
         <Image
           source={{
             uri: displayedTrack.artwork,
@@ -55,7 +62,10 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity activeOpacity={0.5} style={styles.trackControlsContainer}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.trackControlsContainer}
+      >
         <SkipToPreviousButton iconSize={22} />
         <PlayPauseButton iconSize={22} />
         <SkipToNextButton iconSize={22} />

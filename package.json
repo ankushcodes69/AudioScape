@@ -10,7 +10,9 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "build": "eas build --platform android --profile preview --local",
-    "build-dev": "eas build --platform android --profile development --local"
+    "build-dev": "eas build --platform android --profile development --local",
+    "build-eas": "eas build --platform android --profile preview",
+    "build-dev-eas": "eas build --platform android --profile development"
   },
   "jest": {
     "preset": "jest-expo"
@@ -52,7 +54,8 @@
     "text-encoding-polyfill": "^0.6.7",
     "ts-pattern": "^5.4.0",
     "web-streams-polyfill": "^3.3.2",
-    "youtubei.js": "^10.5.0"
+    "youtubei.js": "^10.5.0",
+    "expo-navigation-bar": "~3.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
