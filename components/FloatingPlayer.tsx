@@ -14,14 +14,27 @@ import {
   Dimensions,
 } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
+import color from "color";
 import { useActiveTrack } from "react-native-track-player";
+import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { MovingText } from "@/components/MovingText";
 
 const screenWidth = Dimensions.get("window").width;
 
 export const FloatingPlayer = ({ style }: ViewProps) => {
-  const activeTrack = useActiveTrack();
   const lastActiveTrack = useLastActiveTrack();
+  const activeTrack = useActiveTrack();
+  const { imageColors } = usePlayerBackground(
+    activeTrack?.artwork ?? "https://via.placeholder.com/50"
+  );
+  const dominantColor = activeTrack ? imageColors?.dominant : "#1d1d1d";
+  const darkerColor =
+    dominantColor === "#1d1d1d"
+      ? "#1d1d1d"
+      : color(dominantColor).darken(0.5).hex();
+
+  NavigationBar.setBackgroundColorAsync(`${darkerColor}`);
+
   const router = useRouter();
 
   const displayedTrack = activeTrack ?? lastActiveTrack;
@@ -35,7 +48,7 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
   if (!displayedTrack) return null;
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, { backgroundColor: darkerColor }, style]}>
       <TouchableOpacity
         onPress={handlePress}
         activeOpacity={0.5}
@@ -78,22 +91,20 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1d1d1d",
     padding: 8,
-    borderRadius: 0,
+    borderRadius: 12,
     paddingVertical: 8,
-    width: screenWidth,
   },
   touchableArea: {
     flexDirection: "row",
     alignItems: "center",
-    width: screenWidth - 120,
+    width: screenWidth - 125,
   },
   trackArtworkImage: {
     width: 50,
     height: 50,
     borderRadius: 8,
-    marginLeft: 8,
+    marginLeft: 0,
   },
   trackTitleContainer: {
     flex: 1,
@@ -115,8 +126,8 @@ const styles = StyleSheet.create({
   trackControlsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    columnGap: 18,
-    marginRight: 3,
+    columnGap: 15,
+    marginRight: 9,
     paddingLeft: 2,
   },
 });

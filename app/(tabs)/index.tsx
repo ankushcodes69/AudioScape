@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ActivityIndicator, Alert, Image } from "react-native";
+import { StyleSheet, ActivityIndicator, Alert, Image} from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import { ThemedView } from "@/components/ThemedView";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
@@ -100,7 +100,7 @@ export default function HomeScreen() {
           style={{ marginLeft: 165 }}
           size={35}
           onPress={() => {
-            router.navigate("/search");
+            router.navigate("/(tabs)/search");
           }}
         />
       </ThemedView>

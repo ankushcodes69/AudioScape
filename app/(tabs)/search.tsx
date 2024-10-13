@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   Image,
   FlatList,
   Alert,
+  SafeAreaView,
+  Keyboard,
+  TextInput,
 } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { useRouter, useFocusEffect } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import innertube from "@/components/yt";
 
@@ -24,7 +29,10 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { top} = useSafeAreaInsets();
+  const router = useRouter();
   const { playAudio } = useMusicPlayer();
+  const searchBarRef = useRef<TextInput>(null);
 
   const handleSearch = async () => {
     if (!searchQuery) return;
@@ -76,6 +84,14 @@ export default function SearchScreen() {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    async function fetchResults() {
+      await handleSearch();
+    }
+
+    fetchResults();
+  }, [searchQuery]);
+
   const handleSongSelect = (song: SearchResult) => {
     playAudio(song);
   };
@@ -93,20 +109,41 @@ export default function SearchScreen() {
     </TouchableOpacity>
   );
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (searchBarRef.current) {
+        searchBarRef.current.focus();
+      }
+    }, [])
+  );
+
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          placeholder="Search for a song"
-          placeholderTextColor="#999"
-        />
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <ThemedText style={styles.buttonText}>Search</ThemedText>
-        </TouchableOpacity>
-      </ThemedView>
+    <SafeAreaView style={[styles.container, { paddingTop: top }]}>
+      <Searchbar
+        placeholder="Search for a song"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        mode={"bar"}
+        autoFocus
+        icon={{ source: "arrow-left", direction: "auto" }}
+        iconColor="white"
+        onIconPress={() => {
+          Keyboard.dismiss();
+          router.back();
+        }}
+        onClearIconPress={() => {
+          Keyboard.dismiss();
+        }}
+        style={styles.searchbar}
+        inputStyle={{ color: "white" }}
+        placeholderTextColor="#999"
+        theme={{
+          colors: {
+            primary: "white",
+          },
+        }}
+        ref={searchBarRef}
+      />
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
@@ -117,7 +154,7 @@ export default function SearchScreen() {
           style={styles.searchResults}
         />
       )}
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 
@@ -126,40 +163,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: 20,
-    paddingTop: 40
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "white",
-    margin: 20,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    width: "100%",
-    marginBottom: 20,
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    borderColor: "#444",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    color: "white",
-    backgroundColor: "#333",
-    marginRight: 10,
-  },
-  searchButton: {
-    backgroundColor: "#4CAF50",
-    padding: 10,
-    borderRadius: 5,
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
+  searchbar: {
+    width: "95%",
+    backgroundColor: "#1a1a1a",
   },
   searchResults: {
     width: "100%",

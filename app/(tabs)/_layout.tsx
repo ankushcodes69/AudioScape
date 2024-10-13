@@ -1,14 +1,25 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { View, StyleSheet } from "react-native";
-
+import color from "color";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useActiveTrack } from "react-native-track-player";
+import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 
 function TabLayoutContent() {
   const colorScheme = useColorScheme();
+  const activeTrack = useActiveTrack();
+  const { imageColors } = usePlayerBackground(
+    activeTrack?.artwork ?? "https://via.placeholder.com/50"
+  );
+  const dominantColor = activeTrack ? imageColors?.dominant : "#1d1d1d";
+  const darkerColor =
+    dominantColor === "#1d1d1d"
+      ? "#1d1d1d"
+      : color(dominantColor).darken(0.5).hex();
 
   return (
     <View style={{ flex: 1, backgroundColor: "#000" }}>
@@ -16,8 +27,8 @@ function TabLayoutContent() {
         screenOptions={{
           tabBarStyle: {
             backgroundColor: Colors[colorScheme ?? "light"].background,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
             borderTopWidth: 0,
             paddingTop: 2,
           },
@@ -31,9 +42,9 @@ function TabLayoutContent() {
               style={{
                 ...StyleSheet.absoluteFillObject,
                 overflow: "hidden",
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-                backgroundColor: "#1d1d1d",
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
+                backgroundColor: darkerColor,
               }}
             />
           ),
@@ -51,14 +62,21 @@ function TabLayoutContent() {
             ),
           }}
         />
+
+        <Tabs.Screen
+          name="search"
+          options={{
+            tabBarButton: () => <View />,
+          }}
+        />
       </Tabs>
 
       <FloatingPlayer
         style={{
           position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 50,
+          left: 8,
+          right: 8,
+          bottom: 60,
         }}
       />
     </View>
