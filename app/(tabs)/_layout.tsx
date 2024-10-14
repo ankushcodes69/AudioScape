@@ -64,6 +64,19 @@ function TabLayoutContent() {
         />
 
         <Tabs.Screen
+          name="favorites"
+          options={{
+            title: "Favorites",
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon
+                name={focused ? "heart" : "heart-outline"}
+                color={color}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
           name="search"
           options={{
             tabBarButton: () => <View />,
