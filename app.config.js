@@ -15,6 +15,7 @@ export default {
     backgroundColor: "#1d1d1d"
   },
   android: {
+    softwareKeyboardLayoutMode: "pan",
     permissions: [
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",

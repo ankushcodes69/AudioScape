@@ -29,7 +29,7 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { top} = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const router = useRouter();
   const { playAudio } = useMusicPlayer();
   const searchBarRef = useRef<TextInput>(null);
@@ -118,7 +118,9 @@ export default function SearchScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: top }]}>
+    <SafeAreaView
+      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
+    >
       <Searchbar
         placeholder="Search for a song"
         value={searchQuery}

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ActivityIndicator, Alert, Image} from "react-native";
+import { StyleSheet, ActivityIndicator, Alert, Image } from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import { ThemedView } from "@/components/ThemedView";
-import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import innertube from "@/components/yt";
 import { ThemedText } from "@/components/ThemedText";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
 interface FeedResult {
@@ -34,6 +35,7 @@ function isMusicCarouselShelf(
 export default function HomeScreen() {
   const [homeFeedResults, setHomeFeedResults] = useState<FeedResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { top, bottom } = useSafeAreaInsets();
   const { playAudio } = useMusicPlayer();
   const router = useRouter();
 
@@ -87,7 +89,9 @@ export default function HomeScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView
+      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
+    >
       <ThemedView style={styles.header}>
         <Image
           source={require("@/assets/images/transparent-icon.png")}
@@ -117,7 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    paddingTop: 30,
   },
   header: {
     flexDirection: "row",

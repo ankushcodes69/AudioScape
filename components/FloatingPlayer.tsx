@@ -41,8 +41,6 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 
   const handlePress = () => {
     router.navigate("/player");
-    NavigationBar.setVisibilityAsync("hidden");
-    NavigationBar.setBehaviorAsync("overlay-swipe");
   };
 
   if (!displayedTrack) return null;
