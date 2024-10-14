@@ -3,7 +3,7 @@ const IS_DEV = process.env.APP_VARIANT === 'development';
 export default {
   name: IS_DEV ? "AudioScape (Dev)" : "AudioScape",
   slug: "AudioScape",
-  version: "1.2.0",
+  version: "1.3.0",
   platforms: ["android"],
   orientation: "portrait",
   icon: "./assets/images/icon.png",
