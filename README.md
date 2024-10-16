@@ -1,7 +1,7 @@
 <div align="center">
     <img src="./assets/images/transparent-icon.png" width="150" height="150" style="display: block; margin: 0 auto"/>
     <h1>AudioScape</h1>
-    <p>A Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.</p>
+    <p>An Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.</p>
     
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&label=Last%20Commit&labelColor=ce5601&color=ce6c01)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Total%20Commits&labelColor=ce5601&color=ce6c01)
