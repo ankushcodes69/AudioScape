@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   header: {
+    color: "white",
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   title: {
+    color: "white",
     fontSize: 14,
     fontWeight: "bold",
     marginTop: 5,

@@ -102,7 +102,7 @@ export default function HomeScreen() {
           source={require("@/assets/images/transparent-icon.png")}
           style={styles.logo}
         />
-        <Text style={styles.headertext}>AudioScape</Text>
+        <Text style={styles.headerText}>AudioScape</Text>
         <EvilIcons
           name={"search"}
           color={"white"}
@@ -132,9 +132,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
-  headertext: {
+  headerText: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "white",
   },
   logo: {
     width: 45,
