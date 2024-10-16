@@ -27,7 +27,7 @@ const PlayerScreen = () => {
   if (!activeTrack) {
     return (
       <View style={[defaultStyles.container, { justifyContent: "center" }]}>
-        <ActivityIndicator color={Colors.dark.icon} />
+        <ActivityIndicator color={Colors.icon} />
       </View>
     );
   }
@@ -39,7 +39,7 @@ const PlayerScreen = () => {
         colors={
           imageColors
             ? [imageColors.average, imageColors.dominant]
-            : [Colors.dark.background, "#1d1d1d"]
+            : [Colors.background, "#1d1d1d"]
         }
       >
         <View style={styles.overlayContainer}>
@@ -80,7 +80,7 @@ const PlayerScreen = () => {
                     <FontAwesome
                       name={isFavorite ? "heart" : "heart-o"}
                       size={20}
-                      color={isFavorite ? "#ff0000" : Colors.dark.icon}
+                      color={isFavorite ? "#ff0000" : Colors.icon}
                       style={{ marginHorizontal: 14 }}
                       onPress={() => {
                         console.log("Heart pressed");

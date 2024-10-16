@@ -49,7 +49,7 @@ export const PlayPauseButton = ({
         <FontAwesome6
           name={playing ? "pause" : "play"}
           size={iconSize}
-          color={Colors.dark.text}
+          color={Colors.text}
         />
       </TouchableOpacity>
     </View>
@@ -62,7 +62,7 @@ export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
       activeOpacity={0.5}
       onPress={() => TrackPlayer.skipToNext()}
     >
-      <FontAwesome6 name="forward" size={iconSize} color={Colors.dark.text} />
+      <FontAwesome6 name="forward" size={iconSize} color={Colors.text} />
     </TouchableOpacity>
   );
 };
@@ -73,11 +73,7 @@ export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
       activeOpacity={0.5}
       onPress={() => TrackPlayer.skipToPrevious()}
     >
-      <FontAwesome6
-        name={"backward"}
-        size={iconSize}
-        color={Colors.dark.text}
-      />
+      <FontAwesome6 name={"backward"} size={iconSize} color={Colors.text} />
     </TouchableOpacity>
   );
 };
@@ -117,7 +113,7 @@ export const RepeatToggle = ({ ...iconProps }: RepeatIconProps) => {
     <MaterialCommunityIcons
       name={icon}
       onPress={toggleRepeatMode}
-      color={Colors.dark.text}
+      color={Colors.text}
       size={30}
       {...iconProps}
     />

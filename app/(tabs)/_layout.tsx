@@ -4,13 +4,11 @@ import { View, StyleSheet } from "react-native";
 import color from "color";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 
 function TabLayoutContent() {
-  const colorScheme = useColorScheme();
   const activeTrack = useActiveTrack();
   const { imageColors } = usePlayerBackground(
     activeTrack?.artwork ?? "https://via.placeholder.com/50"
@@ -26,7 +24,7 @@ function TabLayoutContent() {
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: Colors[colorScheme ?? "light"].background,
+            backgroundColor: Colors.background,
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
             borderTopWidth: 0,
@@ -35,7 +33,7 @@ function TabLayoutContent() {
           tabBarLabelStyle: {
             fontSize: 10,
           },
-          tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+          tabBarActiveTintColor: Colors.tint,
           headerShown: false,
           tabBarBackground: () => (
             <View

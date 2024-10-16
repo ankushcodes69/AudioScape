@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     ...defaultStyles.text,
-    color: Colors.dark.text,
+    color: Colors.text,
     opacity: 0.75,
     fontSize: fontSize.xs,
     letterSpacing: 0.7,

@@ -9,9 +9,6 @@ import {
   Dimensions,
 } from "react-native";
 
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
-
 interface SearchResult {
   id: string;
   title: string;
@@ -40,16 +37,16 @@ export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
           source={{ uri: item.thumbnail }}
           style={[styles.thumbnail, { width: itemWidth, height: itemWidth }]}
         />
-        <ThemedView style={styles.playButton}>
+        <View style={styles.playButton}>
           <Text style={styles.playButtonText}>▶</Text>
-        </ThemedView>
+        </View>
       </View>
-      <ThemedText style={styles.title} numberOfLines={1}>
+      <Text style={styles.title} numberOfLines={1}>
         {item.title}
-      </ThemedText>
-      <ThemedText style={styles.artist} numberOfLines={1}>
+      </Text>
+      <Text style={styles.artist} numberOfLines={1}>
         {item.artist}
-      </ThemedText>
+      </Text>
     </TouchableOpacity>
   );
 
@@ -58,15 +55,15 @@ export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
   const bottomRowItems = results.slice(middleIndex);
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText style={styles.header}>Quick picks</ThemedText>
+    <View style={styles.container}>
+      <Text style={styles.header}>Quick picks</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.rowsContainer}>
           <View style={styles.row}>{topRowItems.map(renderItem)}</View>
           <View style={styles.row}>{bottomRowItems.map(renderItem)}</View>
         </View>
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 };
 

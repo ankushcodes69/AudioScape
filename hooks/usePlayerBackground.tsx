@@ -10,7 +10,7 @@ export const usePlayerBackground = (imageUrl: string) => {
 
   useEffect(() => {
     getColors(imageUrl, {
-      fallback: Colors.dark.background,
+      fallback: Colors.background,
       cache: true,
       key: imageUrl,
     }).then((colors) => setImageColors(colors as AndroidImageColors));

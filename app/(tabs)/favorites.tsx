@@ -8,9 +8,8 @@ import {
   Image,
   FlatList,
   View,
+  Text,
 } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 
@@ -54,10 +53,10 @@ const FavoritesScreen = () => {
       onPress={() => handleSongSelect(item)}
     >
       <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
-      <ThemedView style={styles.resultText}>
-        <ThemedText style={styles.resultTitle}>{item.title}</ThemedText>
-        <ThemedText style={styles.resultArtist}>{item.artist}</ThemedText>
-      </ThemedView>
+      <View style={styles.resultText}>
+        <Text style={styles.resultTitle}>{item.title}</Text>
+        <Text style={styles.resultArtist}>{item.artist}</Text>
+      </View>
     </TouchableOpacity>
   );
 

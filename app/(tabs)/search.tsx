@@ -9,10 +9,10 @@ import {
   SafeAreaView,
   Keyboard,
   TextInput,
+  Text,
+  View,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
@@ -102,10 +102,10 @@ export default function SearchScreen() {
       onPress={() => handleSongSelect(item)}
     >
       <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
-      <ThemedView style={styles.resultText}>
-        <ThemedText style={styles.resultTitle}>{item.title}</ThemedText>
-        <ThemedText style={styles.resultArtist}>{item.artist}</ThemedText>
-      </ThemedView>
+      <View style={styles.resultText}>
+        <Text style={styles.resultTitle}>{item.title}</Text>
+        <Text style={styles.resultArtist}>{item.artist}</Text>
+      </View>
     </TouchableOpacity>
   );
 
