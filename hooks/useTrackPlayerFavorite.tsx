@@ -9,7 +9,9 @@ export const useTrackPlayerFavorite = () => {
 
   useEffect(() => {
     if (activeTrack) {
-      setIsFavorite(favoriteTracks.includes(activeTrack.id));
+      setIsFavorite(
+        favoriteTracks.some((track) => track.id === activeTrack.id)
+      );
     }
   }, [activeTrack, favoriteTracks]);
 
@@ -17,7 +19,12 @@ export const useTrackPlayerFavorite = () => {
     if (!activeTrack) return;
 
     // Toggle favorite status
-    toggleFavoriteTrack(activeTrack.id);
+    toggleFavoriteTrack({
+      id: activeTrack.id,
+      title: activeTrack.title || "",
+      artist: activeTrack.artist || "",
+      thumbnail: activeTrack.artwork || "",
+    });
 
     // Update track player internal state
     try {

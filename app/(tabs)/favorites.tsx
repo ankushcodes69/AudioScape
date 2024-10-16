@@ -13,29 +13,12 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
-import innertube from "@/components/yt";
 
 interface Song {
   id: string;
   title: string;
   artist: string;
   thumbnail: string;
-}
-
-async function getInfo(inid: string): Promise<Song> {
-  const yt = await innertube;
-  const info = await yt.music.getInfo(inid);
-  const item = info.basic_info;
-
-  return {
-    id: inid,
-    title: item.title ?? "Unknown Title",
-    artist: item.author ?? "Unknown Artist",
-    thumbnail:
-      item.thumbnail && item.thumbnail[0]
-        ? item.thumbnail[0].url
-        : "https://via.placeholder.com/50",
-  };
 }
 
 const FavoritesScreen = () => {
@@ -49,11 +32,7 @@ const FavoritesScreen = () => {
     const fetchFavoriteTracks = async () => {
       setIsLoading(true);
       try {
-        const tracks: Song[] = [];
-        for (let id of favoritesTracks) {
-          const song = await getInfo(id);
-          tracks.push(song);
-        }
+        const tracks: Song[] = favoritesTracks;
         setFormattedTracks(tracks);
       } catch (error) {
         console.error("Error fetching favorite tracks", error);
