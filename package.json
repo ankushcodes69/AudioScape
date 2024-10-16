@@ -24,7 +24,7 @@
     "base-64": "^1.0.0",
     "color": "^4.2.3",
     "event-target-polyfill": "^0.0.4",
-    "expo": "^51.0.37",
+    "expo": "~51.0.38",
     "expo-av": "^14.0.7",
     "expo-constants": "~16.0.2",
     "expo-dev-client": "^4.0.28",
