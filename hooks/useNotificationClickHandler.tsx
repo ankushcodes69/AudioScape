@@ -12,7 +12,6 @@ const useNotificationClickHandler = () => {
       if (url === "trackplayer://notification.click") {
         router.push("..");
         router.navigate("/player");
-        NavigationBar.setVisibilityAsync("hidden");
         NavigationBar.setBehaviorAsync("overlay-swipe");
       }
     };

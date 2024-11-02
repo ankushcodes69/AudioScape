@@ -3,9 +3,7 @@ export const Colors = {
   minimumTrackTintColor: "rgba(255,255,255,0.6)",
   text: "#ECEDEE",
   textMuted: "#9ca3af",
-  background: "#000000",
+  background: "#121212",
   tint: "#fff",
-  icon: "#9BA1A6",
-  tabIconDefault: "#9BA1A6",
-  tabIconSelected: "#fff",
+  icon: "#9BA1A6"
 };

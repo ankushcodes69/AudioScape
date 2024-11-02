@@ -10,7 +10,6 @@ import Animated, {
   runOnJS,
   Easing,
 } from "react-native-reanimated";
-import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
 
 const { height } = Dimensions.get("window");
@@ -26,7 +25,6 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
   const router = useRouter();
 
   const goBack = () => {
-    NavigationBar.setVisibilityAsync("visible");
     router.back();
   };
 

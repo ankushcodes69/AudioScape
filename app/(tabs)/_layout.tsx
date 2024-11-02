@@ -1,26 +1,13 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import color from "color";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
-import { useActiveTrack } from "react-native-track-player";
-import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 
 function TabLayoutContent() {
-  const activeTrack = useActiveTrack();
-  const { imageColors } = usePlayerBackground(
-    activeTrack?.artwork ?? "https://via.placeholder.com/50"
-  );
-  const dominantColor = activeTrack ? imageColors?.dominant : "#1d1d1d";
-  const darkerColor =
-    dominantColor === "#1d1d1d"
-      ? "#1d1d1d"
-      : color(dominantColor).darken(0.5).hex();
-
   return (
-    <View style={{ flex: 1, backgroundColor: "#000" }}>
+    <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <Tabs
         screenOptions={{
           tabBarStyle: {
@@ -42,7 +29,7 @@ function TabLayoutContent() {
                 overflow: "hidden",
                 borderTopLeftRadius: 25,
                 borderTopRightRadius: 25,
-                backgroundColor: darkerColor,
+                backgroundColor: "#1A1A1A",
               }}
             />
           ),

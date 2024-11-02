@@ -17,6 +17,7 @@ import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import innertube from "@/components/yt";
+import { Colors } from "@/constants/Colors";
 
 interface SearchResult {
   id: string;
@@ -165,6 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    backgroundColor: Colors.background,
   },
   searchbar: {
     width: "95%",

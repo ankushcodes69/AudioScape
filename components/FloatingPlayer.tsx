@@ -27,13 +27,11 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
   const { imageColors } = usePlayerBackground(
     activeTrack?.artwork ?? "https://via.placeholder.com/50"
   );
-  const dominantColor = activeTrack ? imageColors?.dominant : "#1d1d1d";
+  const dominantColor = activeTrack ? imageColors?.dominant : "#1A1A1A";
   const darkerColor =
-    dominantColor === "#1d1d1d"
-      ? "#1d1d1d"
+    dominantColor === "#1A1A1A"
+      ? "#1A1A1A"
       : color(dominantColor).darken(0.5).hex();
-
-  NavigationBar.setBackgroundColorAsync(`${darkerColor}`);
 
   const router = useRouter();
 
@@ -41,7 +39,6 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 
   const handlePress = () => {
     router.navigate("/player");
-    NavigationBar.setVisibilityAsync("hidden");
     NavigationBar.setBehaviorAsync("overlay-swipe");
   };
 

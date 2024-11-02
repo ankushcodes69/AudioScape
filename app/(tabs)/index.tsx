@@ -13,6 +13,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { Colors } from "@/constants/Colors";
 
 interface FeedResult {
   id: string;
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
+    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: "row",

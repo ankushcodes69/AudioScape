@@ -39,7 +39,7 @@ const PlayerScreen = () => {
         colors={
           imageColors
             ? [imageColors.average, imageColors.dominant]
-            : [Colors.background, "#1d1d1d"]
+            : [Colors.background, "#1A1A1A"]
         }
       >
         <View style={styles.overlayContainer}>
