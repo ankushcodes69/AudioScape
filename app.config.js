@@ -33,7 +33,7 @@ export default {
   androidNavigationBar: {
     backgroundColor: "#1A1A1A"
   },
-  plugins: ["expo-router"],
+  plugins: ["expo-router", "expo-font"],
   experiments: {
     typedRoutes: true
   },
