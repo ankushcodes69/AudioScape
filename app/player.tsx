@@ -17,7 +17,7 @@ import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
 const PlayerScreen = () => {
   const activeTrack = useActiveTrack();
   const { imageColors } = usePlayerBackground(
-    activeTrack?.artwork ?? "https://via.placeholder.com/50"
+    activeTrack?.artwork ?? "https://placehold.co/50"
   );
 
   const { top, bottom } = useSafeAreaInsets();

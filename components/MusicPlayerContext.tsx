@@ -65,7 +65,7 @@ async function getInfo(inid: string): Promise<Track> {
     artwork:
       item.thumbnail && item.thumbnail[0]
         ? item.thumbnail[0].url
-        : "https://via.placeholder.com/50",
+        : "https://placehold.co/50",
   };
   return res;
 }

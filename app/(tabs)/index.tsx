@@ -67,7 +67,7 @@ export default function HomeScreen() {
                 artist: item.artists?.[0]?.name ?? "Unknown Artist",
                 thumbnail:
                   item.thumbnail?.contents?.[0]?.url ??
-                  "https://via.placeholder.com/50",
+                  "https://placehold.co/50",
               }));
             setHomeFeedResults(formattedResults);
           } else {

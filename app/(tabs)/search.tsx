@@ -67,7 +67,7 @@ export default function SearchScreen() {
                 item.thumbnail.contents &&
                 item.thumbnail.contents[0]
                   ? item.thumbnail.contents[0].url
-                  : "https://via.placeholder.com/50",
+                  : "https://placehold.co/50",
             }));
 
         setSearchResults(formattedResults);
