@@ -3,12 +3,13 @@
     <h1>AudioScape</h1>
     <p>An Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.</p>
     
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/Music-Player-With-Synced-Lyrics/main?style=flat&label=Last%20Commit&labelColor=ce5601&color=ce6c01)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Total%20Commits&labelColor=ce5601&color=ce6c01)
-![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Languages%20Used&labelColor=ce5601&color=ce6c01)
-![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Issues&labelColor=ce5601&color=ce6c01)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Pull%20Requests&labelColor=ce5601&color=ce6c01)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/Music-Player-With-Synced-Lyrics?style=flat&label=Code%20Size&labelColor=ce5601&color=ce6c01)
+![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?style=flat&label=License&labelColor=ce5601&color=ce6c01)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/AudioScape/main?style=flat&label=Last%20Commit&labelColor=ce5601&color=ce6c01)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?style=flat&label=Total%20Commits&labelColor=ce5601&color=ce6c01)
+![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/AudioScape?style=flat&label=Languages%20Used&labelColor=ce5601&color=ce6c01)
+![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/AudioScape?style=flat&label=Issues&labelColor=ce5601&color=ce6c01)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/AudioScape?style=flat&label=Pull%20Requests&labelColor=ce5601&color=ce6c01)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/AudioScape?style=flat&label=Code%20Size&labelColor=ce5601&color=ce6c01)
 </div>
 
 ## ✨ Features
@@ -22,8 +23,7 @@
 
 ## 🤝 Contributing
 **Pull requests are welcome**
-- If you want:
-    - to **develop new functions** or **fix a bug**, fork the repository and send a pull request.
+- If you want to **develop new functions** or **fix a bug**, fork the repository and send a pull request.
 
 ## 🫂 Acknowledgments
 - [**YouTube.js**](https://github.com/LuanRT/YouTube.js): A JavaScript client for YouTube's private API
