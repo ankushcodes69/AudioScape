@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Linking } from "react-native";
 import { useRouter } from "expo-router";
-import * as NavigationBar from "expo-navigation-bar";
 
 const useNotificationClickHandler = () => {
   const router = useRouter();
@@ -12,7 +11,6 @@ const useNotificationClickHandler = () => {
       if (url === "trackplayer://notification.click") {
         router.push("..");
         router.navigate("/player");
-        NavigationBar.setBehaviorAsync("overlay-swipe");
       }
     };
 

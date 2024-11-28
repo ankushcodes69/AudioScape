@@ -69,7 +69,6 @@ export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
     marginLeft: 10,
   },
   header: {

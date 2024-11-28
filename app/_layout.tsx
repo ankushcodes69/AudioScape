@@ -4,8 +4,14 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import "react-native-reanimated";
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from "react-native-reanimated";
+import * as StatusBar from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as NavigationBar from "expo-navigation-bar";
 import { useSetupTrackPlayer } from "@/hooks/useSetupTrackPlayer";
 import { useLogTrackPlayerState } from "@/hooks/useLogTrackPlayerState";
 import useNotificationClickHandler from "@/hooks/useNotificationClickHandler";
@@ -18,6 +24,11 @@ import { Provider } from "react-redux";
 SplashScreen.preventAutoHideAsync();
 
 TrackPlayer.registerPlaybackService(() => playbackService);
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -37,10 +48,13 @@ export default function RootLayout() {
   useLogTrackPlayerState();
   useNotificationClickHandler();
 
-  // Effect to initialize the library and hide the splash screen
   useEffect(() => {
     const initialize = async () => {
       await initializeLibrary();
+      NavigationBar.setPositionAsync("absolute");
+      NavigationBar.setBackgroundColorAsync("#ffffff01");
+      NavigationBar.setButtonStyleAsync("dark");
+      StatusBar.setStatusBarBackgroundColor("transparent");
       if (fontsLoaded && trackPlayerLoaded) {
         await SplashScreen.hideAsync();
       }
@@ -50,7 +64,7 @@ export default function RootLayout() {
   }, [fontsLoaded, trackPlayerLoaded]);
 
   if (!fontsLoaded || !trackPlayerLoaded) {
-    return null; // Keep the app waiting until both fonts and TrackPlayer are loaded
+    return null;
   }
 
   return (

@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import * as NavigationBar from "expo-navigation-bar";
 import color from "color";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
@@ -39,7 +38,6 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 
   const handlePress = () => {
     router.navigate("/player");
-    NavigationBar.setBehaviorAsync("overlay-swipe");
   };
 
   if (!displayedTrack) return null;

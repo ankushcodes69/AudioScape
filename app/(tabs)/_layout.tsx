@@ -4,8 +4,10 @@ import { View, StyleSheet } from "react-native";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function TabLayoutContent() {
+  const { bottom } = useSafeAreaInsets();
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <Tabs
@@ -15,7 +17,7 @@ function TabLayoutContent() {
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
             borderTopWidth: 0,
-            paddingTop: 2,
+            paddingTop: 1,
           },
           tabBarLabelStyle: {
             fontSize: 10,
@@ -64,7 +66,7 @@ function TabLayoutContent() {
         <Tabs.Screen
           name="search"
           options={{
-            tabBarButton: () => <View />,
+            href: null,
           }}
         />
       </Tabs>
@@ -74,7 +76,7 @@ function TabLayoutContent() {
           position: "absolute",
           left: 8,
           right: 8,
-          bottom: 60,
+          bottom: bottom + 55,
         }}
       />
     </View>
