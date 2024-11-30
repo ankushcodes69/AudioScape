@@ -1,11 +1,17 @@
 import { Colors } from "@/constants/Colors";
-import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  FontAwesome6,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import TrackPlayer, {
   useIsPlaying,
   RepeatMode,
+  useActiveTrack,
 } from "react-native-track-player";
 import { useTrackPlayerRepeatMode } from "@/hooks/useTrackPlayerRepeatMode";
+import { usePlaylists } from "@/store/library";
 import { ComponentProps } from "react";
 import { match } from "ts-pattern";
 
@@ -22,6 +28,8 @@ export const PlayerControls = ({ style }: PlayerControlsProps) => {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.row}>
+        <AddToPlaylistButton />
+
         <SkipToPreviousButton />
 
         <PlayPauseButton />
@@ -78,6 +86,33 @@ export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
   );
 };
 
+export const AddToPlaylistButton = ({ iconSize = 30 }: PlayerButtonProps) => {
+  const { addTrackToPlaylist } = usePlaylists();
+  const activeTrack = useActiveTrack();
+  return (
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => {
+        addTrackToPlaylist(
+          {
+            id: activeTrack?.id,
+            title: activeTrack?.title || "",
+            artist: activeTrack?.artist || "",
+            thumbnail: activeTrack?.artwork || "https://placehold.co/50",
+          },
+          "Test Playlist"
+        );
+      }}
+    >
+      <MaterialIcons
+        name={"playlist-add"}
+        size={iconSize}
+        color={Colors.text}
+      />
+    </TouchableOpacity>
+  );
+};
+
 type RepeatIconProps = Omit<
   ComponentProps<typeof MaterialCommunityIcons>,
   "name"
@@ -123,7 +158,6 @@ export const RepeatToggle = ({ ...iconProps }: RepeatIconProps) => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginLeft: 37.5,
   },
   row: {
     flexDirection: "row",

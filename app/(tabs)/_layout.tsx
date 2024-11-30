@@ -64,6 +64,19 @@ function TabLayoutContent() {
         />
 
         <Tabs.Screen
+          name="playlists"
+          options={{
+            title: "Playlists",
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon
+                name={focused ? "list" : "list-outline"}
+                color={color}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
           name="search"
           options={{
             href: null,
@@ -76,7 +89,7 @@ function TabLayoutContent() {
           position: "absolute",
           left: 8,
           right: 8,
-          bottom: bottom + 55,
+          bottom: bottom + 60,
         }}
       />
     </View>
