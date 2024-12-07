@@ -64,7 +64,7 @@ function TabLayoutContent() {
         />
 
         <Tabs.Screen
-          name="playlists"
+          name="playlists/index"
           options={{
             title: "Playlists",
             tabBarIcon: ({ color, focused }) => (
@@ -73,6 +73,13 @@ function TabLayoutContent() {
                 color={color}
               />
             ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="playlists/[playlistName]"
+          options={{
+            href: null,
           }}
         />
 

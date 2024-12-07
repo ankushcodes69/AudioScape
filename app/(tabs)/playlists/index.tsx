@@ -1,22 +1,24 @@
+import { Colors } from "@/constants/Colors";
+import { usePlaylists } from "@/store/library";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
+  FlatList,
+  Image,
+  Modal,
   SafeAreaView,
   StyleSheet,
-  FlatList,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  Image,
-  TextInput,
-  Alert,
-  Modal,
 } from "react-native";
-import { usePlaylists } from "@/store/library";
-import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function PlaylistScreen() {
   const { playlists, createNewPlaylist } = usePlaylists();
+  const router = useRouter();
   const { top, bottom } = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
@@ -36,7 +38,7 @@ export default function PlaylistScreen() {
       return;
     }
 
-    createNewPlaylist(newPlaylistName);
+    createNewPlaylist(newPlaylistName.trim());
     setModalVisible(false);
     setNewPlaylistName("");
     Alert.alert("Success", `Playlist "${newPlaylistName}" created!`);
@@ -50,7 +52,10 @@ export default function PlaylistScreen() {
     <TouchableOpacity
       style={styles.playlistItem}
       onPress={() => {
-        // Add logic for navigating to the playlist or playing its tracks
+        router.push({
+          pathname: `/(tabs)/playlists/[playlistName]`,
+          params: { playlistName: item.name },
+        });
         console.log(`Selected playlist: ${item.name}`);
       }}
     >
@@ -88,7 +93,8 @@ export default function PlaylistScreen() {
       <Modal
         transparent={true}
         visible={modalVisible}
-        animationType="slide"
+        animationType="fade"
+        statusBarTranslucent={true}
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    color: "white",
+    color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
@@ -154,7 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: "#333",
   },
   thumbnail: {

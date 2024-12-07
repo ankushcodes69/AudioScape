@@ -1,0 +1,114 @@
+import React from "react";
+import {
+  Text,
+  View,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { Colors } from "@/constants/Colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import { usePlaylists } from "@/store/library";
+
+interface TrackInfo {
+  id: string;
+  title: string;
+  artist: string;
+  thumbnail: string;
+}
+
+const PlaylistView = () => {
+  const { top, bottom } = useSafeAreaInsets();
+  const { playAudio } = useMusicPlayer();
+  const { playlistName } = useLocalSearchParams<{ playlistName: string }>();
+
+  const { playlists } = usePlaylists();
+
+  const playlist = playlists[playlistName];
+
+  const handleSongSelect = (song: TrackInfo) => {
+    playAudio(song);
+  };
+
+  const renderPlaylistItems = ({ item }: { item: TrackInfo }) => (
+    <TouchableOpacity
+      style={styles.searchResult}
+      onPress={() => handleSongSelect(item)}
+    >
+      <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
+      <View style={styles.resultText}>
+        <Text style={styles.resultTitle}>{item.title}</Text>
+        <Text style={styles.resultArtist}>{item.artist}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View
+      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
+    >
+      <Text style={styles.header}>{playlistName}</Text>
+      <FlatList
+        data={playlist}
+        keyExtractor={(item) => item.id}
+        renderItem={renderPlaylistItems}
+      />
+    </View>
+  );
+};
+
+export default PlaylistView;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 15,
+    backgroundColor: Colors.background,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: Colors.text,
+    textAlign: "center",
+  },
+  trackItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  trackTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  trackArtist: {
+    fontSize: 16,
+    color: "#666",
+  },
+  searchResult: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333",
+  },
+  resultThumbnail: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  resultText: {
+    flex: 1,
+  },
+  resultTitle: {
+    color: "white",
+    fontSize: 16,
+  },
+  resultArtist: {
+    color: "#999",
+    fontSize: 14,
+  },
+});

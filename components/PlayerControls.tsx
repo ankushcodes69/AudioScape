@@ -8,10 +8,9 @@ import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import TrackPlayer, {
   useIsPlaying,
   RepeatMode,
-  useActiveTrack,
 } from "react-native-track-player";
+import { useRouter } from "expo-router";
 import { useTrackPlayerRepeatMode } from "@/hooks/useTrackPlayerRepeatMode";
-import { usePlaylists } from "@/store/library";
 import { ComponentProps } from "react";
 import { match } from "ts-pattern";
 
@@ -86,30 +85,22 @@ export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
   );
 };
 
-export const AddToPlaylistButton = ({ iconSize = 30 }: PlayerButtonProps) => {
-  const { addTrackToPlaylist } = usePlaylists();
-  const activeTrack = useActiveTrack();
+export const AddToPlaylistButton = ({ iconSize = 30 }) => {
+  const router = useRouter();
+
   return (
-    <TouchableOpacity
-      activeOpacity={0.5}
-      onPress={() => {
-        addTrackToPlaylist(
-          {
-            id: activeTrack?.id,
-            title: activeTrack?.title || "",
-            artist: activeTrack?.artist || "",
-            thumbnail: activeTrack?.artwork || "https://placehold.co/50",
-          },
-          "Test Playlist"
-        );
-      }}
-    >
-      <MaterialIcons
-        name={"playlist-add"}
-        size={iconSize}
-        color={Colors.text}
-      />
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => router.push({ pathname: "/(modals)/addToPlaylist" })}
+      >
+        <MaterialIcons
+          name="playlist-add"
+          size={iconSize}
+          color={Colors.text}
+        />
+      </TouchableOpacity>
+    </View>
   );
 };
 

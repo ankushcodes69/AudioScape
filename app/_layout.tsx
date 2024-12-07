@@ -79,9 +79,13 @@ export default function RootLayout() {
                   name="player"
                   options={{
                     presentation: "transparentModal",
-                    gestureEnabled: true,
-                    gestureDirection: "vertical",
-                    animationDuration: 400,
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="(modals)/addToPlaylist"
+                  options={{
+                    presentation: "transparentModal",
                     headerShown: false,
                   }}
                 />
