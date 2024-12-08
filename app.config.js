@@ -2,6 +2,7 @@ const IS_DEV = process.env.APP_VARIANT === 'development';
 
 export default {
   name: IS_DEV ? "AudioScape (Dev)" : "AudioScape",
+  owner: "ankushsarkar",
   slug: "AudioScape",
   version: "1.3.0",
   platforms: ["android"],
