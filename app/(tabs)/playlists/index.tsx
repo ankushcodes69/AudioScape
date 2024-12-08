@@ -3,7 +3,6 @@ import { usePlaylists } from "@/store/library";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert,
   FlatList,
   Image,
   Modal,
@@ -13,6 +12,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ToastAndroid,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -30,18 +30,27 @@ export default function PlaylistScreen() {
 
   const handleCreatePlaylist = () => {
     if (!newPlaylistName.trim()) {
-      Alert.alert("Error", "Please enter a valid playlist name.");
+      ToastAndroid.show(
+        "Please enter a valid playlist name.",
+        ToastAndroid.LONG
+      );
       return;
     }
     if (playlists[newPlaylistName]) {
-      Alert.alert("Error", "A playlist with this name already exists.");
+      ToastAndroid.show(
+        "A playlist with this name already exists.",
+        ToastAndroid.LONG
+      );
       return;
     }
 
     createNewPlaylist(newPlaylistName.trim());
     setModalVisible(false);
     setNewPlaylistName("");
-    Alert.alert("Success", `Playlist "${newPlaylistName}" created!`);
+    ToastAndroid.show(
+      `Playlist "${newPlaylistName}" created!`,
+      ToastAndroid.SHORT
+    );
   };
 
   const renderPlaylist = ({
@@ -73,7 +82,7 @@ export default function PlaylistScreen() {
     <SafeAreaView
       style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
     >
-      <Text style={styles.header}>Your Playlists</Text>
+      <Text style={styles.header}>Playlists</Text>
 
       <TouchableOpacity
         style={styles.createButton}
@@ -118,7 +127,9 @@ export default function PlaylistScreen() {
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={[styles.modalButtonText, styles.cancelButtonText]}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -141,15 +152,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   createButton: {
-    backgroundColor: "#1DB954",
+    backgroundColor: "white",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 100,
     alignSelf: "center",
     marginBottom: 10,
   },
   createButtonText: {
-    color: "white",
+    color: "black",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -178,17 +189,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     width: "80%",
-    backgroundColor: "#1a1a1a",
+    backgroundColor: Colors.background,
     padding: 20,
     borderRadius: 10,
   },
   modalTitle: {
     fontSize: 20,
-    color: "white",
+    color: Colors.text,
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
@@ -207,20 +218,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   modalButton: {
-    backgroundColor: "#1DB954",
+    backgroundColor: "white",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 100,
     flex: 1,
     marginHorizontal: 5,
   },
-  cancelButton: {
-    backgroundColor: "#d9534f",
-  },
   modalButtonText: {
-    color: "white",
+    color: "black",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  cancelButtonText: {
+    color: "white",
+  },
+  cancelButton: {
+    backgroundColor: Colors.background,
+    borderColor: "#333",
+    borderWidth: 1,
   },
 });

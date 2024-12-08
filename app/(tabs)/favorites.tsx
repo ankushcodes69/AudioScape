@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import { Colors } from "@/constants/Colors";
 
 interface Song {
   id: string;
@@ -67,6 +68,7 @@ const FavoritesScreen = () => {
         { paddingTop: top, paddingBottom: bottom },
       ]}
     >
+      <Text style={styles.header}>Favorites</Text>
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
@@ -86,6 +88,13 @@ export default FavoritesScreen;
 const styles = StyleSheet.create({
   searchResults: {
     width: "100%",
+  },
+  header: {
+    fontSize: 24,
+    color: Colors.text,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 10,
   },
   searchResult: {
     flexDirection: "row",

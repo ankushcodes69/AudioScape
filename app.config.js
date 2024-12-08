@@ -12,7 +12,7 @@ export default {
   splash: {
     image: "./assets/images/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#1A1A1A"
+    backgroundColor: "#121212"
   },
   android: {
     softwareKeyboardLayoutMode: "pan",
@@ -28,10 +28,10 @@ export default {
       foregroundImage: "./assets/images/adaptive-icon-foreground.png",
       backgroundImage: "./assets/images/adaptive-icon-background.png"
     },
-    backgroundColor: "#1A1A1A"
+    backgroundColor: "#121212"
   },
   androidNavigationBar: {
-    backgroundColor: "#1A1A1A"
+    backgroundColor: "##ffffff01"
   },
   plugins: ["expo-router", "expo-font"],
   experiments: {

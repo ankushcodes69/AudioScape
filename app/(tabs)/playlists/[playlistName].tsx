@@ -6,12 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Dimensions,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { usePlaylists } from "@/store/library";
+import FastImage from "react-native-fast-image";
 
 interface TrackInfo {
   id: string;
@@ -50,6 +52,16 @@ const PlaylistView = () => {
     <View
       style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
     >
+      <View style={styles.artworkImageContainer}>
+        <FastImage
+          source={{
+            uri: playlist[0]?.thumbnail,
+            priority: FastImage.priority.high,
+          }}
+          style={styles.artworkImage}
+        />
+      </View>
+
       <Text style={styles.header}>{playlistName}</Text>
       <FlatList
         data={playlist}
@@ -74,6 +86,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: Colors.text,
     textAlign: "center",
+    marginTop: 10,
+  },
+  artworkImageContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    height: Dimensions.get("window").width - 100,
+  },
+  artworkImage: {
+    width: Dimensions.get("window").width - 100,
+    height: Dimensions.get("window").width - 100,
+    resizeMode: "cover",
+    borderRadius: 12,
   },
   trackItem: {
     padding: 10,

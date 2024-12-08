@@ -6,6 +6,7 @@ import {
   View,
   FlatList,
   Image,
+  ToastAndroid,
 } from "react-native";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlaylists } from "@/store/library";
@@ -29,6 +30,7 @@ export default function AddToPlaylistModal() {
     <TouchableOpacity
       style={styles.playlistItem}
       onPress={() => {
+        ToastAndroid.show(`Added song to ${item.name}`, ToastAndroid.SHORT);
         addTrackToPlaylist(
           {
             id: activeTrack?.id,

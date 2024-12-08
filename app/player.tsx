@@ -7,7 +7,13 @@ import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { useTrackPlayerFavorite } from "@/hooks/useTrackPlayerFavorite";
 import { defaultStyles } from "@/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import FastImage from "react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -39,7 +45,7 @@ const PlayerScreen = () => {
         colors={
           imageColors
             ? [imageColors.average, imageColors.dominant]
-            : [Colors.background, "#1A1A1A"]
+            : [Colors.background, "#121212"]
         }
       >
         <View style={styles.overlayContainer}>
@@ -158,8 +164,8 @@ const styles = StyleSheet.create({
     height: "45%",
   },
   artworkImage: {
-    width: "100%",
-    height: "100%",
+    width: Dimensions.get("window").width - 50,
+    height: Dimensions.get("window").width - 50,
     resizeMode: "cover",
     borderRadius: 12,
   },
