@@ -32,7 +32,7 @@ export default {
     backgroundColor: "#121212"
   },
   androidNavigationBar: {
-    backgroundColor: "##ffffff01"
+    backgroundColor: "#121212"
   },
   plugins: ["expo-router", "expo-font"],
   experiments: {
