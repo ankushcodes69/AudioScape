@@ -53,7 +53,7 @@ export default function RootLayout() {
       await initializeLibrary();
       NavigationBar.setPositionAsync("absolute");
       NavigationBar.setBackgroundColorAsync("#ffffff01");
-      NavigationBar.setButtonStyleAsync("dark");
+      NavigationBar.setButtonStyleAsync("light");
       StatusBar.setStatusBarBackgroundColor("transparent");
       if (fontsLoaded && trackPlayerLoaded) {
         await SplashScreen.hideAsync();

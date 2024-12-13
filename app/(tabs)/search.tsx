@@ -155,6 +155,7 @@ export default function SearchScreen() {
           renderItem={renderSearchResult}
           keyExtractor={(item) => item.id}
           style={styles.searchResults}
+          contentContainerStyle={{ paddingBottom: 60 }}
         />
       )}
     </SafeAreaView>
@@ -179,8 +180,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#333",
   },
   resultThumbnail: {
     width: 50,
@@ -191,7 +190,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   resultTitle: {
-    color: "white",
+    color: Colors.text,
     fontSize: 16,
   },
   resultArtist: {

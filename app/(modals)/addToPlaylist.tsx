@@ -7,14 +7,20 @@ import {
   FlatList,
   Image,
   ToastAndroid,
+  Dimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlaylists } from "@/store/library";
 import { Colors } from "@/constants/Colors";
-import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
+import VerticalDismiss from "@/components/navigation/VerticalArrowDismiss";
+import { Entypo } from "@expo/vector-icons";
+
+const { height: screenHeight } = Dimensions.get("window");
 
 export default function AddToPlaylistModal() {
   const { playlists, addTrackToPlaylist } = usePlaylists();
+  const { bottom } = useSafeAreaInsets();
   const activeTrack = useActiveTrack();
 
   const playlistArray = Object.entries(playlists).map(([name, tracks]) => ({
@@ -54,26 +60,36 @@ export default function AddToPlaylistModal() {
   );
 
   return (
-    <VerticalSwipeGesture>
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Choose a playlist</Text>
+    <VerticalDismiss>
+      {(handleDismiss) => (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.header}>
+              <Entypo
+                name="chevron-down"
+                size={28}
+                style={styles.dismissButton}
+                activeOpacity={0.7}
+                color={Colors.text}
+                onPress={handleDismiss}
+              />
 
-          {/* Playlist List */}
-          <FlatList
-            data={playlistArray}
-            keyExtractor={(item) => item.name}
-            renderItem={renderPlaylistItem}
-          />
+              <Text style={styles.modalTitle}>Choose a playlist</Text>
+            </View>
 
-          {/* New Playlist Button 
-          <TouchableOpacity style={styles.newPlaylistButton}>
-            <Text style={styles.newPlaylistText}>+ New playlist</Text>
-          </TouchableOpacity>
-          */}
+            <View style={{ paddingBottom: bottom + 10 }}>
+              <FlatList
+                data={playlistArray}
+                keyExtractor={(item) => item.name}
+                renderItem={renderPlaylistItem}
+                showsVerticalScrollIndicator={true}
+                contentContainerStyle={styles.flatListContent}
+              />
+            </View>
+          </View>
         </View>
-      </View>
-    </VerticalSwipeGesture>
+      )}
+    </VerticalDismiss>
   );
 }
 
@@ -81,12 +97,23 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0)",
   },
   modalContent: {
     backgroundColor: Colors.background,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     padding: 20,
+    maxHeight: screenHeight * 0.6,
+  },
+  header: {
+    flexDirection: "row",
+  },
+  dismissButton: {
+    alignSelf: "center",
+    padding: 10,
+    marginTop: -12,
+    marginRight: 8,
   },
   modalTitle: {
     fontSize: 18,
@@ -94,12 +121,13 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginBottom: 10,
   },
+  flatListContent: {
+    flexGrow: 1,
+  },
   playlistItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#333",
   },
   thumbnail: {
     width: 50,
@@ -110,28 +138,5 @@ const styles = StyleSheet.create({
   playlistName: {
     fontSize: 16,
     color: Colors.text,
-  },
-  playlistTracks: {
-    fontSize: 14,
-    color: Colors.textMuted,
-  },
-  newPlaylistButton: {
-    marginTop: 10,
-    padding: 15,
-    backgroundColor: Colors.background,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  newPlaylistText: {
-    color: Colors.text,
-    fontSize: 16,
-  },
-  closeButton: {
-    marginTop: 10,
-    alignItems: "center",
-  },
-  closeButtonText: {
-    color: Colors.text,
-    fontSize: 14,
   },
 });

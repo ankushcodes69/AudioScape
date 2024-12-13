@@ -8,6 +8,7 @@ import {
   Text,
   Dimensions,
 } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 interface SearchResult {
   id: string;
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   title: {
-    color: "white",
+    color: Colors.text,
     fontSize: 14,
     fontWeight: "bold",
     marginTop: 5,

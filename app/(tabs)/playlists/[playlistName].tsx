@@ -67,6 +67,7 @@ const PlaylistView = () => {
         data={playlist}
         keyExtractor={(item) => item.id}
         renderItem={renderPlaylistItems}
+        contentContainerStyle={{ paddingBottom: 60 }}
       />
     </View>
   );
@@ -91,33 +92,18 @@ const styles = StyleSheet.create({
   artworkImageContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    height: Dimensions.get("window").width - 100,
+    height: Dimensions.get("window").width - 120,
   },
   artworkImage: {
-    width: Dimensions.get("window").width - 100,
-    height: Dimensions.get("window").width - 100,
+    width: Dimensions.get("window").width - 120,
+    height: Dimensions.get("window").width - 120,
     resizeMode: "cover",
     borderRadius: 12,
-  },
-  trackItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-  },
-  trackTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  trackArtist: {
-    fontSize: 16,
-    color: "#666",
   },
   searchResult: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#333",
   },
   resultThumbnail: {
     width: 50,
@@ -128,7 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   resultTitle: {
-    color: "white",
+    color: Colors.text,
     fontSize: 16,
   },
   resultArtist: {

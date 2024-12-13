@@ -166,13 +166,12 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: 10,
+    paddingBottom: 60,
   },
   playlistItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#333",
   },
   thumbnail: {
     width: 50,
