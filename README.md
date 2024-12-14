@@ -4,6 +4,7 @@
     <p>An Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.</p>
 
 ![GitHub Release](https://img.shields.io/github/v/release/ankushcodes69/AudioScape?style=for-the-badge&label=Latest%20Release&labelColor=ce5601&color=ce6c01)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/ankushcodes69/AudioScape/total?style=for-the-badge&labelColor=ce5601&color=ce6c01)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/ankushcodes69/AudioScape/latest?style=for-the-badge&labelColor=ce5601&color=ce6c01)
 ![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?style=for-the-badge&label=License&labelColor=ce5601&color=ce6c01)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/ankushcodes69/AudioScape?style=for-the-badge&label=Codefactor&labelColor=ce5601&color=ce6c01)
