@@ -2,14 +2,17 @@
     <img src="./assets/images/transparent-icon.png" width="150" height="150" style="display: block; margin: 0 auto"/>
     <h1>AudioScape</h1>
     <p>An Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.</p>
-    
-![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?style=flat&label=License&labelColor=ce5601&color=ce6c01)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/AudioScape/main?style=flat&label=Last%20Commit&labelColor=ce5601&color=ce6c01)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?style=flat&label=Total%20Commits&labelColor=ce5601&color=ce6c01)
-![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/AudioScape?style=flat&label=Languages%20Used&labelColor=ce5601&color=ce6c01)
-![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/AudioScape?style=flat&label=Issues&labelColor=ce5601&color=ce6c01)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/AudioScape?style=flat&label=Pull%20Requests&labelColor=ce5601&color=ce6c01)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/AudioScape?style=flat&label=Code%20Size&labelColor=ce5601&color=ce6c01)
+
+![GitHub Release](https://img.shields.io/github/v/release/ankushcodes69/AudioScape?style=for-the-badge&label=Latest%20Release&labelColor=ce5601&color=ce6c01)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/ankushcodes69/AudioScape/latest?style=for-the-badge&labelColor=ce5601&color=ce6c01)
+![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?style=for-the-badge&label=License&labelColor=ce5601&color=ce6c01)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/ankushcodes69/AudioScape?style=for-the-badge&label=Codefactor&labelColor=ce5601&color=ce6c01)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/AudioScape/main?style=for-the-badge&label=Last%20Commit&labelColor=ce5601&color=ce6c01)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?style=for-the-badge&label=Total%20Commits&labelColor=ce5601&color=ce6c01)
+![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/AudioScape?style=for-the-badge&label=Languages%20Used&labelColor=ce5601&color=ce6c01)
+![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/AudioScape?style=for-the-badge&label=Issues&labelColor=ce5601&color=ce6c01)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/AudioScape?style=for-the-badge&label=Pull%20Requests&labelColor=ce5601&color=ce6c01)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/AudioScape?style=for-the-badge&label=Code%20Size&labelColor=ce5601&color=ce6c01)
 </div>
 
 ## ✨ Features
