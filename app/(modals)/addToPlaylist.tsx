@@ -28,11 +28,10 @@ export default function AddToPlaylistModal() {
     thumbnail: tracks.length > 0 ? tracks[0].thumbnail : null,
   }));
 
-  const renderPlaylistItem = ({
-    item,
-  }: {
-    item: { name: string; thumbnail: string | null };
-  }) => (
+  const renderPlaylistItem = (
+    { item }: { item: { name: string; thumbnail: string | null } },
+    handleDismiss: () => void // Receive handleDismiss as an argument
+  ) => (
     <TouchableOpacity
       style={styles.playlistItem}
       onPress={() => {
@@ -46,6 +45,7 @@ export default function AddToPlaylistModal() {
           },
           item.name
         );
+        handleDismiss(); // Call handleDismiss here
         console.log(`Selected playlist: ${item.name}`);
       }}
     >
@@ -81,7 +81,7 @@ export default function AddToPlaylistModal() {
               <FlatList
                 data={playlistArray}
                 keyExtractor={(item) => item.name}
-                renderItem={renderPlaylistItem}
+                renderItem={(props) => renderPlaylistItem(props, handleDismiss)} // Pass handleDismiss
                 showsVerticalScrollIndicator={true}
                 contentContainerStyle={styles.flatListContent}
               />

@@ -155,7 +155,7 @@ export default function SearchScreen() {
           renderItem={renderSearchResult}
           keyExtractor={(item) => item.id}
           style={styles.searchResults}
-          contentContainerStyle={{ paddingBottom: 60 }}
+          contentContainerStyle={{ paddingBottom: 90 }}
         />
       )}
     </SafeAreaView>

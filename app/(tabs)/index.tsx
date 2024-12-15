@@ -6,6 +6,7 @@ import {
   Image,
   View,
   Text,
+  Dimensions,
 } from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import innertube from "@/components/yt";
@@ -104,16 +105,18 @@ export default function HomeScreen() {
           style={styles.logo}
         />
         <Text style={styles.headerText}>AudioScape</Text>
-        <EvilIcons
-          name={"search"}
-          color={"white"}
-          style={{ marginLeft: 165 }}
-          size={35}
-          onPress={() => {
-            router.navigate("/(tabs)/search");
-          }}
-        />
+        <View style={{ marginLeft: "auto" }}>
+          <EvilIcons
+            name={"search"}
+            color={"white"}
+            size={35}
+            onPress={() => {
+              router.navigate("/(tabs)/search");
+            }}
+          />
+        </View>
       </View>
+
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
@@ -132,6 +135,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     padding: 10,
   },
   headerText: {

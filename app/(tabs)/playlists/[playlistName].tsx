@@ -2,7 +2,7 @@ import React from "react";
 import {
   Text,
   View,
-  FlatList,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -13,6 +13,7 @@ import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { usePlaylists } from "@/store/library";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FastImage from "react-native-fast-image";
 
 interface TrackInfo {
@@ -27,7 +28,7 @@ const PlaylistView = () => {
   const { playAudio } = useMusicPlayer();
   const { playlistName } = useLocalSearchParams<{ playlistName: string }>();
 
-  const { playlists } = usePlaylists();
+  const { playlists, removeTrackFromPlaylist } = usePlaylists();
 
   const playlist = playlists[playlistName];
 
@@ -35,23 +36,13 @@ const PlaylistView = () => {
     playAudio(song);
   };
 
-  const renderPlaylistItems = ({ item }: { item: TrackInfo }) => (
-    <TouchableOpacity
-      style={styles.searchResult}
-      onPress={() => handleSongSelect(item)}
-    >
-      <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
-      <View style={styles.resultText}>
-        <Text style={styles.resultTitle}>{item.title}</Text>
-        <Text style={styles.resultArtist}>{item.artist}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
-    <View
-      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
+    <ScrollView
+      style={[styles.container, { paddingTop: top }]}
+      contentContainerStyle={{ paddingBottom: bottom + 90 }}
+      showsVerticalScrollIndicator={false}
     >
+      {/* Artwork Image */}
       <View style={styles.artworkImageContainer}>
         <FastImage
           source={{
@@ -63,13 +54,33 @@ const PlaylistView = () => {
       </View>
 
       <Text style={styles.header}>{playlistName}</Text>
-      <FlatList
-        data={playlist}
-        keyExtractor={(item) => item.id}
-        renderItem={renderPlaylistItems}
-        contentContainerStyle={{ paddingBottom: 60 }}
-      />
-    </View>
+
+      <View>
+        {playlist.map((item: TrackInfo) => (
+          <View key={item.id} style={styles.songItem}>
+            <TouchableOpacity
+              style={styles.songItemTouchableArea}
+              onPress={() => handleSongSelect(item)}
+            >
+              <Image
+                source={{ uri: item.thumbnail }}
+                style={styles.resultThumbnail}
+              />
+              <View style={styles.resultText}>
+                <Text style={styles.resultTitle}>{item.title}</Text>
+                <Text style={styles.resultArtist}>{item.artist}</Text>
+              </View>
+            </TouchableOpacity>
+            <MaterialCommunityIcons
+              name="delete-forever-outline"
+              size={24}
+              color="#530000"
+              onPress={() => removeTrackFromPlaylist(item.id, playlistName)}
+            />
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -100,10 +111,15 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderRadius: 12,
   },
-  searchResult: {
+  songItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
+  },
+  songItemTouchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: Dimensions.get("window").width - 60,
   },
   resultThumbnail: {
     width: 50,

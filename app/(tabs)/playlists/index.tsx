@@ -13,11 +13,14 @@ import {
   TouchableOpacity,
   View,
   ToastAndroid,
+  Dimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function PlaylistScreen() {
-  const { playlists, createNewPlaylist } = usePlaylists();
+  const { playlists, createNewPlaylist, deleteExistingPlaylist } =
+    usePlaylists();
   const router = useRouter();
   const { top, bottom } = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
@@ -58,24 +61,32 @@ export default function PlaylistScreen() {
   }: {
     item: { name: string; thumbnail: string | null };
   }) => (
-    <TouchableOpacity
-      style={styles.playlistItem}
-      onPress={() => {
-        router.push({
-          pathname: `/(tabs)/playlists/[playlistName]`,
-          params: { playlistName: item.name },
-        });
-        console.log(`Selected playlist: ${item.name}`);
-      }}
-    >
-      <Image
-        source={{
-          uri: item.thumbnail || "https://placehold.co/100",
+    <View style={styles.playlistItem}>
+      <TouchableOpacity
+        style={styles.playlistItemTouchableArea}
+        onPress={() => {
+          router.push({
+            pathname: `/(tabs)/playlists/[playlistName]`,
+            params: { playlistName: item.name },
+          });
+          console.log(`Selected playlist: ${item.name}`);
         }}
-        style={styles.thumbnail}
+      >
+        <Image
+          source={{
+            uri: item.thumbnail || "https://placehold.co/100",
+          }}
+          style={styles.thumbnail}
+        />
+        <Text style={styles.playlistName}>{item.name}</Text>
+      </TouchableOpacity>
+      <MaterialCommunityIcons
+        name="delete-forever-outline"
+        size={24}
+        color="#530000"
+        onPress={() => deleteExistingPlaylist(item.name)}
       />
-      <Text style={styles.playlistName}>{item.name}</Text>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -166,12 +177,17 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: 10,
-    paddingBottom: 60,
+    paddingBottom: 90,
   },
   playlistItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
+  },
+  playlistItemTouchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: Dimensions.get("window").width - 60,
   },
   thumbnail: {
     width: 50,
