@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,23 +14,34 @@ import { useActiveTrack } from "react-native-track-player";
 import { usePlaylists } from "@/store/library";
 import { Colors } from "@/constants/Colors";
 import VerticalDismiss from "@/components/navigation/VerticalArrowDismiss";
+import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
 import { Entypo } from "@expo/vector-icons";
 
 const { height: screenHeight } = Dimensions.get("window");
 
 export default function AddToPlaylistModal() {
-  const { playlists, addTrackToPlaylist } = usePlaylists();
+  const { playlists, addTrackToPlaylist, createNewPlaylist } = usePlaylists();
   const { bottom } = useSafeAreaInsets();
   const activeTrack = useActiveTrack();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const playlistArray = Object.entries(playlists).map(([name, tracks]) => ({
     name,
     thumbnail: tracks.length > 0 ? tracks[0].thumbnail : null,
   }));
 
+  const handleCreatePlaylist = (playlistName: string) => {
+    if (playlists[playlistName]) {
+      console.warn("A playlist with this name already exists.");
+      return;
+    }
+    createNewPlaylist(playlistName);
+    setModalVisible(false);
+  };
+
   const renderPlaylistItem = (
     { item }: { item: { name: string; thumbnail: string | null } },
-    handleDismiss: () => void // Receive handleDismiss as an argument
+    handleDismiss: () => void
   ) => (
     <TouchableOpacity
       style={styles.playlistItem}
@@ -45,7 +56,7 @@ export default function AddToPlaylistModal() {
           },
           item.name
         );
-        handleDismiss(); // Call handleDismiss here
+        handleDismiss();
         console.log(`Selected playlist: ${item.name}`);
       }}
     >
@@ -75,17 +86,30 @@ export default function AddToPlaylistModal() {
               />
 
               <Text style={styles.modalTitle}>Choose a playlist</Text>
+
+              <TouchableOpacity
+                style={styles.createButton}
+                onPress={() => setModalVisible(true)}
+              >
+                <Text style={styles.createButtonText}>+ New Playlist</Text>
+              </TouchableOpacity>
             </View>
 
-            <View style={{ paddingBottom: bottom + 10 }}>
+            <View style={{ paddingBottom: bottom + 30 }}>
               <FlatList
                 data={playlistArray}
                 keyExtractor={(item) => item.name}
-                renderItem={(props) => renderPlaylistItem(props, handleDismiss)} // Pass handleDismiss
+                renderItem={(props) => renderPlaylistItem(props, handleDismiss)}
                 showsVerticalScrollIndicator={true}
                 contentContainerStyle={styles.flatListContent}
               />
             </View>
+
+            <CreatePlaylistModal
+              visible={modalVisible}
+              onCreate={handleCreatePlaylist}
+              onCancel={() => setModalVisible(false)}
+            />
           </View>
         </View>
       )}
@@ -108,6 +132,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
+    alignItems: "center",
   },
   dismissButton: {
     alignSelf: "center",
@@ -138,5 +163,19 @@ const styles = StyleSheet.create({
   playlistName: {
     fontSize: 16,
     color: Colors.text,
+  },
+  createButton: {
+    backgroundColor: "white",
+    paddingVertical: 9,
+    paddingHorizontal: 18,
+    borderRadius: 100,
+    alignSelf: "center",
+    marginBottom: 10,
+    marginLeft: 30,
+  },
+  createButtonText: {
+    color: "black",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });
