@@ -6,9 +6,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   Image,
-  FlatList,
   View,
   Text,
+  ScrollView,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
@@ -48,47 +48,50 @@ const FavoritesScreen = () => {
     playAudio(song);
   };
 
-  const renderSearchResult = ({ item }: { item: Song }) => (
-    <TouchableOpacity
-      style={styles.searchResult}
-      onPress={() => handleSongSelect(item)}
-    >
-      <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
-      <View style={styles.resultText}>
-        <Text style={styles.resultTitle}>{item.title}</Text>
-        <Text style={styles.resultArtist}>{item.artist}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
-    <View
+    <ScrollView
       style={[
         defaultStyles.container,
         { paddingTop: top, paddingBottom: bottom },
       ]}
+      contentContainerStyle={styles.scrollContainer}
+      showsVerticalScrollIndicator={false}
     >
+      {/* Header */}
       <Text style={styles.header}>Favorites</Text>
+
+      {/* Loading Indicator */}
       {isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
-        <FlatList
-          data={formattedTracks}
-          renderItem={renderSearchResult}
-          keyExtractor={(item) => item.id}
-          style={styles.searchResults}
-          contentContainerStyle={{ paddingBottom: 90 }}
-        />
+        <View style={styles.songList}>
+          {formattedTracks.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.searchResult}
+              onPress={() => handleSongSelect(item)}
+            >
+              <Image
+                source={{ uri: item.thumbnail }}
+                style={styles.resultThumbnail}
+              />
+              <View style={styles.resultText}>
+                <Text style={styles.resultTitle}>{item.title}</Text>
+                <Text style={styles.resultArtist}>{item.artist}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
 export default FavoritesScreen;
 
 const styles = StyleSheet.create({
-  searchResults: {
-    width: "100%",
+  scrollContainer: {
+    paddingBottom: 110,
   },
   header: {
     fontSize: 24,
@@ -96,6 +99,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
+  },
+  songList: {
+    flexDirection: "column",
+    width: "100%",
   },
   searchResult: {
     flexDirection: "row",

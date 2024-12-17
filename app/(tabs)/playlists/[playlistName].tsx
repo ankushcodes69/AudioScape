@@ -8,7 +8,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
@@ -25,6 +25,7 @@ interface TrackInfo {
 
 const PlaylistView = () => {
   const { top, bottom } = useSafeAreaInsets();
+  const router = useRouter();
   const { playAudio } = useMusicPlayer();
   const { playlistName } = useLocalSearchParams<{ playlistName: string }>();
 
@@ -37,50 +38,63 @@ const PlaylistView = () => {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { paddingTop: top }]}
-      contentContainerStyle={{ paddingBottom: bottom + 90 }}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* Artwork Image */}
-      <View style={styles.artworkImageContainer}>
-        <FastImage
-          source={{
-            uri: playlist[0]?.thumbnail,
-            priority: FastImage.priority.high,
-          }}
-          style={styles.artworkImage}
-        />
-      </View>
+    <View style={[styles.container, { paddingTop: top }]}>
+      <MaterialCommunityIcons
+        name="arrow-left"
+        size={28}
+        color={Colors.text}
+        style={{ paddingTop: 8 }}
+        onPress={() => router.back()}
+      />
 
-      <Text style={styles.header}>{playlistName}</Text>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: bottom + 60 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Artwork Image */}
+        <View style={styles.artworkImageContainer}>
+          <FastImage
+            source={
+              playlist[0]
+                ? {
+                    uri: playlist[0]?.thumbnail,
+                    priority: FastImage.priority.high,
+                  }
+                : require("@/assets/images/unknown_track.png")
+            }
+            style={styles.artworkImage}
+          />
+        </View>
 
-      <View>
-        {playlist.map((item: TrackInfo) => (
-          <View key={item.id} style={styles.songItem}>
-            <TouchableOpacity
-              style={styles.songItemTouchableArea}
-              onPress={() => handleSongSelect(item)}
-            >
-              <Image
-                source={{ uri: item.thumbnail }}
-                style={styles.resultThumbnail}
+        <Text style={styles.header}>{playlistName}</Text>
+
+        <View>
+          {playlist.map((item: TrackInfo) => (
+            <View key={item.id} style={styles.songItem}>
+              <TouchableOpacity
+                style={styles.songItemTouchableArea}
+                onPress={() => handleSongSelect(item)}
+              >
+                <Image
+                  source={{ uri: item.thumbnail }}
+                  style={styles.resultThumbnail}
+                />
+                <View style={styles.resultText}>
+                  <Text style={styles.resultTitle}>{item.title}</Text>
+                  <Text style={styles.resultArtist}>{item.artist}</Text>
+                </View>
+              </TouchableOpacity>
+              <MaterialCommunityIcons
+                name="delete-forever-outline"
+                size={24}
+                color="#530000"
+                onPress={() => removeTrackFromPlaylist(item.id, playlistName)}
               />
-              <View style={styles.resultText}>
-                <Text style={styles.resultTitle}>{item.title}</Text>
-                <Text style={styles.resultArtist}>{item.artist}</Text>
-              </View>
-            </TouchableOpacity>
-            <MaterialCommunityIcons
-              name="delete-forever-outline"
-              size={24}
-              color="#530000"
-              onPress={() => removeTrackFromPlaylist(item.id, playlistName)}
-            />
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
