@@ -21,6 +21,7 @@
 - Background playback with stop when app swipe out from task manager
 - Add Songs To Favorites Category
 - Dynamic Player Background
+- Create Playlists
 
 ## 📲 Installation
 [<img src="./assets/images/getItGithub.png" alt="GitHub" height="80">](https://github.com/ankushcodes69/AudioScape/releases/latest)
