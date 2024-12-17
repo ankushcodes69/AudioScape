@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
-import innertube from "@/components/yt";
+import innertube from "@/youtube";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

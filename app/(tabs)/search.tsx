@@ -16,7 +16,7 @@ import { Searchbar } from "react-native-paper";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
-import innertube from "@/components/yt";
+import innertube from "@/youtube";
 import { Colors } from "@/constants/Colors";
 
 interface SearchResult {

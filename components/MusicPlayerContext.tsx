@@ -6,7 +6,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import innertube from "@/components/yt";
+import innertube from "@/youtube";
 import TrackPlayer, { State, Track } from "react-native-track-player";
 import { Helpers } from "youtubei.js";
 
