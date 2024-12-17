@@ -4,7 +4,7 @@ export default {
   name: IS_DEV ? "AudioScape (Dev)" : "AudioScape",
   owner: "ankushsarkar",
   slug: "AudioScape",
-  version: "1.3.0",
+  version: "1.4.0",
   platforms: ["android"],
   orientation: "portrait",
   icon: "./assets/images/icon.png",
