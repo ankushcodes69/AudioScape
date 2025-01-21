@@ -7,6 +7,7 @@ import React, {
   useCallback,
 } from "react";
 import innertube from "@/youtube";
+import { getBasicInfo } from "@/youtubeUtils/main";
 import TrackPlayer, { State, Track } from "react-native-track-player";
 import { Helpers } from "youtubei.js";
 
@@ -50,9 +51,13 @@ interface MusicPlayerProviderProps {
   children: ReactNode;
 }
 
-async function getInfo(inid: string): Promise<Track> {
+async function getInfo(
+  inid: string,
+  title: string,
+  author: string
+): Promise<Track> {
   const yt = await innertube;
-  const info = await yt.music.getInfo(inid);
+  const info = await getBasicInfo(yt, inid);
   const format = info.chooseFormat({ type: "audio", quality: "best" });
   const streamUrl = `${format?.decipher(yt.session.player)}`;
   const item = info.basic_info;
@@ -60,8 +65,8 @@ async function getInfo(inid: string): Promise<Track> {
   const res = {
     id: inid,
     url: streamUrl,
-    title: info.basic_info.title,
-    artist: info.basic_info.author,
+    title: title,
+    artist: author,
     artwork:
       item.thumbnail && item.thumbnail[0]
         ? item.thumbnail[0].url
@@ -121,7 +126,11 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
             const item = upNext[i];
             if (isValidUpNextItem(item)) {
               const id = item.video_id;
-              const info = await getInfo(id);
+              const info = await getInfo(
+                id,
+                `${String(item.title)}`,
+                item.author
+              );
               log(`Adding to queue: ${info.title}`);
               await TrackPlayer.add(info);
             }
@@ -151,7 +160,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
 
       await resetPlayerState();
 
-      const info = await getInfo(song.id);
+      const info = await getInfo(song.id, song.title, song.artist);
       await TrackPlayer.add(info);
       await TrackPlayer.play();
 

@@ -20,6 +20,9 @@ import { playbackService } from "@/constants/playbackService";
 import { MusicPlayerProvider } from "@/components/MusicPlayerContext";
 import { initializeLibrary, store } from "@/store/library";
 import { Provider } from "react-redux";
+import { install } from "react-native-quick-crypto";
+
+install();
 
 SplashScreen.preventAutoHideAsync();
 
