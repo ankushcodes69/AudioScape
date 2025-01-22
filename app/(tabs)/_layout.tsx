@@ -1,15 +1,18 @@
-import { Tabs } from "expo-router";
 import React from "react";
 import { View, StyleSheet } from "react-native";
+import { Tabs } from "expo-router";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MessageModal } from "@/components/MessageModal"; // Import MessageModal
 
 function TabLayoutContent() {
   const { bottom } = useSafeAreaInsets();
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <MessageModal />
       <Tabs
         screenOptions={{
           tabBarStyle: {
@@ -49,7 +52,6 @@ function TabLayoutContent() {
             ),
           }}
         />
-
         <Tabs.Screen
           name="favorites"
           options={{
@@ -62,7 +64,6 @@ function TabLayoutContent() {
             ),
           }}
         />
-
         <Tabs.Screen
           name="playlists"
           options={{
@@ -75,15 +76,8 @@ function TabLayoutContent() {
             ),
           }}
         />
-
-        <Tabs.Screen
-          name="search"
-          options={{
-            href: null,
-          }}
-        />
+        <Tabs.Screen name="search" options={{ href: null }} />
       </Tabs>
-
       <FloatingPlayer
         style={{
           position: "absolute",

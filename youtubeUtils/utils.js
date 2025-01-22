@@ -38,6 +38,10 @@ async function decryptResponse(iv, hmac, data, clientKeyData) {
     .update(Buffer.concat([data, iv]))
     .digest();
 
+  if (!hmacCalculated.every((byte, i) => byte === hmac[i])) {
+    throw new Error('HMAC verification failed');
+  }
+
   const aesKey = crypto.createDecipheriv("aes-128-ctr", aesKeyData, iv);
   const decryptedData = Buffer.concat([aesKey.update(data), aesKey.final()]);
 

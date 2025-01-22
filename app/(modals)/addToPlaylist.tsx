@@ -61,9 +61,11 @@ export default function AddToPlaylistModal() {
       }}
     >
       <Image
-        source={{
-          uri: item.thumbnail || "https://placehold.co/100",
-        }}
+        source={
+          item.thumbnail
+            ? { uri: item.thumbnail }
+            : require("@/assets/images/unknown_track.png")
+        }
         style={styles.thumbnail}
       />
       <Text style={styles.playlistName}>{item.name}</Text>
