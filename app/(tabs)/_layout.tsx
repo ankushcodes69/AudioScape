@@ -5,13 +5,15 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { MessageModal } from "@/components/MessageModal"; // Import MessageModal
+import { MessageModal } from "@/components/MessageModal";
+import { UpdateModal } from "@/components/UpdateModal";
 
 function TabLayoutContent() {
   const { bottom } = useSafeAreaInsets();
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <UpdateModal />
       <MessageModal />
       <Tabs
         screenOptions={{

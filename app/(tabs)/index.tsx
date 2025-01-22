@@ -6,7 +6,6 @@ import {
   Image,
   View,
   Text,
-  Dimensions,
 } from "react-native";
 import { HomeFeed } from "@/components/HomeFeed";
 import innertube from "@/youtube";

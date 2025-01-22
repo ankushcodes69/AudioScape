@@ -7,44 +7,63 @@ import {
   StyleSheet,
   Linking,
 } from "react-native";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-import { storage } from "@/storage";
+import * as Application from "expo-application";
 import { Colors } from "@/constants/Colors";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDMQ-6wcbIxzO_J8rqVT_AFgGXB3DZXnUM",
-  authDomain: "audioscape-ankushsarkar.firebaseapp.com",
-  projectId: "audioscape-ankushsarkar",
-  storageBucket: "audioscape-ankushsarkar.firebasestorage.app",
-  messagingSenderId: "160278040044",
-  appId: "1:160278040044:web:9c98ba8c3b86bea94e04c9",
-  measurementId: "G-CFXR04RLEH",
-};
-
-initializeApp(firebaseConfig);
-
-export const MessageModal = () => {
+export const UpdateModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [latestVersion, setLatestVersion] = useState<string | null>(null);
+
+  function compareVersions(v1: string, v2: string): number {
+    const normalizeVersion = (version: string) => {
+      return version.startsWith("v") ? version.slice(1) : version;
+    };
+
+    const [major1, minor1, patch1] = normalizeVersion(v1)
+      .split(".")
+      .map(Number);
+    const [major2, minor2, patch2] = normalizeVersion(v2)
+      .split(".")
+      .map(Number);
+
+    if (major1 !== major2) return major1 > major2 ? 1 : -1;
+    if (minor1 !== minor2) return minor1 > minor2 ? 1 : -1;
+    if (patch1 !== patch2) return patch1 > patch2 ? 1 : -1;
+    return 0;
+  }
+
+  const message = `A new version of AudioScape is available!\n\nPlease update to version ${latestVersion} to get the latest features and bug fixes.\n\nDownload and install the latest version from "Assets" section from : https://github.com/ankushcodes69/AudioScape/releases/latest`;
+  let flag = false;
 
   useEffect(() => {
     const fetchMessage = async () => {
-      const db = getFirestore();
-      const docRef = doc(db, "appData", "activeMessage");
-      const docSnap = await getDoc(docRef);
+      try {
+        const response = await fetch(
+          "https://api.github.com/repos/ankushcodes69/AudioScape/releases/latest",
+          {
+            headers: {
+              Accept: "application/vnd.github.v3+json",
+            },
+          }
+        );
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const storedMessageId = storage.getString("lastSeenMessageId");
-
-        if (storedMessageId !== data.id || !data.showOnce) {
-          setMessage(data.content);
-          setIsModalVisible(true);
-
-          storage.set("lastSeenMessageId", data.id);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
         }
+
+        const data = await response.json();
+
+        if (
+          compareVersions(
+            `${Application.nativeApplicationVersion}`,
+            data.tag_name
+          ) == -1
+        ) {
+          setLatestVersion(data.tag_name);
+          setIsModalVisible(true);
+        } else flag = true;
+      } catch (err: any) {
+        console.error(err.message);
       }
     };
 
@@ -57,7 +76,7 @@ export const MessageModal = () => {
     );
   };
 
-  if (!message) return null;
+  if (flag) return null;
 
   return (
     <Modal
