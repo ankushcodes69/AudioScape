@@ -8,10 +8,12 @@ import { useSharedValue } from "react-native-reanimated";
 import TrackPlayer, { useProgress } from "react-native-track-player";
 
 export const PlayerProgressBar = ({ style }: ViewProps) => {
-  const { duration, position } = useProgress(250);
+  const { duration, position, buffered } = useProgress(250);
 
   const isSliding = useSharedValue(false);
   const progress = useSharedValue(0);
+  const slidingValue = useSharedValue(0);
+  const cache = useSharedValue(0);
   const min = useSharedValue(0);
   const max = useSharedValue(1);
 
@@ -20,6 +22,7 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
 
   if (!isSliding.value) {
     progress.value = duration > 0 ? position / duration : 0;
+    cache.value = duration > 0 ? buffered / duration : 0;
   }
 
   return (
@@ -28,15 +31,23 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
         progress={progress}
         minimumValue={min}
         maximumValue={max}
+        cache={cache}
         containerStyle={utilsStyles.slider}
-        thumbWidth={0}
-        renderBubble={() => null}
+        thumbWidth={13}
+        renderBubble={() => (
+          <View style={styles.bubbleContainer}>
+            <Text style={styles.bubbleText}>
+              {formatSecondsToMinutes(slidingValue.value * duration)}
+            </Text>
+          </View>
+        )}
         theme={{
           minimumTrackTintColor: Colors.minimumTrackTintColor,
           maximumTrackTintColor: Colors.maximumTrackTintColor,
         }}
         onSlidingStart={() => (isSliding.value = true)}
         onValueChange={async (value) => {
+          slidingValue.value = value;
           await TrackPlayer.seekTo(value * duration);
         }}
         onSlidingComplete={async (value) => {
@@ -74,5 +85,15 @@ const styles = StyleSheet.create({
     fontSize: fontSize.xs,
     letterSpacing: 0.7,
     fontWeight: "500",
+  },
+  bubbleContainer: {
+    backgroundColor: "transparent",
+    alignItems: "flex-end",
+    width: 67.5,
+  },
+  bubbleText: {
+    color: Colors.text,
+    fontWeight: "500",
+    opacity: 0.8,
   },
 });

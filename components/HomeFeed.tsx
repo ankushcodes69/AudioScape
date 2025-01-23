@@ -38,9 +38,6 @@ export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
           source={{ uri: item.thumbnail }}
           style={[styles.thumbnail, { width: itemWidth, height: itemWidth }]}
         />
-        <View style={styles.playButton}>
-          <Text style={styles.playButtonText}>▶</Text>
-        </View>
       </View>
       <Text style={styles.title} numberOfLines={1}>
         {item.title}
@@ -94,23 +91,6 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     borderRadius: 8,
-  },
-  playButton: {
-    position: "absolute",
-    right: 5,
-    bottom: 5,
-    backgroundColor: "white",
-    borderRadius: 15,
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  playButtonText: {
-    fontSize: 18,
-    bottom: 1.5,
-    left: 1,
-    color: "black",
   },
   title: {
     color: Colors.text,
