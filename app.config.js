@@ -1,10 +1,11 @@
 const IS_DEV = process.env.APP_VARIANT === 'development';
+const packageJson = require('./package.json');
 
 export default {
   name: IS_DEV ? "AudioScape (Dev)" : "AudioScape",
   owner: "ankushsarkar",
   slug: "AudioScape",
-  version: "1.4.0",
+  version: packageJson.version,
   platforms: ["android"],
   orientation: "portrait",
   icon: "./assets/images/icon.png",
