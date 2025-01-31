@@ -134,19 +134,18 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   dismissButton: {
-    alignSelf: "center",
-    padding: 10,
-    marginTop: -12,
-    marginRight: 8,
+    marginTop: -11,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     color: Colors.text,
     marginBottom: 10,
+    marginLeft: -20,
   },
   flatListContent: {
     flexGrow: 1,
@@ -171,9 +170,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     paddingHorizontal: 18,
     borderRadius: 100,
-    alignSelf: "center",
     marginBottom: 10,
-    marginLeft: 30,
   },
   createButtonText: {
     color: "black",

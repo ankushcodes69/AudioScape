@@ -11,7 +11,7 @@ import { getBasicInfo } from "@/youtubeUtils/main";
 import TrackPlayer, { State, Track } from "react-native-track-player";
 import { Helpers } from "youtubei.js";
 
-interface SearchResult {
+interface SongItem {
   id: string;
   title: string;
   artist: string;
@@ -21,7 +21,7 @@ interface SearchResult {
 interface MusicPlayerContextType {
   isPlaying: boolean;
   isLoading: boolean;
-  playAudio: (song: SearchResult) => Promise<void>;
+  playAudio: (song: SongItem) => Promise<void>;
   togglePlayPause: () => Promise<void>;
 }
 
@@ -153,7 +153,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
     [log]
   );
 
-  const playAudio = async (song: SearchResult) => {
+  const playAudio = async (song: SongItem) => {
     try {
       log(`Starting playback for song: ${song.title}`);
       setIsLoading(true);

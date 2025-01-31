@@ -10,24 +10,27 @@ import {
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 
-interface SearchResult {
+interface SongItem {
   id: string;
   title: string;
   artist: string;
   thumbnail: string;
 }
 
-interface HomeFeedProps {
-  results: SearchResult[];
-  onItemClick: (item: SearchResult) => void;
+interface QuickPicksSectionProps {
+  results: SongItem[];
+  onItemClick: (item: SongItem) => void;
 }
 
-export const HomeFeed: React.FC<HomeFeedProps> = ({ results, onItemClick }) => {
+export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
+  results,
+  onItemClick,
+}) => {
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = screenWidth * 0.27;
   const itemHeight = itemWidth + 50;
 
-  const renderItem = (item: SearchResult) => (
+  const renderItem = (item: SongItem) => (
     <TouchableOpacity
       key={item.id}
       style={[styles.itemContainer, { width: itemWidth, height: itemHeight }]}
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: "white",
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
     marginBottom: 10,
     marginLeft: 5,
