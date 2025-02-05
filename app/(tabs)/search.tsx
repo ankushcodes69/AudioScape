@@ -16,6 +16,7 @@ import { Searchbar } from "react-native-paper";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 import innertube from "@/youtube";
 import { Colors } from "@/constants/Colors";
 
@@ -26,10 +27,18 @@ interface SearchResult {
   thumbnail: string;
 }
 
+interface SearchSuggestions {
+  text: string;
+}
+
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchSuggestions, setSearchSuggestions] = useState<
+    SearchSuggestions[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const { top, bottom } = useSafeAreaInsets();
   const router = useRouter();
   const { playAudio } = useMusicPlayer();
@@ -38,6 +47,9 @@ export default function SearchScreen() {
   const handleSearch = async () => {
     if (!searchQuery) return;
 
+    Keyboard.dismiss();
+
+    setIsSearching(false);
     setIsLoading(true);
     try {
       const yt = await innertube;
@@ -85,9 +97,48 @@ export default function SearchScreen() {
     setIsLoading(false);
   };
 
+  const handleSearchSuggestions = async () => {
+    if (!searchQuery) return;
+
+    setIsSearching(true);
+    try {
+      const yt = await innertube;
+      const searchSuggestions = await yt.music.getSearchSuggestions(
+        searchQuery
+      );
+
+      if (
+        searchSuggestions &&
+        Array.isArray(searchSuggestions) &&
+        searchSuggestions.length > 0 &&
+        searchSuggestions[0].contents
+      ) {
+        const formattedResults: SearchSuggestions[] =
+          searchSuggestions[0].contents
+            .filter(
+              (item: any) => item && item.suggestion && item.suggestion.text
+            )
+            .map((item: any) => ({
+              text: item.suggestion.text,
+            }));
+
+        setSearchSuggestions(formattedResults);
+      } else {
+        setSearchSuggestions([]);
+        Alert.alert("No results", "No songs found for your search query.");
+      }
+    } catch (error) {
+      console.error("Error searching:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while searching. Please try again."
+      );
+    }
+  };
+
   useEffect(() => {
     async function fetchResults() {
-      await handleSearch();
+      await handleSearchSuggestions();
     }
 
     fetchResults();
@@ -95,6 +146,14 @@ export default function SearchScreen() {
 
   const handleSongSelect = (song: SearchResult) => {
     playAudio(song);
+  };
+
+  const handleSearchSuggestionsSelect = async (
+    suggestion: SearchSuggestions
+  ) => {
+    Keyboard.dismiss();
+    await setSearchQuery(suggestion.text);
+    await handleSearch();
   };
 
   const renderSearchResult = ({ item }: { item: SearchResult }) => (
@@ -107,6 +166,21 @@ export default function SearchScreen() {
         <Text style={styles.resultTitle}>{item.title}</Text>
         <Text style={styles.resultArtist}>{item.artist}</Text>
       </View>
+    </TouchableOpacity>
+  );
+
+  const renderSearchSuggestions = ({ item }: { item: SearchSuggestions }) => (
+    <TouchableOpacity
+      style={styles.searchResult}
+      onPress={() => handleSearchSuggestionsSelect(item)}
+    >
+      <EvilIcons
+        name="search"
+        size={30}
+        color={Colors.text}
+        style={{ marginRight: 10, marginLeft: 10, marginTop: -3 }}
+      />
+      <Text style={styles.resultTitle}>{item.text}</Text>
     </TouchableOpacity>
   );
 
@@ -147,7 +221,17 @@ export default function SearchScreen() {
         }}
         ref={searchBarRef}
       />
-      {isLoading ? (
+
+      {isSearching ? (
+        <FlatList
+          data={searchSuggestions}
+          renderItem={renderSearchSuggestions}
+          keyExtractor={(item) => item.text}
+          style={styles.searchResults}
+          contentContainerStyle={{ paddingBottom: 90 }}
+          keyboardShouldPersistTaps="handled"
+        />
+      ) : isLoading ? (
         <ActivityIndicator color="white" size="large" />
       ) : (
         <FlatList
@@ -156,6 +240,7 @@ export default function SearchScreen() {
           keyExtractor={(item) => item.id}
           style={styles.searchResults}
           contentContainerStyle={{ paddingBottom: 90 }}
+          keyboardShouldPersistTaps="handled"
         />
       )}
     </SafeAreaView>
