@@ -44,8 +44,8 @@ export default function SearchScreen() {
   const { playAudio } = useMusicPlayer();
   const searchBarRef = useRef<TextInput>(null);
 
-  const handleSearch = async () => {
-    if (!searchQuery) return;
+  const handleSearch = async (query: string) => {
+    if (!query) return;
 
     Keyboard.dismiss();
 
@@ -53,7 +53,7 @@ export default function SearchScreen() {
     setIsLoading(true);
     try {
       const yt = await innertube;
-      const searchResults = await yt.music.search(searchQuery, {
+      const searchResults = await yt.music.search(query, {
         type: "song",
       });
 
@@ -153,7 +153,7 @@ export default function SearchScreen() {
   ) => {
     Keyboard.dismiss();
     await setSearchQuery(suggestion.text);
-    await handleSearch();
+    await handleSearch(suggestion.text);
   };
 
   const renderSearchResult = ({ item }: { item: SearchResult }) => (
@@ -211,6 +211,7 @@ export default function SearchScreen() {
         onClearIconPress={() => {
           Keyboard.dismiss();
         }}
+        onSubmitEditing={() => handleSearch(searchQuery)}
         style={styles.searchbar}
         inputStyle={{ color: "white" }}
         placeholderTextColor="#999"
