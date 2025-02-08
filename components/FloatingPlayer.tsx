@@ -26,10 +26,10 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
   const { imageColors } = usePlayerBackground(
     activeTrack?.artwork ?? "https://placehold.co/50"
   );
-  const dominantColor = activeTrack ? imageColors?.dominant : "#1A1A1A";
+  const dominantColor = activeTrack ? imageColors?.dominant : "#101010";
   const darkerColor =
-    dominantColor === "#1A1A1A"
-      ? "#1A1A1A"
+    dominantColor === "#101010"
+      ? "#101010"
       : color(dominantColor).darken(0.5).hex();
 
   const router = useRouter();

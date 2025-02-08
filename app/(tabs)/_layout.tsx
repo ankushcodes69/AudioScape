@@ -36,7 +36,7 @@ function TabLayoutContent() {
                 overflow: "hidden",
                 borderTopLeftRadius: 25,
                 borderTopRightRadius: 25,
-                backgroundColor: "#1A1A1A",
+                backgroundColor: "#101010",
               }}
             />
           ),

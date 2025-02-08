@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     width: "95%",
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#101010",
   },
   searchResults: {
     width: "100%",
