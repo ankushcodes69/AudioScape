@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: "white",
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
   },
   gridContainer: {

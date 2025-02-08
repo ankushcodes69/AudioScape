@@ -57,7 +57,7 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Quick picks</Text>
+      <Text style={styles.header}>Quick Picks</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.rowsContainer}>
           <View style={styles.row}>{topRowItems.map(renderItem)}</View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: "white",
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
     marginLeft: 5,
