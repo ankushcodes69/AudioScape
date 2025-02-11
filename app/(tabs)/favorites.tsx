@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { Colors } from "@/constants/Colors";
 
 interface Song {
@@ -21,10 +22,12 @@ interface Song {
   thumbnail: string;
 }
 
+const gradientIndex = Math.floor(Math.random() * (19 + 1));
+
 const FavoritesScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [formattedTracks, setFormattedTracks] = useState<Song[]>([]);
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const { playAudio } = useMusicPlayer();
   const favoritesTracks = useFavorites().favoriteTracks;
 
@@ -49,56 +52,55 @@ const FavoritesScreen = () => {
   };
 
   return (
-    <ScrollView
-      style={[
-        defaultStyles.container,
-        { paddingTop: top, paddingBottom: bottom },
-      ]}
-      contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* Header */}
-      <Text style={styles.header}>Favorites</Text>
+    <FullScreenGradientBackground index={gradientIndex}>
+      <View style={[defaultStyles.container, { paddingTop: top }]}>
+        {/* Header */}
+        <Text style={styles.header}>Favorites</Text>
 
-      {/* Loading Indicator */}
-      {isLoading ? (
-        <ActivityIndicator color="white" size="large" />
-      ) : (
-        <View style={styles.songList}>
-          {formattedTracks.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.searchResult}
-              onPress={() => handleSongSelect(item)}
-            >
-              <Image
-                source={{ uri: item.thumbnail }}
-                style={styles.resultThumbnail}
-              />
-              <View style={styles.resultText}>
-                <Text style={styles.resultTitle}>{item.title}</Text>
-                <Text style={styles.resultArtist}>{item.artist}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </ScrollView>
+        {/* Loading Indicator */}
+        {isLoading ? (
+          <ActivityIndicator color="white" size="large" />
+        ) : (
+          <ScrollView
+            style={styles.songList}
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            {formattedTracks.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.searchResult}
+                onPress={() => handleSongSelect(item)}
+              >
+                <Image
+                  source={{ uri: item.thumbnail }}
+                  style={styles.resultThumbnail}
+                />
+                <View style={styles.resultText}>
+                  <Text style={styles.resultTitle}>{item.title}</Text>
+                  <Text style={styles.resultArtist}>{item.artist}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
+      </View>
+    </FullScreenGradientBackground>
   );
 };
 
 export default FavoritesScreen;
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    paddingBottom: 110,
-  },
   header: {
     fontSize: 24,
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
+  },
+  scrollContainer: {
+    paddingBottom: 90,
   },
   songList: {
     flexDirection: "column",

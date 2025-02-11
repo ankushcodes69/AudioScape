@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "80%",
-    backgroundColor: Colors.background,
+    backgroundColor: "#101010",
     padding: 20,
     borderRadius: 10,
   },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   cancelButton: {
-    backgroundColor: Colors.background,
+    backgroundColor: "#101010",
     borderColor: "#333",
     borderWidth: 1,
   },

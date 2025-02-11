@@ -57,7 +57,7 @@ export const UpdateModal = () => {
           compareVersions(
             `${Application.nativeApplicationVersion}`,
             data.tag_name
-          ) == -1
+          ) === -1
         ) {
           setLatestVersion(data.tag_name);
           setIsModalVisible(true);

@@ -102,7 +102,7 @@ export default function AddToPlaylistModal() {
                 data={playlistArray}
                 keyExtractor={(item) => item.name}
                 renderItem={(props) => renderPlaylistItem(props, handleDismiss)}
-                showsVerticalScrollIndicator={true}
+                showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.flatListContent}
               />
             </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0)",
   },
   modalContent: {
-    backgroundColor: Colors.background,
+    backgroundColor: "#101010",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     padding: 20,

@@ -15,6 +15,7 @@ import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { usePlaylists } from "@/store/library";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FastImage from "react-native-fast-image";
+import { FullScreenGradientBackground } from "@/components/GradientBackground";
 
 interface TrackInfo {
   id: string;
@@ -23,8 +24,10 @@ interface TrackInfo {
   thumbnail: string;
 }
 
+const gradientIndex = Math.floor(Math.random() * (19 + 1));
+
 const PlaylistView = () => {
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const router = useRouter();
   const { playAudio } = useMusicPlayer();
   const { playlistName } = useLocalSearchParams<{ playlistName: string }>();
@@ -38,63 +41,65 @@ const PlaylistView = () => {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: top }]}>
-      <MaterialCommunityIcons
-        name="arrow-left"
-        size={28}
-        color={Colors.text}
-        style={{ paddingTop: 8 }}
-        onPress={() => router.back()}
-      />
+    <FullScreenGradientBackground index={gradientIndex}>
+      <View style={[styles.container, { paddingTop: top }]}>
+        <MaterialCommunityIcons
+          name="arrow-left"
+          size={28}
+          color={Colors.text}
+          style={{ paddingTop: 8 }}
+          onPress={() => router.back()}
+        />
 
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: bottom + 60 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Artwork Image */}
-        <View style={styles.artworkImageContainer}>
-          <FastImage
-            source={
-              playlist[0]
-                ? {
-                    uri: playlist[0]?.thumbnail,
-                    priority: FastImage.priority.high,
-                  }
-                : require("@/assets/images/unknown_track.png")
-            }
-            style={styles.artworkImage}
-          />
-        </View>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 90 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Artwork Image */}
+          <View style={styles.artworkImageContainer}>
+            <FastImage
+              source={
+                playlist[0]
+                  ? {
+                      uri: playlist[0]?.thumbnail,
+                      priority: FastImage.priority.high,
+                    }
+                  : require("@/assets/images/unknown_track.png")
+              }
+              style={styles.artworkImage}
+            />
+          </View>
 
-        <Text style={styles.header}>{playlistName}</Text>
+          <Text style={styles.header}>{playlistName}</Text>
 
-        <View>
-          {playlist.map((item: TrackInfo) => (
-            <View key={item.id} style={styles.songItem}>
-              <TouchableOpacity
-                style={styles.songItemTouchableArea}
-                onPress={() => handleSongSelect(item)}
-              >
-                <Image
-                  source={{ uri: item.thumbnail }}
-                  style={styles.resultThumbnail}
+          <View>
+            {playlist.map((item: TrackInfo) => (
+              <View key={item.id} style={styles.songItem}>
+                <TouchableOpacity
+                  style={styles.songItemTouchableArea}
+                  onPress={() => handleSongSelect(item)}
+                >
+                  <Image
+                    source={{ uri: item.thumbnail }}
+                    style={styles.resultThumbnail}
+                  />
+                  <View style={styles.resultText}>
+                    <Text style={styles.resultTitle}>{item.title}</Text>
+                    <Text style={styles.resultArtist}>{item.artist}</Text>
+                  </View>
+                </TouchableOpacity>
+                <MaterialCommunityIcons
+                  name="delete-forever-outline"
+                  size={24}
+                  color="#530000"
+                  onPress={() => removeTrackFromPlaylist(item.id, playlistName)}
                 />
-                <View style={styles.resultText}>
-                  <Text style={styles.resultTitle}>{item.title}</Text>
-                  <Text style={styles.resultArtist}>{item.artist}</Text>
-                </View>
-              </TouchableOpacity>
-              <MaterialCommunityIcons
-                name="delete-forever-outline"
-                size={24}
-                color="#530000"
-                onPress={() => removeTrackFromPlaylist(item.id, playlistName)}
-              />
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+    </FullScreenGradientBackground>
   );
 };
 
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: Colors.background,
+    paddingBottom: 0,
   },
   header: {
     fontSize: 24,

@@ -18,7 +18,6 @@ function TabLayoutContent() {
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: Colors.background,
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
             borderTopWidth: 0,

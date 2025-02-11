@@ -14,13 +14,16 @@ import { usePlaylists } from "@/store/library";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
+
+const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 export default function PlaylistScreen() {
   const { playlists, createNewPlaylist, deleteExistingPlaylist } =
     usePlaylists();
   const router = useRouter();
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
 
   const playlistArray = Object.entries(playlists).map(([name, tracks]) => ({
@@ -72,38 +75,37 @@ export default function PlaylistScreen() {
   );
 
   return (
-    <SafeAreaView
-      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
-    >
-      <Text style={styles.header}>Playlists</Text>
+    <FullScreenGradientBackground index={gradientIndex}>
+      <SafeAreaView style={[styles.container, { paddingTop: top }]}>
+        <Text style={styles.header}>Playlists</Text>
 
-      <TouchableOpacity
-        style={styles.createButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.createButtonText}>+ Create Playlist</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.createButtonText}>+ Create Playlist</Text>
+        </TouchableOpacity>
 
-      <FlatList
-        data={playlistArray}
-        renderItem={renderPlaylist}
-        keyExtractor={(item) => item.name}
-        contentContainerStyle={styles.listContainer}
-      />
+        <FlatList
+          data={playlistArray}
+          renderItem={renderPlaylist}
+          keyExtractor={(item) => item.name}
+          contentContainerStyle={styles.listContainer}
+        />
 
-      <CreatePlaylistModal
-        visible={modalVisible}
-        onCreate={handleCreatePlaylist}
-        onCancel={() => setModalVisible(false)}
-      />
-    </SafeAreaView>
+        <CreatePlaylistModal
+          visible={modalVisible}
+          onCreate={handleCreatePlaylist}
+          onCancel={() => setModalVisible(false)}
+        />
+      </SafeAreaView>
+    </FullScreenGradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   header: {
     fontSize: 24,

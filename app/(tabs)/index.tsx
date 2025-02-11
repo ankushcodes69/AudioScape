@@ -16,7 +16,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { Colors } from "@/constants/Colors";
+import { FullScreenGradientBackground } from "@/components/GradientBackground";
 
 interface FeedResult {
   id: string;
@@ -45,7 +45,7 @@ export default function HomeScreen() {
   const [quickPicksResults, setQuickPicksResults] = useState<FeedResult[]>([]);
   const [trendingResults, setTrendingResults] = useState<FeedResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const { playAudio } = useMusicPlayer();
   const router = useRouter();
 
@@ -140,45 +140,45 @@ export default function HomeScreen() {
   };
 
   return (
-    <View
-      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
-    >
-      <View style={styles.header}>
-        <Image
-          source={require("@/assets/images/transparent-icon.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.headerText}>AudioScape</Text>
-        <View style={{ marginLeft: "auto" }}>
-          <EvilIcons
-            name={"search"}
-            color={"white"}
-            size={35}
-            onPress={() => {
-              router.navigate("/(tabs)/search");
-            }}
+    <FullScreenGradientBackground index={7}>
+      <View style={[styles.container, { paddingTop: top }]}>
+        <View style={styles.header}>
+          <Image
+            source={require("@/assets/images/transparent-icon.png")}
+            style={styles.logo}
           />
+          <Text style={styles.headerText}>AudioScape</Text>
+          <View style={{ marginLeft: "auto" }}>
+            <EvilIcons
+              name={"search"}
+              color={"white"}
+              size={35}
+              onPress={() => {
+                router.navigate("/(tabs)/search");
+              }}
+            />
+          </View>
         </View>
-      </View>
 
-      {isLoading ? (
-        <ActivityIndicator color="white" size="large" />
-      ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}
-        >
-          <QuickPicksSection
-            results={quickPicksResults}
-            onItemClick={handleSongSelect}
-          />
-          <TrendingSection
-            results={trendingResults}
-            onItemClick={handleSongSelect}
-          />
-        </ScrollView>
-      )}
-    </View>
+        {isLoading ? (
+          <ActivityIndicator color="white" size="large" />
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}
+          >
+            <QuickPicksSection
+              results={quickPicksResults}
+              onItemClick={handleSongSelect}
+            />
+            <TrendingSection
+              results={trendingResults}
+              onItemClick={handleSongSelect}
+            />
+          </ScrollView>
+        )}
+      </View>
+    </FullScreenGradientBackground>
   );
 }
 
@@ -186,7 +186,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    backgroundColor: Colors.background,
   },
   scrollContainer: {
     paddingBottom: 90,

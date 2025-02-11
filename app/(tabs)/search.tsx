@@ -16,6 +16,7 @@ import { Searchbar } from "react-native-paper";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import innertube from "@/youtube";
 import { Colors } from "@/constants/Colors";
@@ -31,6 +32,8 @@ interface SearchSuggestions {
   text: string;
 }
 
+const gradientIndex = Math.floor(Math.random() * (19 + 1));
+
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -39,7 +42,7 @@ export default function SearchScreen() {
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
   const router = useRouter();
   const { playAudio } = useMusicPlayer();
   const searchBarRef = useRef<TextInput>(null);
@@ -193,58 +196,58 @@ export default function SearchScreen() {
   );
 
   return (
-    <SafeAreaView
-      style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
-    >
-      <Searchbar
-        placeholder="Search for a song"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        mode={"bar"}
-        autoFocus
-        icon={{ source: "arrow-left", direction: "auto" }}
-        iconColor="white"
-        onIconPress={() => {
-          Keyboard.dismiss();
-          router.back();
-        }}
-        onClearIconPress={() => {
-          Keyboard.dismiss();
-        }}
-        onSubmitEditing={() => handleSearch(searchQuery)}
-        style={styles.searchbar}
-        inputStyle={{ color: "white" }}
-        placeholderTextColor="#999"
-        theme={{
-          colors: {
-            primary: "white",
-          },
-        }}
-        ref={searchBarRef}
-      />
+    <FullScreenGradientBackground index={gradientIndex}>
+      <SafeAreaView style={[styles.container, { paddingTop: top }]}>
+        <Searchbar
+          placeholder="Search for a song"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          mode={"bar"}
+          autoFocus
+          icon={{ source: "arrow-left", direction: "auto" }}
+          iconColor="white"
+          onIconPress={() => {
+            Keyboard.dismiss();
+            router.back();
+          }}
+          onClearIconPress={() => {
+            Keyboard.dismiss();
+          }}
+          onSubmitEditing={() => handleSearch(searchQuery)}
+          style={styles.searchbar}
+          inputStyle={{ color: "white" }}
+          placeholderTextColor="#999"
+          theme={{
+            colors: {
+              primary: "white",
+            },
+          }}
+          ref={searchBarRef}
+        />
 
-      {isSearching ? (
-        <FlatList
-          data={searchSuggestions}
-          renderItem={renderSearchSuggestions}
-          keyExtractor={(item) => item.text}
-          style={styles.searchResults}
-          contentContainerStyle={{ paddingBottom: 90 }}
-          keyboardShouldPersistTaps="handled"
-        />
-      ) : isLoading ? (
-        <ActivityIndicator color="white" size="large" />
-      ) : (
-        <FlatList
-          data={searchResults}
-          renderItem={renderSearchResult}
-          keyExtractor={(item) => item.id}
-          style={styles.searchResults}
-          contentContainerStyle={{ paddingBottom: 90 }}
-          keyboardShouldPersistTaps="handled"
-        />
-      )}
-    </SafeAreaView>
+        {isSearching ? (
+          <FlatList
+            data={searchSuggestions}
+            renderItem={renderSearchSuggestions}
+            keyExtractor={(item) => item.text}
+            style={styles.searchResults}
+            contentContainerStyle={{ paddingBottom: 90 }}
+            keyboardShouldPersistTaps="handled"
+          />
+        ) : isLoading ? (
+          <ActivityIndicator color="white" size="large" />
+        ) : (
+          <FlatList
+            data={searchResults}
+            renderItem={renderSearchResult}
+            keyExtractor={(item) => item.id}
+            style={styles.searchResults}
+            contentContainerStyle={{ paddingBottom: 90 }}
+            keyboardShouldPersistTaps="handled"
+          />
+        )}
+      </SafeAreaView>
+    </FullScreenGradientBackground>
   );
 }
 
@@ -253,7 +256,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: Colors.background,
   },
   searchbar: {
     width: "95%",
