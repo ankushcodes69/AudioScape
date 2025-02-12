@@ -5,7 +5,7 @@ import "text-encoding-polyfill";
 import "react-native-url-polyfill/auto";
 import { decode, encode } from "base-64";
 import { MMKV } from "react-native-mmkv";
-import Innertube, { UniversalCache } from "youtubei.js";
+import Innertube, { UniversalCache, ClientType } from "youtubei.js";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -36,8 +36,10 @@ global.CustomEvent = CustomEvent as any;
 // === END === Making Youtube.js work
 
 let innertube: Promise<Innertube> = Innertube.create({
+  client_type: ClientType.WEB,
   cache: new UniversalCache(false),
   generate_session_locally: true,
+  retrieve_player: true,
 });
 
 export default innertube;

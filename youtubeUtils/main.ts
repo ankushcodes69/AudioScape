@@ -1,6 +1,6 @@
 import Innertube, { Constants } from "youtubei.js";
 import { type Context, YT } from "youtubei.js";
-import GoogleVideo, { base64ToU8, PART, Protos } from "googlevideo";
+import GoogleVideo, { PART, Protos, QUALITY } from "googlevideo";
 import { decryptResponse, encryptRequest } from "./utils";
 
 type ClientConfig = {
@@ -8,6 +8,18 @@ type ClientConfig = {
   encryptedClientKey: Uint8Array;
   onesieUstreamerConfig: Uint8Array;
   baseUrl: string;
+};
+
+type OnesieRequestArgs = {
+  videoId: string;
+  poToken?: string;
+  clientConfig: ClientConfig;
+  innertube: Innertube;
+};
+
+type OnesieRequest = {
+  body: Uint8Array;
+  encodedVideoId: string;
 };
 
 /**
@@ -50,18 +62,6 @@ async function getYouTubeTVClientConfig(): Promise<ClientConfig> {
   };
 }
 
-type OnesieRequestArgs = {
-  videoId: string;
-  poToken?: string;
-  clientConfig: ClientConfig;
-  innertube: Innertube;
-};
-
-type OnesieRequest = {
-  body: Uint8Array;
-  encodedVideoId: string;
-};
-
 /**
  * Prepares a Onesie request.
  */
@@ -78,6 +78,7 @@ async function prepareOnesieRequest(
   clonedInnerTubeContext.client.clientName = Constants.CLIENTS.TV.NAME;
   clonedInnerTubeContext.client.clientVersion = Constants.CLIENTS.TV.VERSION;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: Record<string, any> = {
     playbackContext: {
       contentPlaybackContext: {
@@ -142,6 +143,9 @@ async function prepareOnesieRequest(
     clientAbrState: {
       timeSinceLastManualFormatSelectionMs: 0,
       lastManualDirection: 0,
+      quality: QUALITY.HD720,
+      selectedQualityHeight: QUALITY.HD720,
+      startTimeMs: 0,
       visibility: 0,
     },
     streamerContext: {
@@ -150,7 +154,7 @@ async function prepareOnesieRequest(
       poToken: poToken ? base64ToU8(poToken) : undefined,
       playbackCookie: undefined,
       clientInfo: {
-        clientName: parseInt(Constants.CLIENTS.TV.NAME_ID),
+        clientName: parseInt(Constants.CLIENT_NAME_IDS.TVHTML5),
         clientVersion: clonedInnerTubeContext.client.clientVersion,
       },
     },
@@ -277,4 +281,17 @@ export async function getBasicInfo(
   }
 
   throw new Error("Player response not found");
+}
+
+function base64ToU8(base64: string): Uint8Array {
+  const standard_base64 = base64.replace(/-/g, "+").replace(/_/g, "/");
+  const padded_base64 = standard_base64.padEnd(
+    standard_base64.length + ((4 - (standard_base64.length % 4)) % 4),
+    "="
+  );
+  return new Uint8Array(
+    atob(padded_base64)
+      .split("")
+      .map((char) => char.charCodeAt(0))
+  );
 }

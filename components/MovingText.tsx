@@ -1,19 +1,10 @@
-import { useEffect } from "react";
-import Animated, {
-  Easing,
-  StyleProps,
-  cancelAnimation,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withRepeat,
-  withTiming,
-} from "react-native-reanimated";
+import { Text, TextStyle, StyleProp } from "react-native";
+import { Marquee } from "@animatereactnative/marquee";
 
 export type MovingTextProps = {
   text: string;
   animationThreshold: number;
-  style?: StyleProps;
+  style: StyleProp<TextStyle>;
 };
 
 export const MovingText = ({
@@ -21,51 +12,21 @@ export const MovingText = ({
   animationThreshold,
   style,
 }: MovingTextProps) => {
-  const translateX = useSharedValue(0);
   const shouldAnimate = text.length >= animationThreshold;
 
-  const textWidth = text.length * 3;
-
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    translateX.value = withDelay(
-      1000,
-      withRepeat(
-        withTiming(-textWidth - 70, {
-          duration: 6000,
-          easing: Easing.linear,
-        }),
-        -1,
-        true
-      )
+  if (shouldAnimate) {
+    return (
+      <Marquee spacing={60} speed={0.3}>
+        <Text numberOfLines={1} style={style}>
+          {text}
+        </Text>
+      </Marquee>
     );
-
-    return () => {
-      cancelAnimation(translateX);
-      translateX.value = 0;
-    };
-  }, [translateX, text, animationThreshold, shouldAnimate, textWidth]);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: translateX.value }],
-    };
-  });
-
-  return (
-    <Animated.Text
-      numberOfLines={1}
-      style={[
-        style,
-        animatedStyle,
-        shouldAnimate && {
-          width: 9999, // preventing the ellipsis from appearing
-          paddingLeft: 16, // avoid the initial character being barely visible
-        },
-      ]}
-    >
-      {text}
-    </Animated.Text>
-  );
+  } else {
+    return (
+      <Text numberOfLines={1} style={style}>
+        {text}
+      </Text>
+    );
+  }
 };

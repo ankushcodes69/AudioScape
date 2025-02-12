@@ -13,13 +13,14 @@
     "build-dev-eas": "eas build --platform android --profile development"
   },
   "dependencies": {
+    "@animatereactnative/marquee": "^0.5.2",
     "@expo/vector-icons": "^14.0.4",
     "@react-navigation/native": "^7.0.0",
     "@reduxjs/toolkit": "^2.5.0",
     "base-64": "^1.0.0",
     "color": "^4.2.3",
     "event-target-polyfill": "^0.0.4",
-    "expo": "~52.0.32",
+    "expo": "~52.0.33",
     "expo-application": "~6.0.2",
     "expo-av": "~15.0.2",
     "expo-dev-client": "~5.0.12",
@@ -52,7 +53,7 @@
     "text-encoding-polyfill": "^0.6.7",
     "ts-pattern": "^5.5.0",
     "web-streams-polyfill": "^3.3.2",
-    "youtubei.js": "^12.2.0"
+    "youtubei.js": "^13.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
