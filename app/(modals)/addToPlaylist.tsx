@@ -5,14 +5,15 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Image,
   ToastAndroid,
   Dimensions,
 } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlaylists } from "@/store/library";
 import { Colors } from "@/constants/Colors";
+import { unknownTrackImageUri } from "@/constants/images";
 import VerticalDismiss from "@/components/navigation/VerticalArrowDismiss";
 import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
 import { Entypo } from "@expo/vector-icons";
@@ -60,12 +61,8 @@ export default function AddToPlaylistModal() {
         console.log(`Selected playlist: ${item.name}`);
       }}
     >
-      <Image
-        source={
-          item.thumbnail
-            ? { uri: item.thumbnail }
-            : require("@/assets/images/unknown_track.png")
-        }
+      <FastImage
+        source={{ uri: item.thumbnail ?? unknownTrackImageUri }}
         style={styles.thumbnail}
       />
       <Text style={styles.playlistName}>{item.name}</Text>
@@ -97,7 +94,7 @@ export default function AddToPlaylistModal() {
               </TouchableOpacity>
             </View>
 
-            <View style={{ paddingBottom: bottom + 30 }}>
+            <View style={{ paddingBottom: bottom }}>
               <FlatList
                 data={playlistArray}
                 keyExtractor={(item) => item.name}
@@ -149,6 +146,7 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     flexGrow: 1,
+    paddingBottom: 25,
   },
   playlistItem: {
     flexDirection: "row",
@@ -158,7 +156,7 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: 50,
     height: 50,
-    borderRadius: 5,
+    borderRadius: 8,
     marginRight: 15,
   },
   playlistName: {

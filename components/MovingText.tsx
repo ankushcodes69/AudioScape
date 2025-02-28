@@ -16,7 +16,7 @@ export const MovingText = ({
 
   if (shouldAnimate) {
     return (
-      <Marquee spacing={60} speed={0.3}>
+      <Marquee spacing={60} speed={0.3} withGesture={false}>
         <Text numberOfLines={1} style={style}>
           {text}
         </Text>

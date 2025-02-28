@@ -63,7 +63,7 @@ export const PlayPauseButton = ({
   );
 };
 
-export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
+export const SkipToNextButton = ({ iconSize = 32 }: PlayerButtonProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -74,7 +74,7 @@ export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
   );
 };
 
-export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
+export const SkipToPreviousButton = ({ iconSize = 32 }: PlayerButtonProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -85,7 +85,7 @@ export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
   );
 };
 
-export const AddToPlaylistButton = ({ iconSize = 30 }) => {
+export const AddToPlaylistButton = ({ iconSize = 32 }) => {
   const router = useRouter();
 
   return (
@@ -140,7 +140,7 @@ export const RepeatToggle = ({ ...iconProps }: RepeatIconProps) => {
       name={icon}
       onPress={toggleRepeatMode}
       color={Colors.text}
-      size={30}
+      size={32}
       {...iconProps}
     />
   );

@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
-  Image,
   FlatList,
   Alert,
   SafeAreaView,
@@ -12,7 +10,10 @@ import {
   Text,
   View,
 } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
 import { Searchbar } from "react-native-paper";
+import LoaderKit from "react-native-loader-kit";
+import { useActiveTrack } from "react-native-track-player";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
@@ -44,6 +45,7 @@ export default function SearchScreen() {
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const { top } = useSafeAreaInsets();
   const router = useRouter();
+  const activeTrack = useActiveTrack();
   const { playAudio } = useMusicPlayer();
   const searchBarRef = useRef<TextInput>(null);
 
@@ -100,7 +102,7 @@ export default function SearchScreen() {
     setIsLoading(false);
   };
 
-  const handleSearchSuggestions = async () => {
+  const handleSearchSuggestions = useCallback(async () => {
     if (!searchQuery) return;
 
     setIsSearching(true);
@@ -137,7 +139,7 @@ export default function SearchScreen() {
         "An error occurred while searching. Please try again."
       );
     }
-  };
+  }, [searchQuery]);
 
   useEffect(() => {
     async function fetchResults() {
@@ -145,7 +147,7 @@ export default function SearchScreen() {
     }
 
     fetchResults();
-  }, [searchQuery]);
+  }, [handleSearchSuggestions]);
 
   const handleSongSelect = (song: SearchResult) => {
     playAudio(song);
@@ -164,7 +166,17 @@ export default function SearchScreen() {
       style={styles.searchResult}
       onPress={() => handleSongSelect(item)}
     >
-      <Image source={{ uri: item.thumbnail }} style={styles.resultThumbnail} />
+      <FastImage
+        source={{ uri: item.thumbnail }}
+        style={styles.resultThumbnail}
+      />
+      {activeTrack?.id === item.id && (
+        <LoaderKit
+          style={styles.trackPlayingIconIndicator}
+          name="LineScalePulseOutRapid"
+          color="white"
+        />
+      )}
       <View style={styles.resultText}>
         <Text style={styles.resultTitle}>{item.title}</Text>
         <Text style={styles.resultArtist}>{item.artist}</Text>
@@ -235,7 +247,13 @@ export default function SearchScreen() {
             keyboardShouldPersistTaps="handled"
           />
         ) : isLoading ? (
-          <ActivityIndicator color="white" size="large" />
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            <LoaderKit
+              style={{ width: 50, height: 50, alignSelf: "center" }}
+              name="BallSpinFadeLoader"
+              color="white"
+            />
+          </View>
         ) : (
           <FlatList
             data={searchResults}
@@ -270,9 +288,17 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   resultThumbnail: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
+    width: 55,
+    height: 55,
+    marginHorizontal: 10,
+    borderRadius: 8,
+  },
+  trackPlayingIconIndicator: {
+    position: "absolute",
+    top: 28,
+    left: 38,
+    width: 20,
+    height: 20,
   },
   resultText: {
     flex: 1,

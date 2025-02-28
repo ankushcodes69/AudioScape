@@ -3,11 +3,13 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Image,
   View,
   Text,
   Dimensions,
 } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
+import LoaderKit from "react-native-loader-kit";
+import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
 
 interface SongItem {
@@ -26,6 +28,8 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
   results,
   onItemClick,
 }) => {
+  const activeTrack = useActiveTrack();
+
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = screenWidth * 0.27;
   const itemHeight = itemWidth + 50;
@@ -37,10 +41,25 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
       onPress={() => onItemClick(item)}
     >
       <View style={styles.imageContainer}>
-        <Image
+        <FastImage
           source={{ uri: item.thumbnail }}
           style={[styles.thumbnail, { width: itemWidth, height: itemWidth }]}
         />
+        {activeTrack?.id === item.id && (
+          <LoaderKit
+            style={[
+              styles.trackPlayingIconIndicator,
+              {
+                top: itemWidth / 2 - 15,
+                left: itemWidth / 2 - 13,
+                width: itemWidth * 0.3,
+                height: itemWidth * 0.3,
+              },
+            ]}
+            name="LineScalePulseOutRapid"
+            color="white"
+          />
+        )}
       </View>
       <Text style={styles.title} numberOfLines={1}>
         {item.title}
@@ -94,7 +113,10 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   thumbnail: {
-    borderRadius: 8,
+    borderRadius: 12,
+  },
+  trackPlayingIconIndicator: {
+    position: "absolute",
   },
   title: {
     color: Colors.text,

@@ -3,10 +3,12 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Image,
   View,
   Text,
 } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
+import LoaderKit from "react-native-loader-kit";
+import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
 
 interface SongItem {
@@ -26,6 +28,8 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   results,
   onItemClick,
 }) => {
+  const activeTrack = useActiveTrack();
+
   const createRow = (startIndex: number) => {
     return results
       .filter((_, index) => index % 4 === startIndex)
@@ -39,7 +43,17 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             <Text style={styles.rankText}>{startIndex + 1 + index * 4}</Text>
           </View>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
+            <FastImage
+              source={{ uri: item.thumbnail }}
+              style={styles.thumbnail}
+            />
+            {activeTrack?.id === item.id && (
+              <LoaderKit
+                style={styles.trackPlayingIconIndicator}
+                name="LineScalePulseOutRapid"
+                color="white"
+              />
+            )}
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title} numberOfLines={1}>
@@ -110,9 +124,16 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   thumbnail: {
-    width: 56,
-    height: 56,
-    borderRadius: 4,
+    width: 55,
+    height: 55,
+    borderRadius: 8,
+  },
+  trackPlayingIconIndicator: {
+    position: "absolute",
+    top: 18,
+    left: 19,
+    width: 20,
+    height: 20,
   },
   textContainer: {
     flex: 1,

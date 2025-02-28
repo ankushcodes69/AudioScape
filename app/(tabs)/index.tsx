@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-  Image,
-  View,
-  Text,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Alert, View, Text, ScrollView } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
+import LoaderKit from "react-native-loader-kit";
 import { QuickPicksSection } from "@/components/QuickPicksSection";
 import { TrendingSection } from "@/components/TrendingSection";
 import innertube from "@/youtube";
@@ -17,6 +11,7 @@ import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
+import { transparentIconUri } from "@/constants/images";
 
 interface FeedResult {
   id: string;
@@ -33,6 +28,7 @@ interface MusicCarouselShelf {
   contents?: any[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface MusicTasteBuilderShelf {}
 
 function isMusicCarouselShelf(
@@ -40,6 +36,8 @@ function isMusicCarouselShelf(
 ): section is MusicCarouselShelf {
   return "contents" in section;
 }
+
+const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 export default function HomeScreen() {
   const [quickPicksResults, setQuickPicksResults] = useState<FeedResult[]>([]);
@@ -83,6 +81,8 @@ export default function HomeScreen() {
         "Error",
         "An error occurred while fetching the home feed. Please try again."
       );
+
+      console.error("Quick picks fetch error:", error);
     }
   };
 
@@ -120,6 +120,8 @@ export default function HomeScreen() {
         "Error",
         "An error occurred while fetching the home feed. Please try again."
       );
+
+      console.error("Trending fetch error:", error);
     }
   };
 
@@ -140,11 +142,14 @@ export default function HomeScreen() {
   };
 
   return (
-    <FullScreenGradientBackground index={7}>
+    <FullScreenGradientBackground index={gradientIndex}>
       <View style={[styles.container, { paddingTop: top }]}>
         <View style={styles.header}>
-          <Image
-            source={require("@/assets/images/transparent-icon.png")}
+          <FastImage
+            source={{
+              uri: transparentIconUri,
+              priority: FastImage.priority.high,
+            }}
             style={styles.logo}
           />
           <Text style={styles.headerText}>AudioScape</Text>
@@ -161,7 +166,23 @@ export default function HomeScreen() {
         </View>
 
         {isLoading ? (
-          <ActivityIndicator color="white" size="large" />
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            <LoaderKit
+              style={{ width: 50, height: 50, alignSelf: "center" }}
+              name="BallSpinFadeLoader"
+              color="white"
+            />
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
+                flexWrap: "wrap",
+                fontSize: 16,
+              }}
+            >
+              Please Wait Sometimes It May Take Longer Than Usual To Load
+            </Text>
+          </View>
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}

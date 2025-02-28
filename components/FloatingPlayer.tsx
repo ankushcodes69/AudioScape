@@ -9,10 +9,10 @@ import {
   StyleSheet,
   View,
   ViewProps,
-  Image,
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
 import color from "color";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
@@ -49,9 +49,10 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
         activeOpacity={0.5}
         style={styles.touchableArea}
       >
-        <Image
+        <FastImage
           source={{
             uri: displayedTrack.artwork,
+            priority: FastImage.priority.high,
           }}
           style={styles.trackArtworkImage}
         />
@@ -99,7 +100,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 8,
-    marginLeft: 0,
   },
   trackTitleContainer: {
     flex: 1,
