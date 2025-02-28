@@ -92,6 +92,13 @@ export default function RootLayout() {
                     headerShown: false,
                   }}
                 />
+                <Stack.Screen
+                  name="(modals)/upNext"
+                  options={{
+                    presentation: "transparentModal",
+                    headerShown: false,
+                  }}
+                />
                 <Stack.Screen name="+not-found" />
               </Stack>
             </ThemeProvider>

@@ -13,20 +13,24 @@ import {
   Text,
   View,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import FastImage from "react-native-fast-image";
+import FastImage from "@d11/react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
 
 const PlayerScreen = () => {
   const activeTrack = useActiveTrack();
+  const router = useRouter();
+
   const { imageColors } = usePlayerBackground(
     activeTrack?.artwork ?? "https://placehold.co/50"
   );
 
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
 
   const { isFavorite, toggleFavoriteFunc } = useTrackPlayerFavorite();
 
@@ -41,7 +45,7 @@ const PlayerScreen = () => {
   return (
     <VerticalSwipeGesture>
       <LinearGradient
-        style={{ flex: 1 }}
+        style={{ flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
         colors={
           imageColors
             ? [imageColors.average, imageColors.dominant]
@@ -51,7 +55,7 @@ const PlayerScreen = () => {
         <View style={styles.overlayContainer}>
           <DismissPlayerSymbol />
 
-          <View style={{ flex: 1, marginTop: top + 70, marginBottom: bottom }}>
+          <View style={{ flex: 1, marginTop: top + 50 }}>
             <View style={styles.artworkImageContainer}>
               <FastImage
                 source={{
@@ -64,8 +68,8 @@ const PlayerScreen = () => {
             </View>
 
             <View style={{ flex: 1 }}>
-              <View style={{ marginTop: "auto" }}>
-                <View style={{ height: 60 }}>
+              <View style={{ marginTop: 40 }}>
+                <View style={{ height: "15%" }}>
                   <View
                     style={{
                       flexDirection: "row",
@@ -85,11 +89,10 @@ const PlayerScreen = () => {
                     {/* Favorite button icon*/}
                     <FontAwesome
                       name={isFavorite ? "heart" : "heart-o"}
-                      size={20}
+                      size={22}
                       color={isFavorite ? "#ff0000" : Colors.icon}
                       style={{ marginHorizontal: 14 }}
                       onPress={() => {
-                        console.log("Heart pressed");
                         toggleFavoriteFunc();
                       }}
                     />
@@ -111,6 +114,14 @@ const PlayerScreen = () => {
                 <PlayerControls style={{ marginTop: 40, marginBottom: 125 }} />
               </View>
             </View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+              style={styles.upNextButton}
+              onPress={() => router.push({ pathname: "/(modals)/upNext" })}
+            >
+              <Text style={styles.upNextText}>UP NEXT</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
@@ -135,8 +146,8 @@ const DismissPlayerSymbol = () => {
       <View
         accessible={false}
         style={{
-          width: 50,
-          height: 8,
+          width: 45,
+          height: 6,
           borderRadius: 8,
           backgroundColor: "#fff",
           opacity: 0.7,
@@ -151,21 +162,22 @@ const styles = StyleSheet.create({
     ...defaultStyles.container,
     paddingHorizontal: screenPadding.horizontal,
     backgroundColor: "rgba(0,0,0,0.5)",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
   artworkImageContainer: {
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.44,
-    shadowRadius: 11.0,
-    flexDirection: "row",
-    justifyContent: "center",
-    height: "45%",
-  },
-  artworkImage: {
+    elevation: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.8,
+    shadowRadius: 11,
+    borderRadius: 12,
     width: Dimensions.get("window").width - 50,
     height: Dimensions.get("window").width - 50,
+  },
+  artworkImage: {
+    width: "100%",
+    height: "100%",
     resizeMode: "cover",
     borderRadius: 12,
   },
@@ -183,6 +195,21 @@ const styles = StyleSheet.create({
     fontSize: fontSize.base,
     opacity: 0.8,
     maxWidth: "90%",
+  },
+  upNextText: {
+    textAlign: "center",
+    color: Colors.text,
+    flexShrink: 1,
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  upNextButton: {
+    backgroundColor: "rgba(0,0,0,0.2)",
+    paddingVertical: 9,
+    paddingHorizontal: 15,
+    borderRadius: 18,
+    bottom: 35,
+    alignSelf: "center",
   },
 });
 
