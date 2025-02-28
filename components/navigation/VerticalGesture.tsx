@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
 import { StyleSheet, Dimensions } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   withTiming,
   withSpring,
@@ -28,13 +27,13 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
     router.back();
   };
 
-  const gestureHandler = useAnimatedGestureHandler({
-    onActive: (event) => {
+  const gestureHandler = Gesture.Pan()
+    .onChange((event) => {
       if (event.translationY > 0) {
         translateY.value = event.translationY;
       }
-    },
-    onEnd: (event) => {
+    })
+    .onEnd((event) => {
       if (event.translationY > height * 0.1) {
         translateY.value = withTiming(
           height + 100,
@@ -49,8 +48,7 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
       } else {
         translateY.value = withSpring(0);
       }
-    },
-  });
+    });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -59,11 +57,11 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
   });
 
   return (
-    <PanGestureHandler onGestureEvent={gestureHandler}>
+    <GestureDetector gesture={gestureHandler}>
       <Animated.View style={[styles.container, animatedStyle]}>
         {children}
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 };
 

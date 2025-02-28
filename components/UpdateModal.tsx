@@ -13,6 +13,7 @@ import { Colors } from "@/constants/Colors";
 export const UpdateModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
+  const [isUpToDate, setIsUpToDate] = useState(false);
 
   function compareVersions(v1: string, v2: string): number {
     const normalizeVersion = (version: string) => {
@@ -33,7 +34,6 @@ export const UpdateModal = () => {
   }
 
   const message = `A new version of AudioScape is available!\n\nPlease update to version ${latestVersion} to get the latest features and bug fixes.\n\nDownload and install the latest version from "Assets" section from : https://github.com/ankushcodes69/AudioScape/releases/latest`;
-  let flag = false;
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -61,7 +61,9 @@ export const UpdateModal = () => {
         ) {
           setLatestVersion(data.tag_name);
           setIsModalVisible(true);
-        } else flag = true;
+        } else {
+          setIsUpToDate(true);
+        }
       } catch (err: any) {
         console.error(err.message);
       }
@@ -76,7 +78,7 @@ export const UpdateModal = () => {
     );
   };
 
-  if (flag) return null;
+  if (isUpToDate) return null;
 
   return (
     <Modal
