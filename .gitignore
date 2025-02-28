@@ -9,6 +9,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.env
 
 app/(tabs)/test.tsx
 app/(tabs)/testData.json

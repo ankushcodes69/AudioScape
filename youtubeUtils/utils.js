@@ -1,4 +1,5 @@
 const crypto = require("react-native-quick-crypto");
+const Buffer = global.Buffer;
 
 async function encryptRequest(clientKey, data) {
   if (clientKey.length !== 32) {
