@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   FlatList,
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -9,10 +8,15 @@ import {
   View,
   Dimensions,
 } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
 import { Colors } from "@/constants/Colors";
+import { unknownTrackImageUri } from "@/constants/images";
 import { usePlaylists } from "@/store/library";
 import { useRouter } from "expo-router";
+import { AnimatedFAB } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
+import { useActiveTrack } from "react-native-track-player";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
@@ -24,7 +28,12 @@ export default function PlaylistScreen() {
     usePlaylists();
   const router = useRouter();
   const { top } = useSafeAreaInsets();
+  const lastActiveTrack = useLastActiveTrack();
+  const activeTrack = useActiveTrack();
   const [modalVisible, setModalVisible] = useState(false);
+  const [isExtended, setIsExtended] = useState(true);
+
+  const isFloatingPlayerNotVisible = !(activeTrack ?? lastActiveTrack);
 
   const playlistArray = Object.entries(playlists).map(([name, tracks]) => ({
     name,
@@ -55,12 +64,8 @@ export default function PlaylistScreen() {
           });
         }}
       >
-        <Image
-          source={
-            item.thumbnail
-              ? { uri: item.thumbnail }
-              : require("@/assets/images/unknown_track.png")
-          }
+        <FastImage
+          source={{ uri: item.thumbnail ?? unknownTrackImageUri }}
           style={styles.thumbnail}
         />
         <Text style={styles.playlistName}>{item.name}</Text>
@@ -79,18 +84,55 @@ export default function PlaylistScreen() {
       <SafeAreaView style={[styles.container, { paddingTop: top }]}>
         <Text style={styles.header}>Playlists</Text>
 
-        <TouchableOpacity
-          style={styles.createButton}
+        {playlistArray.length === 0 ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: Colors.text,
+                textAlign: "center",
+                fontSize: 18,
+                marginTop: -top - 20,
+              }}
+            >
+              No playlists found! {"\n"}Create a playlist and start adding your
+              favorite songs.
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={playlistArray}
+            renderItem={renderPlaylist}
+            keyExtractor={(item) => item.name}
+            contentContainerStyle={styles.listContainer}
+            onScroll={(e) => {
+              const currentScrollPosition =
+                Math.floor(e.nativeEvent.contentOffset.y) || 0;
+              setIsExtended(currentScrollPosition <= 0);
+            }}
+          />
+        )}
+        <AnimatedFAB
+          style={{
+            position: "absolute",
+            marginRight: 16,
+            marginBottom: isFloatingPlayerNotVisible ? 16 : 90,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "white",
+          }}
+          theme={{ roundness: 1 }}
+          icon="plus"
+          label="Create Playlist"
+          color="black"
+          extended={isExtended}
+          animateFrom={"right"}
           onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.createButtonText}>+ Create Playlist</Text>
-        </TouchableOpacity>
-
-        <FlatList
-          data={playlistArray}
-          renderItem={renderPlaylist}
-          keyExtractor={(item) => item.name}
-          contentContainerStyle={styles.listContainer}
         />
 
         <CreatePlaylistModal
@@ -114,22 +156,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 10,
   },
-  createButton: {
-    backgroundColor: "white",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 100,
-    alignSelf: "center",
-    marginBottom: 10,
-  },
-  createButtonText: {
-    color: "black",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   listContainer: {
     paddingHorizontal: 10,
-    paddingBottom: 90,
+    paddingBottom: 145,
   },
   playlistItem: {
     flexDirection: "row",
@@ -142,9 +171,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width - 60,
   },
   thumbnail: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
+    width: 55,
+    height: 55,
+    borderRadius: 8,
     marginRight: 15,
   },
   playlistName: {

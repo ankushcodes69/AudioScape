@@ -5,16 +5,20 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Image,
   Dimensions,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
+import { unknownTrackImageUri } from "@/constants/images";
+import { FAB } from "react-native-paper";
+import LoaderKit from "react-native-loader-kit";
+import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
+import { useActiveTrack } from "react-native-track-player";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { usePlaylists } from "@/store/library";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import FastImage from "react-native-fast-image";
+import FastImage from "@d11/react-native-fast-image";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 
 interface TrackInfo {
@@ -29,12 +33,16 @@ const gradientIndex = Math.floor(Math.random() * (19 + 1));
 const PlaylistView = () => {
   const { top } = useSafeAreaInsets();
   const router = useRouter();
-  const { playAudio } = useMusicPlayer();
+  const lastActiveTrack = useLastActiveTrack();
+  const activeTrack = useActiveTrack();
+  const { playAudio, playPlaylist } = useMusicPlayer();
   const { playlistName } = useLocalSearchParams<{ playlistName: string }>();
 
   const { playlists, removeTrackFromPlaylist } = usePlaylists();
 
   const playlist = playlists[playlistName];
+
+  const isFloatingPlayerNotVisible = !(activeTrack ?? lastActiveTrack);
 
   const handleSongSelect = (song: TrackInfo) => {
     playAudio(song);
@@ -58,14 +66,10 @@ const PlaylistView = () => {
           {/* Artwork Image */}
           <View style={styles.artworkImageContainer}>
             <FastImage
-              source={
-                playlist[0]
-                  ? {
-                      uri: playlist[0]?.thumbnail,
-                      priority: FastImage.priority.high,
-                    }
-                  : require("@/assets/images/unknown_track.png")
-              }
+              source={{
+                uri: playlist[0]?.thumbnail ?? unknownTrackImageUri,
+                priority: FastImage.priority.high,
+              }}
               style={styles.artworkImage}
             />
           </View>
@@ -79,10 +83,17 @@ const PlaylistView = () => {
                   style={styles.songItemTouchableArea}
                   onPress={() => handleSongSelect(item)}
                 >
-                  <Image
+                  <FastImage
                     source={{ uri: item.thumbnail }}
                     style={styles.resultThumbnail}
                   />
+                  {activeTrack?.id === item.id && (
+                    <LoaderKit
+                      style={styles.trackPlayingIconIndicator}
+                      name="LineScalePulseOutRapid"
+                      color="white"
+                    />
+                  )}
                   <View style={styles.resultText}>
                     <Text style={styles.resultTitle}>{item.title}</Text>
                     <Text style={styles.resultArtist}>{item.artist}</Text>
@@ -98,6 +109,25 @@ const PlaylistView = () => {
             ))}
           </View>
         </ScrollView>
+
+        <FAB
+          style={{
+            position: "absolute",
+            marginRight: 16,
+            marginBottom: isFloatingPlayerNotVisible ? 16 : 90,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "white",
+          }}
+          theme={{ roundness: 7 }}
+          icon="play"
+          color="black"
+          onPress={async () => {
+            if (playlist.length === 0) return;
+            await playPlaylist(playlist);
+            await router.navigate("/player");
+          }}
+        />
       </View>
     </FullScreenGradientBackground>
   );
@@ -120,9 +150,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   artworkImageContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    elevation: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.8,
+    shadowRadius: 11,
+    borderRadius: 12,
+    alignSelf: "center",
     height: Dimensions.get("window").width - 120,
+    width: Dimensions.get("window").width - 120,
   },
   artworkImage: {
     width: Dimensions.get("window").width - 120,
@@ -141,9 +177,17 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width - 60,
   },
   resultThumbnail: {
-    width: 50,
-    height: 50,
+    width: 55,
+    height: 55,
     marginRight: 10,
+    borderRadius: 8,
+  },
+  trackPlayingIconIndicator: {
+    position: "absolute",
+    top: 18,
+    left: 19,
+    width: 20,
+    height: 20,
   },
   resultText: {
     flex: 1,
