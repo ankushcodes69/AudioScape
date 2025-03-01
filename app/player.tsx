@@ -117,10 +117,10 @@ const PlayerScreen = () => {
             <TouchableOpacity
               activeOpacity={0.5}
               hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-              style={styles.upNextButton}
-              onPress={() => router.push({ pathname: "/(modals)/upNext" })}
+              style={styles.queueButton}
+              onPress={() => router.push({ pathname: "/(modals)/queue" })}
             >
-              <Text style={styles.upNextText}>UP NEXT</Text>
+              <Text style={styles.queueText}>QUEUE</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -196,14 +196,14 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     maxWidth: "90%",
   },
-  upNextText: {
+  queueText: {
     textAlign: "center",
     color: Colors.text,
     flexShrink: 1,
     fontSize: 16,
     fontWeight: "500",
   },
-  upNextButton: {
+  queueButton: {
     backgroundColor: "rgba(0,0,0,0.2)",
     paddingVertical: 9,
     paddingHorizontal: 15,

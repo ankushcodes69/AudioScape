@@ -93,7 +93,7 @@ export default function RootLayout() {
                   }}
                 />
                 <Stack.Screen
-                  name="(modals)/upNext"
+                  name="(modals)/queue"
                   options={{
                     presentation: "transparentModal",
                     headerShown: false,
