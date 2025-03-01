@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   scrollContainer: {
-    paddingBottom: 90,
+    paddingBottom: 145,
   },
   songList: {
     flexDirection: "column",

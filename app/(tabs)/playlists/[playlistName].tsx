@@ -60,7 +60,7 @@ const PlaylistView = () => {
         />
 
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 90 }}
+          contentContainerStyle={{ paddingBottom: 145 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Artwork Image */}
