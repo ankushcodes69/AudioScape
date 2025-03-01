@@ -117,8 +117,12 @@ const FavoritesScreen = () => {
                     />
                   )}
                   <View style={styles.resultText}>
-                    <Text style={styles.resultTitle}>{item.title}</Text>
-                    <Text style={styles.resultArtist}>{item.artist}</Text>
+                    <Text style={styles.resultTitle} numberOfLines={1}>
+                      {item.title}
+                    </Text>
+                    <Text style={styles.resultArtist} numberOfLines={1}>
+                      {item.artist}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               ))

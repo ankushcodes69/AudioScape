@@ -51,13 +51,16 @@ const PlaylistView = () => {
   return (
     <FullScreenGradientBackground index={gradientIndex}>
       <View style={[styles.container, { paddingTop: top }]}>
-        <MaterialCommunityIcons
-          name="arrow-left"
-          size={28}
-          color={Colors.text}
-          style={{ paddingTop: 8 }}
-          onPress={() => router.back()}
-        />
+        <View style={styles.header}>
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={28}
+            color={Colors.text}
+            style={{ position: "absolute", left: 0 }}
+            onPress={() => router.back()}
+          />
+          <Text style={styles.headerText}>{playlistName}</Text>
+        </View>
 
         <ScrollView
           contentContainerStyle={{ paddingBottom: 145 }}
@@ -73,8 +76,6 @@ const PlaylistView = () => {
               style={styles.artworkImage}
             />
           </View>
-
-          <Text style={styles.header}>{playlistName}</Text>
 
           <View>
             {playlist.map((item: TrackInfo) => (
@@ -95,8 +96,12 @@ const PlaylistView = () => {
                     />
                   )}
                   <View style={styles.resultText}>
-                    <Text style={styles.resultTitle}>{item.title}</Text>
-                    <Text style={styles.resultArtist}>{item.artist}</Text>
+                    <Text style={styles.resultTitle} numberOfLines={1}>
+                      {item.title}
+                    </Text>
+                    <Text style={styles.resultArtist} numberOfLines={1}>
+                      {item.artist}
+                    </Text>
                   </View>
                 </TouchableOpacity>
                 <MaterialCommunityIcons
@@ -142,12 +147,16 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 15,
     color: Colors.text,
-    textAlign: "center",
-    marginTop: 10,
+    maxWidth: Dimensions.get("window").width - 90,
   },
   artworkImageContainer: {
     elevation: 20,
@@ -159,6 +168,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: Dimensions.get("window").width - 120,
     width: Dimensions.get("window").width - 120,
+    marginBottom: 20,
   },
   artworkImage: {
     width: Dimensions.get("window").width - 120,
