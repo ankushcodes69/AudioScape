@@ -9,7 +9,7 @@
 ![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?label=license)
 ![CodeFactor Grade](https://www.codefactor.io/repository/github/ankushcodes69/audioscape/badge)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/AudioScape/main)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?label=last%20commit)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?label=total%20commits)
 ![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/AudioScape?label=languages%20used)
 ![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/AudioScape)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/AudioScape)
