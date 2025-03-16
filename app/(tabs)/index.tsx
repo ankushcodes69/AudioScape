@@ -91,20 +91,34 @@ export default function HomeScreen() {
       const exploreFeed: FeedType = await yt.music.getExplore();
 
       if (exploreFeed?.sections && exploreFeed.sections.length > 0) {
-        const trending = exploreFeed.sections[3];
+        const trending = exploreFeed.sections.find((section) => {
+          const anySection = section as any;
+          return anySection.header?.title?.text === "Trending";
+        });
 
         if (
+          trending &&
           isMusicCarouselShelf(trending) &&
           Array.isArray(trending.contents)
         ) {
           const formattedResults: FeedResult[] = trending.contents
-            .filter((item: any) => item?.id && item?.title)
+            .filter(
+              (item: any) => item?.id && (item?.title || item?.title.text)
+            )
             .map((item: any) => ({
               id: item.id,
-              title: item.title,
-              artist: item.authors?.[0]?.name ?? "Unknown Artist",
+              title:
+                typeof item.title === "string"
+                  ? item.title
+                  : item.title?.text || "Unknown Title",
+              artist:
+                item.authors?.[0]?.name ??
+                item.author?.name ??
+                "Unknown Artist",
               thumbnail:
-                item.thumbnail?.contents?.[0]?.url ?? "https://placehold.co/50",
+                item.thumbnail?.contents?.[0]?.url ??
+                item.thumbnail?.[0]?.url ??
+                "https://placehold.co/50",
             }));
           setTrendingResults(formattedResults);
         } else {
