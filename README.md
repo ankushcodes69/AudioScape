@@ -34,6 +34,8 @@
 - Add Songs To Favorites Category
 - Dynamic Player Background
 - Create Playlists
+- Search for songs
+- Automatically check for updates
 
 ## 📲 Installation
 
