@@ -13,8 +13,6 @@ function TabLayoutContent() {
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
-      <UpdateModal />
-      <MessageModal />
       <Tabs
         screenOptions={{
           tabBarStyle: {
@@ -87,6 +85,9 @@ function TabLayoutContent() {
           bottom: bottom + 60,
         }}
       />
+
+      <UpdateModal />
+      <MessageModal />
     </View>
   );
 }
