@@ -18,6 +18,7 @@ import useNotificationClickHandler from "@/hooks/useNotificationClickHandler";
 import TrackPlayer from "react-native-track-player";
 import { playbackService } from "@/constants/playbackService";
 import { MusicPlayerProvider } from "@/components/MusicPlayerContext";
+import { LyricsProvider } from "@/hooks/useLyricsContext";
 import { initializeLibrary, store } from "@/store/library";
 import { Provider } from "react-redux";
 import { install } from "react-native-quick-crypto";
@@ -73,37 +74,49 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <MusicPlayerProvider>
-        <SafeAreaProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <ThemeProvider value={DarkTheme}>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="player"
-                  options={{
-                    presentation: "transparentModal",
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="(modals)/addToPlaylist"
-                  options={{
-                    presentation: "transparentModal",
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="(modals)/queue"
-                  options={{
-                    presentation: "transparentModal",
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-            </ThemeProvider>
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
+        <LyricsProvider>
+          <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ThemeProvider value={DarkTheme}>
+                <Stack>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="player"
+                    options={{
+                      presentation: "transparentModal",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/addToPlaylist"
+                    options={{
+                      presentation: "transparentModal",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/queue"
+                    options={{
+                      presentation: "transparentModal",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/lyrics"
+                    options={{
+                      presentation: "transparentModal",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+              </ThemeProvider>
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
+        </LyricsProvider>
       </MusicPlayerProvider>
     </Provider>
   );

@@ -88,6 +88,7 @@ async function getInfo(
         item.thumbnail && item.thumbnail[0]
           ? item.thumbnail[0].url
           : "https://placehold.co/50",
+      duration: item.duration,
     };
     return res;
   } catch (error) {

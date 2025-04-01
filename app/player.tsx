@@ -114,14 +114,26 @@ const PlayerScreen = () => {
                 <PlayerControls style={{ marginTop: 40, marginBottom: 125 }} />
               </View>
             </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-              style={styles.queueButton}
-              onPress={() => router.push({ pathname: "/(modals)/queue" })}
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
             >
-              <Text style={styles.queueText}>QUEUE</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                style={styles.bottomButton}
+                onPress={() => router.push({ pathname: "/(modals)/queue" })}
+              >
+                <Text style={styles.queueText}>QUEUE</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                style={styles.bottomButton}
+                onPress={() => router.push({ pathname: "/(modals)/lyrics" })}
+              >
+                <Text style={styles.queueText}> LYRICS</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </LinearGradient>
@@ -203,7 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  queueButton: {
+  bottomButton: {
     backgroundColor: "rgba(0,0,0,0.2)",
     paddingVertical: 9,
     paddingHorizontal: 15,

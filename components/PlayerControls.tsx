@@ -3,6 +3,7 @@ import {
   FontAwesome6,
   MaterialCommunityIcons,
   MaterialIcons,
+  Entypo,
 } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import TrackPlayer, {
@@ -41,9 +42,23 @@ export const PlayerControls = ({ style }: PlayerControlsProps) => {
   );
 };
 
+export const ReducedPlayerControls = ({ style }: PlayerControlsProps) => {
+  return (
+    <View style={[styles.container, style]}>
+      <View style={styles.row}>
+        <SkipToPreviousButton />
+
+        <PlayPauseButton />
+
+        <SkipToNextButton />
+      </View>
+    </View>
+  );
+};
+
 export const PlayPauseButton = ({
   style,
-  iconSize = 48,
+  iconSize = 50,
 }: PlayerButtonProps) => {
   const { playing } = useIsPlaying();
 
@@ -63,24 +78,28 @@ export const PlayPauseButton = ({
   );
 };
 
-export const SkipToNextButton = ({ iconSize = 32 }: PlayerButtonProps) => {
+export const SkipToNextButton = ({ iconSize = 40 }: PlayerButtonProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={() => TrackPlayer.skipToNext()}
     >
-      <FontAwesome6 name="forward" size={iconSize} color={Colors.text} />
+      <Entypo name="controller-next" size={iconSize} color={Colors.text} />
     </TouchableOpacity>
   );
 };
 
-export const SkipToPreviousButton = ({ iconSize = 32 }: PlayerButtonProps) => {
+export const SkipToPreviousButton = ({ iconSize = 40 }: PlayerButtonProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={() => TrackPlayer.skipToPrevious()}
     >
-      <FontAwesome6 name={"backward"} size={iconSize} color={Colors.text} />
+      <Entypo
+        name="controller-jump-to-start"
+        size={iconSize}
+        color={Colors.text}
+      />
     </TouchableOpacity>
   );
 };
