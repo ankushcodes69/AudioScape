@@ -19,6 +19,7 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
 
   const trackElapsedTime = formatSecondsToMinutes(position);
   const trackRemainingTime = formatSecondsToMinutes(duration - position);
+  const trackDuration = formatSecondsToMinutes(duration);
 
   if (!isSliding.value) {
     progress.value = duration > 0 ? position / duration : 0;
@@ -64,7 +65,7 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
         <Text style={styles.timeText}>{trackElapsedTime}</Text>
 
         <Text style={styles.timeText}>
-          {"-"} {trackRemainingTime}
+          {"-"} {trackRemainingTime} {"/"} {trackDuration}
         </Text>
       </View>
     </View>

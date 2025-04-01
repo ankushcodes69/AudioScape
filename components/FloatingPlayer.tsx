@@ -75,9 +75,9 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
         activeOpacity={0.5}
         style={styles.trackControlsContainer}
       >
-        <SkipToPreviousButton iconSize={20} />
+        <SkipToPreviousButton iconSize={25} />
         <PlayPauseButton iconSize={25} />
-        <SkipToNextButton iconSize={20} />
+        <SkipToNextButton iconSize={25} />
       </TouchableOpacity>
     </View>
   );
@@ -121,8 +121,6 @@ const styles = StyleSheet.create({
   trackControlsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    columnGap: 15,
-    marginRight: 9,
-    paddingLeft: 2,
+    columnGap: 13,
   },
 });
