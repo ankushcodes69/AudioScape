@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Alert, View, Text, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Alert,
+  View,
+  Text,
+  ScrollView,
+  Linking,
+} from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import { QuickPicksSection } from "@/components/QuickPicksSection";
 import { TrendingSection } from "@/components/TrendingSection";
 import innertube from "@/youtube";
 import Innertube from "youtubei.js";
-import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { EvilIcons, SimpleLineIcons } from "@expo/vector-icons";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { Divider } from "react-native-paper";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { transparentIconUri } from "@/constants/images";
 
@@ -43,6 +51,7 @@ export default function HomeScreen() {
   const [quickPicksResults, setQuickPicksResults] = useState<FeedResult[]>([]);
   const [trendingResults, setTrendingResults] = useState<FeedResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const { top } = useSafeAreaInsets();
   const { playAudio } = useMusicPlayer();
   const router = useRouter();
@@ -167,7 +176,25 @@ export default function HomeScreen() {
             style={styles.logo}
           />
           <Text style={styles.headerText}>AudioScape</Text>
-          <View style={{ marginLeft: "auto" }}>
+          <View
+            style={{
+              marginLeft: "auto",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <SimpleLineIcons
+              name="equalizer"
+              size={20}
+              color="white"
+              style={{ marginTop: 5 }}
+              onPress={() => {
+                Linking.sendIntent(
+                  "android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL"
+                );
+              }}
+            />
             <EvilIcons
               name={"search"}
               color={"white"}
@@ -178,6 +205,12 @@ export default function HomeScreen() {
             />
           </View>
         </View>
+
+        {isScrolling && (
+          <Divider
+            style={{ backgroundColor: "rgba(255,255,255,0.3)", height: 0.3 }}
+          />
+        )}
 
         {isLoading ? (
           <View style={{ flex: 1, justifyContent: "center" }}>
@@ -201,6 +234,11 @@ export default function HomeScreen() {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
+            onScroll={(e) => {
+              const currentScrollPosition =
+                Math.floor(e.nativeEvent.contentOffset.y) || 0;
+              setIsScrolling(currentScrollPosition > 0);
+            }}
           >
             <QuickPicksSection
               results={quickPicksResults}
@@ -224,6 +262,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingBottom: 90,
+    marginTop: 3,
   },
   header: {
     flexDirection: "row",
