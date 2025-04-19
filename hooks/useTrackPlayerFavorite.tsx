@@ -15,33 +15,48 @@ export const useTrackPlayerFavorite = () => {
     }
   }, [activeTrack, favoriteTracks]);
 
-  const toggleFavoriteFunc = useCallback(async () => {
-    if (!activeTrack) return;
+  const checkIfFavorite = useCallback(
+    async (id: string) => {
+      return favoriteTracks.some((track) => track.id === id);
+    },
+    [favoriteTracks]
+  );
 
-    // Toggle favorite status
-    toggleFavoriteTrack({
-      id: activeTrack.id,
-      title: activeTrack.title || "",
-      artist: activeTrack.artist || "",
-      thumbnail: activeTrack.artwork || "",
-    });
+  const toggleFavoriteFunc = useCallback(
+    async (
+      track = activeTrack
+        ? {
+            id: activeTrack.id,
+            title: activeTrack.title || "",
+            artist: activeTrack.artist || "",
+            thumbnail: activeTrack.artwork || "",
+          }
+        : undefined
+    ) => {
+      if (!track) return;
 
-    // Update track player internal state
-    try {
-      const queue = await TrackPlayer.getQueue();
-      const trackIndex = queue.findIndex(
-        (track) => track.id === activeTrack.id
-      );
+      toggleFavoriteTrack({
+        id: track.id,
+        title: track.title,
+        artist: track.artist,
+        thumbnail: track.thumbnail,
+      });
 
-      if (trackIndex !== -1) {
-        await TrackPlayer.updateMetadataForTrack(trackIndex, {
-          rating: isFavorite ? 0 : 1,
-        });
+      try {
+        const queue = await TrackPlayer.getQueue();
+        const trackIndex = queue.findIndex((t) => t.id === track.id);
+
+        if (trackIndex !== -1) {
+          await TrackPlayer.updateMetadataForTrack(trackIndex, {
+            rating: isFavorite ? 0 : 1,
+          });
+        }
+      } catch (error) {
+        console.error("Error updating track metadata:", error);
       }
-    } catch (error) {
-      console.error("Error updating track metadata:", error);
-    }
-  }, [activeTrack, isFavorite, toggleFavoriteTrack]);
+    },
+    [activeTrack, isFavorite, toggleFavoriteTrack]
+  );
 
-  return { isFavorite, toggleFavoriteFunc };
+  return { isFavorite, toggleFavoriteFunc, checkIfFavorite };
 };
