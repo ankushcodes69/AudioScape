@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -10,14 +10,14 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { unknownTrackImageUri } from "@/constants/images";
-import { FAB } from "react-native-paper";
+import { FAB, Divider } from "react-native-paper";
 import LoaderKit from "react-native-loader-kit";
 import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
 import { useActiveTrack } from "react-native-track-player";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { usePlaylists } from "@/store/library";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import FastImage from "@d11/react-native-fast-image";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 
@@ -31,6 +31,7 @@ interface TrackInfo {
 const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 const PlaylistView = () => {
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const { top } = useSafeAreaInsets();
   const router = useRouter();
   const lastActiveTrack = useLastActiveTrack();
@@ -38,7 +39,7 @@ const PlaylistView = () => {
   const { playAudio, playPlaylist } = useMusicPlayer();
   const { playlistName } = useLocalSearchParams<{ playlistName: string }>();
 
-  const { playlists, removeTrackFromPlaylist } = usePlaylists();
+  const { playlists } = usePlaylists();
 
   const playlist = playlists[playlistName];
 
@@ -62,9 +63,24 @@ const PlaylistView = () => {
           <Text style={styles.headerText}>{playlistName}</Text>
         </View>
 
+        {isScrolling && (
+          <Divider
+            style={{
+              backgroundColor: "rgba(255,255,255,0.3)",
+              height: 0.3,
+              marginHorizontal: -15,
+            }}
+          />
+        )}
+
         <ScrollView
           contentContainerStyle={{ paddingBottom: 145 }}
           showsVerticalScrollIndicator={false}
+          onScroll={(e) => {
+            const currentScrollPosition =
+              Math.floor(e.nativeEvent.contentOffset.y) || 0;
+            setIsScrolling(currentScrollPosition > 0);
+          }}
         >
           {/* Artwork Image */}
           <View style={styles.artworkImageContainer}>
@@ -104,15 +120,44 @@ const PlaylistView = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-                <MaterialCommunityIcons
-                  name="delete-forever-outline"
-                  size={24}
-                  color="#530000"
-                  onPress={() => removeTrackFromPlaylist(item.id, playlistName)}
-                />
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    // Convert the song object to a JSON string
+                    const songData = JSON.stringify({
+                      id: item.id,
+                      title: item.title,
+                      artist: item.artist,
+                      thumbnail: item.thumbnail,
+                    });
+
+                    router.push({
+                      pathname: "/(modals)/menu",
+                      params: {
+                        songData: songData,
+                        type: "playlistSong",
+                        playlistName: playlistName,
+                      },
+                    });
+                  }}
+                  hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                >
+                  <Entypo name="dots-three-vertical" size={15} color="white" />
+                </TouchableOpacity>
               </View>
             ))}
           </View>
+          {playlist.length !== 0 && (
+            <Text
+              style={{
+                color: Colors.textMuted,
+                textAlign: "center",
+                fontSize: 15,
+              }}
+            >
+              {playlist.length} {`Track${playlist.length > 1 ? "s" : ""}`}
+            </Text>
+          )}
         </ScrollView>
 
         <FAB

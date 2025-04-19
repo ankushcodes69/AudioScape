@@ -14,10 +14,12 @@ import TrackPlayer, {
   Event,
   useActiveTrack,
 } from "react-native-track-player";
+import { useRouter } from "expo-router";
 import LoaderKit from "react-native-loader-kit";
 import { Colors } from "@/constants/Colors";
 import { unknownTrackImageUri } from "@/constants/images";
 import FastImage from "@d11/react-native-fast-image";
+import { Divider } from "react-native-paper";
 import VerticalDismiss from "@/components/navigation/VerticalArrowDismiss";
 import { Entypo } from "@expo/vector-icons";
 
@@ -26,7 +28,9 @@ const { height: screenHeight } = Dimensions.get("window");
 export default function QueueModal() {
   const [queue, setQueue] = useState<Track[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const activeTrack = useActiveTrack();
+  const router = useRouter();
   const { bottom } = useSafeAreaInsets();
 
   const fetchQueue = useCallback(async () => {
@@ -63,33 +67,62 @@ export default function QueueModal() {
   };
 
   const renderSongItem = ({ item, index }: { item: Track; index: number }) => (
-    <TouchableOpacity
-      style={styles.songItem}
-      onPress={() => handleSongSelect(item)}
+    <View
+      key={item.id}
+      style={[
+        styles.songItem,
+        activeTrack?.id === item.id && styles.activeSongItem,
+      ]}
     >
-      <View style={styles.indexContainer}>
-        <Text style={styles.indexText}>{index + 1}</Text>
-      </View>
-      <FastImage
-        source={{ uri: item.artwork ?? unknownTrackImageUri }}
-        style={styles.thumbnail}
-      />
-      {activeTrack?.id === item.id && (
-        <LoaderKit
-          style={styles.trackPlayingIconIndicator}
-          name="LineScalePulseOutRapid"
-          color={"white"}
+      <TouchableOpacity
+        style={styles.songItemTouchableArea}
+        onPress={() => handleSongSelect(item)}
+      >
+        <View style={styles.indexContainer}>
+          <Text style={styles.indexText}>{index + 1}</Text>
+        </View>
+        <FastImage
+          source={{ uri: item.artwork ?? unknownTrackImageUri }}
+          style={styles.thumbnail}
         />
-      )}
-      <View style={styles.songText}>
-        <Text style={styles.songTitle} numberOfLines={1}>
-          {item.title}
-        </Text>
-        <Text style={styles.songArtist} numberOfLines={1}>
-          {item.artist}
-        </Text>
-      </View>
-    </TouchableOpacity>
+        {activeTrack?.id === item.id && (
+          <LoaderKit
+            style={styles.trackPlayingIconIndicator}
+            name="LineScalePulseOutRapid"
+            color={"white"}
+          />
+        )}
+        <View style={styles.songText}>
+          <Text style={styles.songTitle} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <Text style={styles.songArtist} numberOfLines={1}>
+            {item.artist}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            // Convert the song object to a JSON string
+            const songData = JSON.stringify({
+              id: item.id,
+              title: item.title,
+              artist: item.artist,
+              thumbnail: item.artwork ?? unknownTrackImageUri,
+            });
+
+            router.push({
+              pathname: "/(modals)/menu",
+              params: { songData: songData, type: "queueSong" },
+            });
+          }}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <Entypo name="dots-three-vertical" size={15} color="white" />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -111,6 +144,15 @@ export default function QueueModal() {
               </Text>
             </View>
 
+            {isScrolling && (
+              <Divider
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.3)",
+                  height: 0.3,
+                }}
+              />
+            )}
+
             <View style={{ paddingBottom: bottom }}>
               <FlatList
                 data={queue}
@@ -118,6 +160,11 @@ export default function QueueModal() {
                 renderItem={renderSongItem}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.flatListContent}
+                onScroll={(e) => {
+                  const currentScrollPosition =
+                    Math.floor(e.nativeEvent.contentOffset.y) || 0;
+                  setIsScrolling(currentScrollPosition > 0);
+                }}
               />
             </View>
           </View>
@@ -137,8 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#101010",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    padding: 20,
-    paddingLeft: 0,
+    paddingVertical: 15,
     maxHeight: screenHeight * 0.6,
   },
   header: {
@@ -164,7 +210,17 @@ const styles = StyleSheet.create({
   songItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    marginHorizontal: 5,
+  },
+  activeSongItem: {
+    backgroundColor: "rgba(255, 255, 255, 0.045)", // Subtle highlight for active track
+    borderRadius: 16,
+  },
+  songItemTouchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   indexContainer: {
     width: 40,
@@ -183,8 +239,8 @@ const styles = StyleSheet.create({
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 25,
-    left: 66,
+    top: 15,
+    left: 56,
     width: 20,
     height: 20,
   },

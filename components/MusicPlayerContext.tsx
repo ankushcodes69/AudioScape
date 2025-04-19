@@ -23,6 +23,7 @@ interface MusicPlayerContextType {
   isLoading: boolean;
   playAudio: (song: SongItem) => Promise<void>;
   playPlaylist: (songs: SongItem[]) => Promise<void>;
+  playNext: (song: SongItem[] | null) => Promise<void>;
   togglePlayPause: () => Promise<void>;
 }
 
@@ -353,6 +354,47 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
     }
   };
 
+  const playNext = async (songs: SongItem[] | null) => {
+    if (!songs || songs.length === 0) {
+      log("No songs provided for playNext");
+      return;
+    }
+
+    try {
+      const queue = await TrackPlayer.getQueue();
+      const currentIndex = await TrackPlayer.getActiveTrackIndex();
+      let insertIndex = (currentIndex ?? queue.length - 1) + 1;
+
+      for (const song of songs) {
+        const existingIndex = queue.findIndex((item) => item.id === song.id);
+
+        const info = await getInfo(song.id);
+        if (!info) {
+          log(`Skipping unavailable song: ${song.title}`);
+          continue;
+        }
+
+        if (existingIndex !== -1) {
+          log(
+            `Song already in queue at index ${existingIndex}, removing and re-adding at ${insertIndex}`
+          );
+          await TrackPlayer.remove(existingIndex);
+        }
+
+        await TrackPlayer.add(info, insertIndex);
+        insertIndex++; // Move insert index forward for next song
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      log(`Error in playNext: ${errorMessage}`);
+      Alert.alert(
+        "Playback Error",
+        `Failed to queue one or more songs. Please try again later.`
+      );
+    }
+  };
+
   const togglePlayPause = async () => {
     try {
       const currentState = (await TrackPlayer.getPlaybackState()).state;
@@ -386,6 +428,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         isLoading,
         playAudio,
         playPlaylist,
+        playNext,
         togglePlayPause,
       }}
     >

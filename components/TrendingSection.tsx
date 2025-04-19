@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
+import Entypo from "@expo/vector-icons/Entypo";
+import { useRouter } from "expo-router";
 import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
 
@@ -28,42 +30,66 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   results,
   onItemClick,
 }) => {
+  const router = useRouter();
   const activeTrack = useActiveTrack();
 
   const createRow = (startIndex: number) => {
     return results
       .filter((_, index) => index % 4 === startIndex)
       .map((item, index) => (
-        <TouchableOpacity
-          key={item.id}
-          style={styles.itemContainer}
-          onPress={() => onItemClick(item)}
-        >
-          <View style={styles.rankContainer}>
-            <Text style={styles.rankText}>{startIndex + 1 + index * 4}</Text>
-          </View>
-          <View style={styles.imageContainer}>
-            <FastImage
-              source={{ uri: item.thumbnail }}
-              style={styles.thumbnail}
-            />
-            {activeTrack?.id === item.id && (
-              <LoaderKit
-                style={styles.trackPlayingIconIndicator}
-                name="LineScalePulseOutRapid"
-                color="white"
+        <View key={item.id} style={styles.itemContainer}>
+          <TouchableOpacity
+            key={item.id}
+            style={styles.itemTouchableArea}
+            onPress={() => onItemClick(item)}
+          >
+            <View style={styles.rankContainer}>
+              <Text style={styles.rankText}>{startIndex + 1 + index * 4}</Text>
+            </View>
+            <View style={styles.imageContainer}>
+              <FastImage
+                source={{ uri: item.thumbnail }}
+                style={styles.thumbnail}
               />
-            )}
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.title} numberOfLines={1}>
-              {item.title}
-            </Text>
-            <Text style={styles.artist} numberOfLines={1}>
-              {item.artist}
-            </Text>
-          </View>
-        </TouchableOpacity>
+              {activeTrack?.id === item.id && (
+                <LoaderKit
+                  style={styles.trackPlayingIconIndicator}
+                  name="LineScalePulseOutRapid"
+                  color="white"
+                />
+              )}
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.title} numberOfLines={2}>
+                {item.title}
+              </Text>
+              <Text style={styles.artist} numberOfLines={1}>
+                {item.artist}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => {
+              // Convert the song object to a JSON string
+              const songData = JSON.stringify({
+                id: item.id,
+                title: item.title,
+                artist: item.artist,
+                thumbnail: item.thumbnail,
+              });
+
+              router.push({
+                pathname: "/(modals)/menu",
+                params: { songData: songData, type: "song" },
+              });
+            }}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          >
+            <Entypo name="dots-three-vertical" size={15} color="white" />
+          </TouchableOpacity>
+        </View>
       ));
   };
 
@@ -107,9 +133,13 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 16,
+    marginRight: 28,
     width: 280,
     height: 72,
+  },
+  itemTouchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   rankContainer: {
     width: 40,
@@ -117,7 +147,7 @@ const styles = StyleSheet.create({
   },
   rankText: {
     color: "#888",
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: "bold",
   },
   imageContainer: {

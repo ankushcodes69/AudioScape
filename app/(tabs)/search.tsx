@@ -18,7 +18,7 @@ import { useRouter, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
-import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { EvilIcons, Entypo } from "@expo/vector-icons";
 import innertube from "@/youtube";
 import { Colors } from "@/constants/Colors";
 
@@ -162,26 +162,53 @@ export default function SearchScreen() {
   };
 
   const renderSearchResult = ({ item }: { item: SearchResult }) => (
-    <TouchableOpacity
-      style={styles.searchResult}
-      onPress={() => handleSongSelect(item)}
-    >
-      <FastImage
-        source={{ uri: item.thumbnail }}
-        style={styles.resultThumbnail}
-      />
-      {activeTrack?.id === item.id && (
-        <LoaderKit
-          style={styles.trackPlayingIconIndicator}
-          name="LineScalePulseOutRapid"
-          color="white"
+    <View key={item.id} style={styles.searchResult}>
+      <TouchableOpacity
+        style={styles.searchResultTouchableArea}
+        onPress={() => handleSongSelect(item)}
+      >
+        <FastImage
+          source={{ uri: item.thumbnail }}
+          style={styles.resultThumbnail}
         />
-      )}
-      <View style={styles.resultText}>
-        <Text style={styles.resultTitle}>{item.title}</Text>
-        <Text style={styles.resultArtist}>{item.artist}</Text>
-      </View>
-    </TouchableOpacity>
+        {activeTrack?.id === item.id && (
+          <LoaderKit
+            style={styles.trackPlayingIconIndicator}
+            name="LineScalePulseOutRapid"
+            color="white"
+          />
+        )}
+        <View style={styles.resultText}>
+          <Text style={styles.resultTitle} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <Text style={styles.resultArtist} numberOfLines={1}>
+            {item.artist}
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => {
+          // Convert the song object to a JSON string
+          const songData = JSON.stringify({
+            id: item.id,
+            title: item.title,
+            artist: item.artist,
+            thumbnail: item.thumbnail,
+          });
+
+          router.push({
+            pathname: "/(modals)/menu",
+            params: { songData: songData, type: "song" },
+          });
+        }}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+      >
+        <Entypo name="dots-three-vertical" size={15} color="white" />
+      </TouchableOpacity>
+    </View>
   );
 
   const renderSearchSuggestions = ({ item }: { item: SearchSuggestions }) => (
@@ -285,7 +312,13 @@ const styles = StyleSheet.create({
   searchResult: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingVertical: 10,
+    paddingLeft: 10,
+    paddingRight: 30,
+  },
+  searchResultTouchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   resultThumbnail: {
     width: 55,
@@ -295,8 +328,8 @@ const styles = StyleSheet.create({
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 28,
-    left: 38,
+    top: 17.5,
+    left: 28.5,
     width: 20,
     height: 20,
   },

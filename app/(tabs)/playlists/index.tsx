@@ -1,35 +1,34 @@
 import React, { useState } from "react";
 import {
-  FlatList,
-  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
 } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import { Colors } from "@/constants/Colors";
 import { unknownTrackImageUri } from "@/constants/images";
 import { usePlaylists } from "@/store/library";
 import { useRouter } from "expo-router";
-import { AnimatedFAB } from "react-native-paper";
+import { AnimatedFAB, Divider } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
 import { useActiveTrack } from "react-native-track-player";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
+import { defaultStyles } from "@/styles";
 
 const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 export default function PlaylistScreen() {
-  const { playlists, createNewPlaylist, deleteExistingPlaylist } =
-    usePlaylists();
+  const { playlists, createNewPlaylist } = usePlaylists();
   const router = useRouter();
   const { top } = useSafeAreaInsets();
   const lastActiveTrack = useLastActiveTrack();
   const activeTrack = useActiveTrack();
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isExtended, setIsExtended] = useState(true);
 
@@ -54,7 +53,7 @@ export default function PlaylistScreen() {
   }: {
     item: { name: string; thumbnail: string | null };
   }) => (
-    <View style={styles.playlistItem}>
+    <View key={item.name} style={styles.playlistItem}>
       <TouchableOpacity
         style={styles.playlistItemTouchableArea}
         onPress={() => {
@@ -70,53 +69,88 @@ export default function PlaylistScreen() {
         />
         <Text style={styles.playlistName}>{item.name}</Text>
       </TouchableOpacity>
-      <MaterialCommunityIcons
-        name="delete-forever-outline"
-        size={24}
-        color="#530000"
-        onPress={() => deleteExistingPlaylist(item.name)}
-      />
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => {
+          // Convert the song object to a JSON string
+          const playlistData = JSON.stringify({
+            name: item.name,
+            thumbnail: item.thumbnail,
+          });
+
+          router.push({
+            pathname: "/(modals)/menu",
+            params: { playlistData: playlistData, type: "playlist" },
+          });
+        }}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+      >
+        <Entypo name="dots-three-vertical" size={15} color="white" />
+      </TouchableOpacity>
     </View>
   );
 
   return (
     <FullScreenGradientBackground index={gradientIndex}>
-      <SafeAreaView style={[styles.container, { paddingTop: top }]}>
+      <View style={[defaultStyles.container, { paddingTop: top }]}>
         <Text style={styles.header}>Playlists</Text>
 
-        {playlistArray.length === 0 ? (
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: Colors.text,
-                textAlign: "center",
-                fontSize: 18,
-                marginTop: -top - 20,
-              }}
-            >
-              No playlists found! {"\n"}Create a playlist and start adding your
-              favorite songs.
-            </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={playlistArray}
-            renderItem={renderPlaylist}
-            keyExtractor={(item) => item.name}
-            contentContainerStyle={styles.listContainer}
-            onScroll={(e) => {
-              const currentScrollPosition =
-                Math.floor(e.nativeEvent.contentOffset.y) || 0;
-              setIsExtended(currentScrollPosition <= 0);
-            }}
+        {isScrolling && (
+          <Divider
+            style={{ backgroundColor: "rgba(255,255,255,0.3)", height: 0.3 }}
           />
         )}
+
+        <ScrollView
+          style={styles.playlistList}
+          contentContainerStyle={[
+            styles.scrollContainer,
+            playlistArray.length === 0 && { flex: 1 },
+          ]}
+          showsVerticalScrollIndicator={false}
+          onScroll={(e) => {
+            const currentScrollPosition =
+              Math.floor(e.nativeEvent.contentOffset.y) || 0;
+            setIsScrolling(currentScrollPosition > 0);
+            setIsExtended(currentScrollPosition <= 0);
+          }}
+        >
+          {playlistArray.length === 0 ? (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: Colors.text,
+                  textAlign: "center",
+                  fontSize: 18,
+                }}
+              >
+                No playlists found! {"\n"}Create a playlist and start adding
+                your favorite songs.
+              </Text>
+            </View>
+          ) : (
+            playlistArray.map((item) => renderPlaylist({ item }))
+          )}
+          {playlistArray.length !== 0 && (
+            <Text
+              style={{
+                color: Colors.textMuted,
+                textAlign: "center",
+                fontSize: 15,
+              }}
+            >
+              {playlistArray.length}{" "}
+              {`Playlist${playlistArray.length > 1 ? "s" : ""}`}
+            </Text>
+          )}
+        </ScrollView>
+
         <AnimatedFAB
           style={{
             position: "absolute",
@@ -140,15 +174,12 @@ export default function PlaylistScreen() {
           onCreate={handleCreatePlaylist}
           onCancel={() => setModalVisible(false)}
         />
-      </SafeAreaView>
+      </View>
     </FullScreenGradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
     fontSize: 24,
     color: Colors.text,
@@ -156,19 +187,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 10,
   },
-  listContainer: {
-    paddingHorizontal: 10,
+  scrollContainer: {
     paddingBottom: 145,
+  },
+  playlistList: {
+    flexDirection: "column",
+    width: "100%",
   },
   playlistItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingVertical: 10,
+    paddingLeft: 20,
+    paddingRight: 30,
   },
   playlistItemTouchableArea: {
     flexDirection: "row",
     alignItems: "center",
-    width: Dimensions.get("window").width - 60,
   },
   thumbnail: {
     width: 55,

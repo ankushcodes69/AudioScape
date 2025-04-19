@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
-import { FAB } from "react-native-paper";
+import Entypo from "@expo/vector-icons/Entypo";
+import { FAB, Divider } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
 import { useActiveTrack } from "react-native-track-player";
@@ -31,6 +32,7 @@ const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 const FavoritesScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [formattedTracks, setFormattedTracks] = useState<Song[]>([]);
   const { top } = useSafeAreaInsets();
   const { playAudio, playPlaylist } = useMusicPlayer();
@@ -68,6 +70,12 @@ const FavoritesScreen = () => {
         {/* Header */}
         <Text style={styles.header}>Favorites</Text>
 
+        {isScrolling && (
+          <Divider
+            style={{ backgroundColor: "rgba(255,255,255,0.3)", height: 0.3 }}
+          />
+        )}
+
         {/* Loading Indicator */}
         {isLoading ? (
           <ActivityIndicator color="white" size="large" />
@@ -79,6 +87,11 @@ const FavoritesScreen = () => {
               formattedTracks.length === 0 && { flex: 1 },
             ]}
             showsVerticalScrollIndicator={false}
+            onScroll={(e) => {
+              const currentScrollPosition =
+                Math.floor(e.nativeEvent.contentOffset.y) || 0;
+              setIsScrolling(currentScrollPosition > 0);
+            }}
           >
             {formattedTracks.length === 0 ? (
               <View
@@ -100,32 +113,70 @@ const FavoritesScreen = () => {
               </View>
             ) : (
               formattedTracks.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={styles.songItem}
-                  onPress={() => handleSongSelect(item)}
-                >
-                  <FastImage
-                    source={{ uri: item.thumbnail }}
-                    style={styles.resultThumbnail}
-                  />
-                  {activeTrack?.id === item.id && (
-                    <LoaderKit
-                      style={styles.trackPlayingIconIndicator}
-                      name="LineScalePulseOutRapid"
-                      color={"white"}
+                <View key={item.id} style={styles.songItem}>
+                  <TouchableOpacity
+                    style={styles.songItemTouchableArea}
+                    onPress={() => handleSongSelect(item)}
+                  >
+                    <FastImage
+                      source={{ uri: item.thumbnail }}
+                      style={styles.resultThumbnail}
                     />
-                  )}
-                  <View style={styles.resultText}>
-                    <Text style={styles.resultTitle} numberOfLines={1}>
-                      {item.title}
-                    </Text>
-                    <Text style={styles.resultArtist} numberOfLines={1}>
-                      {item.artist}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                    {activeTrack?.id === item.id && (
+                      <LoaderKit
+                        style={styles.trackPlayingIconIndicator}
+                        name="LineScalePulseOutRapid"
+                        color={"white"}
+                      />
+                    )}
+                    <View style={styles.resultText}>
+                      <Text style={styles.resultTitle} numberOfLines={1}>
+                        {item.title}
+                      </Text>
+                      <Text style={styles.resultArtist} numberOfLines={1}>
+                        {item.artist}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => {
+                      // Convert the song object to a JSON string
+                      const songData = JSON.stringify({
+                        id: item.id,
+                        title: item.title,
+                        artist: item.artist,
+                        thumbnail: item.thumbnail,
+                      });
+
+                      router.push({
+                        pathname: "/(modals)/menu",
+                        params: { songData: songData, type: "song" },
+                      });
+                    }}
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                  >
+                    <Entypo
+                      name="dots-three-vertical"
+                      size={15}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
               ))
+            )}
+            {formattedTracks.length !== 0 && (
+              <Text
+                style={{
+                  color: Colors.textMuted,
+                  textAlign: "center",
+                  fontSize: 15,
+                }}
+              >
+                {formattedTracks.length}{" "}
+                {`Track${formattedTracks.length > 1 ? "s" : ""}`}
+              </Text>
             )}
           </ScrollView>
         )}
@@ -173,8 +224,13 @@ const styles = StyleSheet.create({
   songItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingLeft: 20,
+    paddingRight: 30,
+  },
+  songItemTouchableArea: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   resultThumbnail: {
     width: 55,
@@ -184,8 +240,8 @@ const styles = StyleSheet.create({
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 28,
-    left: 38,
+    top: 17.5,
+    left: 18.5,
     width: 20,
     height: 20,
   },
