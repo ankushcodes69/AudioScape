@@ -16,6 +16,8 @@ import { useSetupTrackPlayer } from "@/hooks/useSetupTrackPlayer";
 import { useLogTrackPlayerState } from "@/hooks/useLogTrackPlayerState";
 import useNotificationClickHandler from "@/hooks/useNotificationClickHandler";
 import TrackPlayer from "react-native-track-player";
+import { MessageModal } from "@/components/MessageModal";
+import { UpdateModal } from "@/components/UpdateModal";
 import { playbackService } from "@/constants/playbackService";
 import { MusicPlayerProvider } from "@/components/MusicPlayerContext";
 import { LyricsProvider } from "@/hooks/useLyricsContext";
@@ -111,9 +113,18 @@ export default function RootLayout() {
                       headerShown: false,
                     }}
                   />
+                  <Stack.Screen
+                    name="(modals)/menu"
+                    options={{
+                      presentation: "transparentModal",
+                      headerShown: false,
+                    }}
+                  />
                   <Stack.Screen name="+not-found" />
                 </Stack>
               </ThemeProvider>
+              <UpdateModal />
+              <MessageModal />
             </GestureHandlerRootView>
           </SafeAreaProvider>
         </LyricsProvider>
