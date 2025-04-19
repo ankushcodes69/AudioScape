@@ -190,7 +190,7 @@ export default function LyricsModal() {
               ]}
             >
               <View style={styles.modalContent}>
-                <DismissPlayerSymbol />
+                <DismissLyricsModalSymbol />
 
                 <View style={styles.header}>
                   <Entypo
@@ -276,7 +276,7 @@ export default function LyricsModal() {
   );
 }
 
-const DismissPlayerSymbol = () => {
+const DismissLyricsModalSymbol = () => {
   const { top } = useSafeAreaInsets();
 
   return (

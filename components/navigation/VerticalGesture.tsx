@@ -15,10 +15,12 @@ const { height } = Dimensions.get("window");
 
 interface SwipeToDismissPlayerProps {
   children: ReactNode;
+  duration?: number;
 }
 
 const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
   children,
+  duration = 1000,
 }) => {
   const translateY = useSharedValue(0);
   const router = useRouter();
@@ -38,7 +40,7 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
         translateY.value = withTiming(
           height + 100,
           {
-            duration: 1000,
+            duration: duration,
             easing: Easing.out(Easing.exp),
           },
           () => {
