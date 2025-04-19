@@ -6,11 +6,12 @@ const useNotificationClickHandler = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const handleDeepLink = (event: { url: string }) => {
+    const handleDeepLink = async (event: { url: string }) => {
       const { url } = event;
       if (url === "trackplayer://notification.click") {
-        router.push("..");
-        router.navigate("/player");
+        await router.push("..");
+        if (await router.canDismiss()) await router.dismissTo("/player");
+        else await router.navigate("/player");
       }
     };
 
