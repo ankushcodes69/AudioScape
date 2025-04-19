@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,7 @@ import {
 import FastImage from "@d11/react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
+import { useLocalSearchParams } from "expo-router";
 import { usePlaylists } from "@/store/library";
 import { Colors } from "@/constants/Colors";
 import { unknownTrackImageUri } from "@/constants/images";
@@ -23,6 +24,7 @@ const { height: screenHeight } = Dimensions.get("window");
 export default function AddToPlaylistModal() {
   const { playlists, addTrackToPlaylist, createNewPlaylist } = usePlaylists();
   const { bottom } = useSafeAreaInsets();
+  const params = useLocalSearchParams();
   const activeTrack = useActiveTrack();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -40,34 +42,43 @@ export default function AddToPlaylistModal() {
     setModalVisible(false);
   };
 
+  const trackFromParams = useMemo(() => {
+    return params?.track ? JSON.parse(params.track as string) : null;
+  }, [params]);
+
+  const track =
+    trackFromParams ??
+    (activeTrack
+      ? {
+          id: activeTrack.id,
+          title: activeTrack.title || "",
+          artist: activeTrack.artist || "",
+          thumbnail: activeTrack.artwork || "https://placehold.co/50",
+        }
+      : undefined);
+
   const renderPlaylistItem = (
     { item }: { item: { name: string; thumbnail: string | null } },
     handleDismiss: () => void
-  ) => (
-    <TouchableOpacity
-      style={styles.playlistItem}
-      onPress={() => {
-        ToastAndroid.show(`Added song to ${item.name}`, ToastAndroid.SHORT);
-        addTrackToPlaylist(
-          {
-            id: activeTrack?.id,
-            title: activeTrack?.title || "",
-            artist: activeTrack?.artist || "",
-            thumbnail: activeTrack?.artwork || "https://placehold.co/50",
-          },
-          item.name
-        );
-        handleDismiss();
-        console.log(`Selected playlist: ${item.name}`);
-      }}
-    >
-      <FastImage
-        source={{ uri: item.thumbnail ?? unknownTrackImageUri }}
-        style={styles.thumbnail}
-      />
-      <Text style={styles.playlistName}>{item.name}</Text>
-    </TouchableOpacity>
-  );
+  ) => {
+    return (
+      <TouchableOpacity
+        style={styles.playlistItem}
+        onPress={() => {
+          ToastAndroid.show(`Added song to ${item.name}`, ToastAndroid.SHORT);
+          if (track) addTrackToPlaylist(track, item.name);
+          handleDismiss();
+          console.log(`Selected playlist: ${item.name}`);
+        }}
+      >
+        <FastImage
+          source={{ uri: item.thumbnail ?? unknownTrackImageUri }}
+          style={styles.thumbnail}
+        />
+        <Text style={styles.playlistName}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <VerticalDismiss>
