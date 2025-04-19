@@ -7,7 +7,11 @@ import React, {
   useCallback,
 } from "react";
 import innertube from "@/youtube";
-import TrackPlayer, { State, Track } from "react-native-track-player";
+import TrackPlayer, {
+  State,
+  Track,
+  useActiveTrack,
+} from "react-native-track-player";
 import { Helpers } from "youtubei.js";
 import { Alert } from "react-native";
 
@@ -110,6 +114,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   const abortControllerRef = useRef<AbortController | null>(null);
   const isAddingToQueueRef = useRef<boolean>(false);
   const currentSongIdRef = useRef<string | null>(null);
+  const activeTrack = useActiveTrack();
 
   const log = useCallback((message: string) => {
     console.log(`[MusicPlayer] ${message}`);
@@ -361,11 +366,21 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
     }
 
     try {
-      const queue = await TrackPlayer.getQueue();
       const currentIndex = await TrackPlayer.getActiveTrackIndex();
-      let insertIndex = (currentIndex ?? queue.length - 1) + 1;
+      const initialQueue = await TrackPlayer.getQueue();
+
+      // Fallback to queue length if currentIndex is undefined
+      let insertIndex =
+        typeof currentIndex === "number"
+          ? currentIndex + 1
+          : initialQueue.length;
 
       for (const song of songs) {
+        if (song.id === activeTrack?.id) {
+          continue; // Skip if the song is currently playing
+        }
+
+        const queue = await TrackPlayer.getQueue(); // Refresh the queue on each iteration
         const existingIndex = queue.findIndex((item) => item.id === song.id);
 
         const info = await getInfo(song.id);
@@ -382,7 +397,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         }
 
         await TrackPlayer.add(info, insertIndex);
-        insertIndex++; // Move insert index forward for next song
+        insertIndex++; // Move insert index forward for the next song
       }
     } catch (error) {
       const errorMessage =

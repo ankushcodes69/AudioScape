@@ -203,9 +203,9 @@ export default function MenuModal() {
         if (selectedPlaylist) {
           const playlistSongs = playlists[selectedPlaylist.name];
           if (playlistSongs.length === 0) return;
-          await playNext(playlistSongs ? playlistSongs : null);
           ToastAndroid.show("Playlist will play next", ToastAndroid.SHORT);
           router.back();
+          playNext(playlistSongs ? playlistSongs : null);
         }
       },
     },
