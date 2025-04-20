@@ -25,6 +25,7 @@
    <img src="./assets/images/screenshot-3.png" width="45%" />
    <img src="./assets/images/screenshot-4.png" width="45%" />
    <img src="./assets/images/screenshot-5.png" width="45%" />
+   <img src="./assets/images/screenshot-6.png" width="45%" />
 </div>
 
 ## ✨ Features
