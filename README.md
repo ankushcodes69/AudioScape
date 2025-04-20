@@ -20,11 +20,11 @@
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="./assets/images/screenshot-1.png" width="18%" />
-  <img src="./assets/images/screenshot-2.png" width="18%" />
-  <img src="./assets/images/screenshot-3.png" width="18%" />
-  <img src="./assets/images/screenshot-4.png" width="18%" />
-  <img src="./assets/images/screenshot-5.png" width="18%" />
+  <img src="./assets/images/screenshot-1.png" style="width: 18%; max-width: 45%; min-width: 150px; margin: 2px;" />
+  <img src="./assets/images/screenshot-2.png" style="width: 18%; max-width: 45%; min-width: 150px; margin: 2px;" />
+  <img src="./assets/images/screenshot-3.png" style="width: 18%; max-width: 45%; min-width: 150px; margin: 2px;" />
+  <img src="./assets/images/screenshot-4.png" style="width: 18%; max-width: 45%; min-width: 150px; margin: 2px;" />
+  <img src="./assets/images/screenshot-5.png" style="width: 18%; max-width: 45%; min-width: 150px; margin: 2px;" />
 </div>
 
 ## ✨ Features
