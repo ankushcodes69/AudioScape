@@ -1,11 +1,16 @@
 import { fontSize } from "@/constants/tokens";
 import { Colors } from "@/constants/Colors";
 import { formatSecondsToMinutes } from "@/helpers/miscellaneous";
-import { defaultStyles, utilsStyles } from "@/styles";
-import { StyleSheet, Text, View, ViewProps } from "react-native";
+import { defaultStyles } from "@/styles";
+import { Text, View, ViewProps } from "react-native";
 import { Slider } from "react-native-awesome-slider";
 import { useSharedValue } from "react-native-reanimated";
 import TrackPlayer, { useProgress } from "react-native-track-player";
+import {
+  verticalScale,
+  scale,
+  ScaledSheet,
+} from "react-native-size-matters/extend";
 
 export const PlayerProgressBar = ({ style }: ViewProps) => {
   const { duration, position, buffered } = useProgress(250);
@@ -33,8 +38,11 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
         minimumValue={min}
         maximumValue={max}
         cache={cache}
-        containerStyle={utilsStyles.slider}
-        thumbWidth={13}
+        containerStyle={{
+          height: verticalScale(3.5),
+          borderRadius: 16,
+        }}
+        thumbWidth={scale(13)}
         renderBubble={() => (
           <View style={styles.bubbleContainer}>
             <Text style={styles.bubbleText}>
@@ -72,12 +80,12 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   timeRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginTop: 20,
+    marginTop: "20@vs",
   },
   timeText: {
     ...defaultStyles.text,
@@ -95,6 +103,5 @@ const styles = StyleSheet.create({
   bubbleText: {
     color: Colors.text,
     fontWeight: "500",
-    opacity: 0.8,
   },
 });

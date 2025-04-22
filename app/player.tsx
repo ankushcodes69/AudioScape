@@ -1,26 +1,25 @@
 import { MovingText } from "@/components/MovingText";
 import { PlayerControls } from "@/components/PlayerControls";
 import { PlayerProgressBar } from "@/components/PlayerProgressbar";
-import { fontSize, screenPadding } from "@/constants/tokens";
+import { screenPadding } from "@/constants/tokens";
 import { Colors } from "@/constants/Colors";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { useTrackPlayerFavorite } from "@/hooks/useTrackPlayerFavorite";
 import { defaultStyles } from "@/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { ActivityIndicator, Text, View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import FastImage from "@d11/react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
+import {
+  ScaledSheet,
+  verticalScale,
+  scale,
+  moderateScale,
+} from "react-native-size-matters/extend";
 
 const PlayerScreen = () => {
   const activeTrack = useActiveTrack();
@@ -55,7 +54,7 @@ const PlayerScreen = () => {
         <View style={styles.overlayContainer}>
           <DismissPlayerSymbol />
 
-          <View style={{ flex: 1, marginTop: top + 50 }}>
+          <View style={{ flex: 1, marginTop: top + verticalScale(50) }}>
             <View style={styles.artworkImageContainer}>
               <FastImage
                 source={{
@@ -68,8 +67,8 @@ const PlayerScreen = () => {
             </View>
 
             <View style={{ flex: 1 }}>
-              <View style={{ marginTop: 40 }}>
-                <View style={{ height: "15%" }}>
+              <View style={{ marginTop: verticalScale(40) }}>
+                <View style={{ height: verticalScale(50) }}>
                   <View
                     style={{
                       flexDirection: "row",
@@ -89,9 +88,9 @@ const PlayerScreen = () => {
                     {/* Favorite button icon*/}
                     <FontAwesome
                       name={isFavorite ? "heart" : "heart-o"}
-                      size={22}
+                      size={moderateScale(22)}
                       color={isFavorite ? "#ff0000" : Colors.icon}
-                      style={{ marginHorizontal: 14 }}
+                      style={{ marginHorizontal: scale(14) }}
                       onPress={() => {
                         toggleFavoriteFunc();
                       }}
@@ -103,16 +102,24 @@ const PlayerScreen = () => {
                   {activeTrack.artist && (
                     <Text
                       numberOfLines={1}
-                      style={[styles.trackArtistText, { marginTop: 6 }]}
+                      style={[
+                        styles.trackArtistText,
+                        { marginTop: verticalScale(6) },
+                      ]}
                     >
                       {activeTrack.artist}
                     </Text>
                   )}
                 </View>
 
-                <PlayerProgressBar style={{ marginTop: 32 }} />
+                <PlayerProgressBar style={{ marginTop: verticalScale(32) }} />
 
-                <PlayerControls style={{ marginTop: 40, marginBottom: 125 }} />
+                <PlayerControls
+                  style={{
+                    marginTop: verticalScale(40),
+                    marginBottom: verticalScale(125),
+                  }}
+                />
               </View>
             </View>
             <View
@@ -159,8 +166,8 @@ const DismissPlayerSymbol = () => {
       <View
         accessible={false}
         style={{
-          width: 45,
-          height: 6,
+          width: scale(45),
+          height: verticalScale(6),
           borderRadius: 8,
           backgroundColor: "#fff",
           opacity: 0.7,
@@ -170,7 +177,7 @@ const DismissPlayerSymbol = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   overlayContainer: {
     ...defaultStyles.container,
     paddingHorizontal: screenPadding.horizontal,
@@ -185,8 +192,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 11,
     borderRadius: 12,
-    width: Dimensions.get("window").width - 50,
-    height: Dimensions.get("window").width - 50,
+    width: scale(360) - 50,
+    height: scale(360) - 50,
   },
   artworkImage: {
     width: "100%",
@@ -200,12 +207,12 @@ const styles = StyleSheet.create({
   },
   trackTitleText: {
     ...defaultStyles.text,
-    fontSize: 22,
+    fontSize: "22@ms",
     fontWeight: "700",
   },
   trackArtistText: {
     ...defaultStyles.text,
-    fontSize: fontSize.base,
+    fontSize: "20@ms",
     opacity: 0.8,
     maxWidth: "90%",
   },
@@ -213,15 +220,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: Colors.text,
     flexShrink: 1,
-    fontSize: 16,
+    fontSize: "16@ms",
     fontWeight: "500",
   },
   bottomButton: {
     backgroundColor: "rgba(0,0,0,0.2)",
-    paddingVertical: 9,
-    paddingHorizontal: 15,
+    paddingVertical: "9@vs",
+    paddingHorizontal: "15@s",
     borderRadius: 18,
-    bottom: 35,
+    bottom: "35@vs",
     alignSelf: "center",
   },
 });

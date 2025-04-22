@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { Text, TouchableOpacity, View, FlatList } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, {
   Track,
@@ -22,8 +15,11 @@ import FastImage from "@d11/react-native-fast-image";
 import { Divider } from "react-native-paper";
 import VerticalDismiss from "@/components/navigation/VerticalArrowDismiss";
 import { Entypo } from "@expo/vector-icons";
-
-const { height: screenHeight } = Dimensions.get("window");
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 export default function QueueModal() {
   const [queue, setQueue] = useState<Track[]>([]);
@@ -119,7 +115,11 @@ export default function QueueModal() {
           }}
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
-          <Entypo name="dots-three-vertical" size={15} color="white" />
+          <Entypo
+            name="dots-three-vertical"
+            size={moderateScale(15)}
+            color="white"
+          />
         </TouchableOpacity>
       </TouchableOpacity>
     </View>
@@ -133,7 +133,7 @@ export default function QueueModal() {
             <View style={styles.header}>
               <Entypo
                 name="chevron-down"
-                size={28}
+                size={moderateScale(28)}
                 style={styles.dismissButton}
                 activeOpacity={0.7}
                 color={Colors.text}
@@ -174,7 +174,7 @@ export default function QueueModal() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingVertical: 15,
-    maxHeight: screenHeight * 0.6,
+    maxHeight: verticalScale(736 * 0.6),
   },
   header: {
     flexDirection: "row",
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     marginTop: -11,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: "18@ms",
     fontWeight: "bold",
     color: Colors.text,
     marginBottom: 10,
@@ -223,36 +223,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   indexContainer: {
-    width: 40,
+    width: "40@s",
     alignItems: "center",
   },
   indexText: {
     color: "#888",
-    fontSize: 18,
+    fontSize: "18@ms",
     fontWeight: "bold",
   },
   thumbnail: {
-    width: 50,
-    height: 50,
+    width: "50@s",
+    height: "50@s",
     borderRadius: 8,
     marginRight: 15,
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 15,
-    left: 56,
-    width: 20,
-    height: 20,
+    top: "15@s",
+    left: "56@s",
+    width: "20@s",
+    height: "20@s",
   },
   songText: {
     flex: 1,
   },
   songTitle: {
     color: Colors.text,
-    fontSize: 16,
+    fontSize: "16@ms",
   },
   songArtist: {
     color: "#999",
-    fontSize: 14,
+    fontSize: "14@ms",
   },
 });

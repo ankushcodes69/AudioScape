@@ -1,17 +1,12 @@
 import React from "react";
-import {
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Text,
-} from "react-native";
+import { ScrollView, TouchableOpacity, View, Text } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
+import { ScaledSheet, moderateScale } from "react-native-size-matters/extend";
 
 interface SongItem {
   id: string;
@@ -87,7 +82,11 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             }}
             hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
           >
-            <Entypo name="dots-three-vertical" size={15} color="white" />
+            <Entypo
+              name="dots-three-vertical"
+              size={moderateScale(15)}
+              color="white"
+            />
           </TouchableOpacity>
         </View>
       ));
@@ -110,7 +109,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: "white",
-    fontSize: 20,
+    fontSize: "20@ms",
     fontWeight: "bold",
   },
   gridContainer: {
@@ -128,42 +127,42 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    marginBottom: 8,
+    marginBottom: "8@vs",
   },
   itemContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 28,
-    width: 280,
-    height: 72,
+    marginRight: "28@s",
+    width: "280@s",
+    height: "72@vs",
   },
   itemTouchableArea: {
     flexDirection: "row",
     alignItems: "center",
   },
   rankContainer: {
-    width: 40,
+    width: "40@s",
     alignItems: "center",
   },
   rankText: {
     color: "#888",
-    fontSize: 28,
+    fontSize: "28@ms",
     fontWeight: "bold",
   },
   imageContainer: {
-    marginRight: 12,
+    marginRight: "12@s",
   },
   thumbnail: {
-    width: 55,
-    height: 55,
+    width: "55@s",
+    height: "55@s",
     borderRadius: 8,
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 18,
-    left: 19,
-    width: 20,
-    height: 20,
+    top: "18@vs",
+    left: "19@s",
+    width: "20@s",
+    height: "20@s",
   },
   textContainer: {
     flex: 1,
@@ -171,12 +170,12 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.text,
-    fontSize: 16,
+    fontSize: "16@ms",
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: "4@vs",
   },
   artist: {
-    fontSize: 14,
+    fontSize: "14@ms",
     color: "#888",
   },
 });

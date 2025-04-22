@@ -5,6 +5,7 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { moderateScale } from "react-native-size-matters/extend";
 
 function TabLayoutContent() {
   const { bottom } = useSafeAreaInsets();
@@ -20,7 +21,7 @@ function TabLayoutContent() {
             paddingTop: 1,
           },
           tabBarLabelStyle: {
-            fontSize: 10,
+            fontSize: moderateScale(10),
           },
           tabBarActiveTintColor: Colors.tint,
           headerShown: false,

@@ -5,20 +5,13 @@ import {
 } from "@/components/PlayerControls";
 import { useLastActiveTrack } from "@/hooks/useLastActiveTrack";
 import { useRouter } from "expo-router";
-import {
-  StyleSheet,
-  View,
-  ViewProps,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { View, ViewProps, TouchableOpacity } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import color from "color";
 import { useActiveTrack } from "react-native-track-player";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { MovingText } from "@/components/MovingText";
-
-const screenWidth = Dimensions.get("window").width;
+import { ScaledSheet, scale } from "react-native-size-matters/extend";
 
 export const FloatingPlayer = ({ style }: ViewProps) => {
   const lastActiveTrack = useLastActiveTrack();
@@ -75,30 +68,30 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
         activeOpacity={0.5}
         style={styles.trackControlsContainer}
       >
-        <SkipToPreviousButton iconSize={25} />
-        <PlayPauseButton iconSize={25} />
-        <SkipToNextButton iconSize={25} />
+        <SkipToPreviousButton iconSize={scale(25)} />
+        <PlayPauseButton iconSize={scale(25)} />
+        <SkipToNextButton iconSize={scale(25)} />
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
+    paddingHorizontal: "8@s",
+    paddingVertical: "8@vs",
     borderRadius: 12,
-    paddingVertical: 8,
   },
   touchableArea: {
     flexDirection: "row",
     alignItems: "center",
-    width: screenWidth - 125,
+    width: "235@s",
   },
   trackArtworkImage: {
-    width: 50,
-    height: 50,
+    width: "50@s",
+    height: "50@s",
     borderRadius: 8,
   },
   trackTitleContainer: {
@@ -108,19 +101,17 @@ const styles = StyleSheet.create({
   },
   trackTitle: {
     color: "#f2f2f0",
-    fontSize: 18,
+    fontSize: "18@ms",
     fontWeight: "600",
-    paddingLeft: 0,
   },
   trackArtist: {
     color: "#a9a9a9",
-    fontSize: 12,
+    fontSize: "12@ms",
     fontWeight: "500",
-    paddingLeft: 0,
   },
   trackControlsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    columnGap: 13,
+    columnGap: "13@s",
   },
 });

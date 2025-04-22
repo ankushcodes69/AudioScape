@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-} from "react-native";
+import { ScrollView, TouchableOpacity, View, Text } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
+import { ScaledSheet } from "react-native-size-matters/extend";
 
 interface SongItem {
   id: string;
@@ -30,32 +24,17 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
 }) => {
   const activeTrack = useActiveTrack();
 
-  const screenWidth = Dimensions.get("window").width;
-  const itemWidth = screenWidth * 0.27;
-  const itemHeight = itemWidth + 50;
-
   const renderItem = (item: SongItem) => (
     <TouchableOpacity
       key={item.id}
-      style={[styles.itemContainer, { width: itemWidth, height: itemHeight }]}
+      style={styles.itemContainer}
       onPress={() => onItemClick(item)}
     >
       <View style={styles.imageContainer}>
-        <FastImage
-          source={{ uri: item.thumbnail }}
-          style={[styles.thumbnail, { width: itemWidth, height: itemWidth }]}
-        />
+        <FastImage source={{ uri: item.thumbnail }} style={styles.thumbnail} />
         {activeTrack?.id === item.id && (
           <LoaderKit
-            style={[
-              styles.trackPlayingIconIndicator,
-              {
-                top: itemWidth / 2 - 15,
-                left: itemWidth / 2 - 13,
-                width: itemWidth * 0.3,
-                height: itemWidth * 0.3,
-              },
-            ]}
+            style={styles.trackPlayingIconIndicator}
             name="LineScalePulseOutRapid"
             color="white"
           />
@@ -91,41 +70,49 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   header: {
     color: "white",
-    fontSize: 20,
+    fontSize: "20@ms",
     fontWeight: "bold",
-    marginBottom: 10,
-    marginLeft: 15,
+    paddingHorizontal: 15,
+    paddingBottom: 12,
   },
   rowsContainer: {
     flexDirection: "column",
   },
   row: {
     flexDirection: "row",
-    marginBottom: 10,
+    marginBottom: "10@vs",
   },
   itemContainer: {
     marginRight: 10,
+    width: "100@s",
+    height: "145@s",
   },
   imageContainer: {
     position: "relative",
   },
   thumbnail: {
     borderRadius: 12,
+    width: "100@s",
+    height: "100@s",
   },
   trackPlayingIconIndicator: {
     position: "absolute",
+    top: "35@s",
+    left: "35@s",
+    width: "30@s",
+    height: "30@s",
   },
   title: {
     color: Colors.text,
-    fontSize: 14,
+    fontSize: "14@ms",
     fontWeight: "bold",
     marginTop: 5,
   },
   artist: {
-    fontSize: 12,
+    fontSize: "12@ms",
     color: "#888",
   },
 });

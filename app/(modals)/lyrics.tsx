@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  useWindowDimensions,
-  ViewStyle,
-} from "react-native";
+import { View, Text, useWindowDimensions, ViewStyle } from "react-native";
 import { useProgress, useActiveTrack } from "react-native-track-player";
 import { usePlayerBackground } from "@/hooks/usePlayerBackground";
 import { Colors } from "@/constants/Colors";
@@ -27,6 +21,12 @@ import { useKeepAwake } from "expo-keep-awake";
 import { ReducedPlayerControls } from "@/components/PlayerControls";
 import { PlayerProgressBar } from "@/components/PlayerProgressbar";
 import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
+import {
+  ScaledSheet,
+  moderateScale,
+  scale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 const THRESHOLD = 150;
 const GRADIENT_HEIGHT = 50;
@@ -195,7 +195,7 @@ export default function LyricsModal() {
                 <View style={styles.header}>
                   <Entypo
                     name="chevron-down"
-                    size={28}
+                    size={moderateScale(28)}
                     style={styles.dismissButton}
                     activeOpacity={0.7}
                     color={Colors.text}
@@ -266,7 +266,9 @@ export default function LyricsModal() {
                 <PlayerProgressBar
                   style={{ marginTop: 15, marginHorizontal: 20 }}
                 />
-                <ReducedPlayerControls style={{ marginBottom: 35 }} />
+                <ReducedPlayerControls
+                  style={{ marginBottom: verticalScale(35) }}
+                />
               </View>
             </View>
           </View>
@@ -293,8 +295,8 @@ const DismissLyricsModalSymbol = () => {
       <View
         accessible={false}
         style={{
-          width: 45,
-          height: 6,
+          width: scale(45),
+          height: verticalScale(6),
           borderRadius: 8,
           backgroundColor: "#fff",
           opacity: 0.7,
@@ -304,7 +306,7 @@ const DismissLyricsModalSymbol = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
@@ -332,7 +334,7 @@ const styles = StyleSheet.create({
     marginTop: -11,
   },
   songTitle: {
-    fontSize: 18,
+    fontSize: "18@ms",
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
@@ -340,7 +342,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   artistName: {
-    fontSize: 14,
+    fontSize: "14@ms",
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",

@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { useTrackPlayerRepeatMode } from "@/hooks/useTrackPlayerRepeatMode";
 import { ComponentProps } from "react";
 import { match } from "ts-pattern";
+import { moderateScale } from "react-native-size-matters/extend";
 
 type PlayerControlsProps = {
   style?: ViewStyle;
@@ -58,7 +59,7 @@ export const ReducedPlayerControls = ({ style }: PlayerControlsProps) => {
 
 export const PlayPauseButton = ({
   style,
-  iconSize = 50,
+  iconSize = moderateScale(50),
 }: PlayerButtonProps) => {
   const { playing } = useIsPlaying();
 
@@ -78,7 +79,9 @@ export const PlayPauseButton = ({
   );
 };
 
-export const SkipToNextButton = ({ iconSize = 40 }: PlayerButtonProps) => {
+export const SkipToNextButton = ({
+  iconSize = moderateScale(40),
+}: PlayerButtonProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -89,7 +92,9 @@ export const SkipToNextButton = ({ iconSize = 40 }: PlayerButtonProps) => {
   );
 };
 
-export const SkipToPreviousButton = ({ iconSize = 40 }: PlayerButtonProps) => {
+export const SkipToPreviousButton = ({
+  iconSize = moderateScale(40),
+}: PlayerButtonProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -104,7 +109,7 @@ export const SkipToPreviousButton = ({ iconSize = 40 }: PlayerButtonProps) => {
   );
 };
 
-export const AddToPlaylistButton = ({ iconSize = 32 }) => {
+export const AddToPlaylistButton = ({ iconSize = moderateScale(32) }) => {
   const router = useRouter();
 
   return (
@@ -159,7 +164,7 @@ export const RepeatToggle = ({ ...iconProps }: RepeatIconProps) => {
       name={icon}
       onPress={toggleRepeatMode}
       color={Colors.text}
-      size={32}
+      size={moderateScale(32)}
       {...iconProps}
     />
   );

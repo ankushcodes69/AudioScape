@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { unknownTrackImageUri } from "@/constants/images";
@@ -20,6 +13,12 @@ import { usePlaylists } from "@/store/library";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import FastImage from "@d11/react-native-fast-image";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+  scale,
+} from "react-native-size-matters/extend";
 
 interface TrackInfo {
   id: string;
@@ -55,7 +54,7 @@ const PlaylistView = () => {
         <View style={styles.header}>
           <MaterialCommunityIcons
             name="arrow-left"
-            size={28}
+            size={moderateScale(28)}
             color={Colors.text}
             style={{ position: "absolute", left: 0 }}
             onPress={() => router.back()}
@@ -74,7 +73,7 @@ const PlaylistView = () => {
         )}
 
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 145 }}
+          contentContainerStyle={{ paddingBottom: verticalScale(145) }}
           showsVerticalScrollIndicator={false}
           onScroll={(e) => {
             const currentScrollPosition =
@@ -142,7 +141,11 @@ const PlaylistView = () => {
                   }}
                   hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                 >
-                  <Entypo name="dots-three-vertical" size={15} color="white" />
+                  <Entypo
+                    name="dots-three-vertical"
+                    size={moderateScale(15)}
+                    color="white"
+                  />
                 </TouchableOpacity>
               </View>
             ))}
@@ -152,7 +155,7 @@ const PlaylistView = () => {
               style={{
                 color: Colors.textMuted,
                 textAlign: "center",
-                fontSize: 15,
+                fontSize: moderateScale(15),
               }}
             >
               {playlist.length} {`Track${playlist.length > 1 ? "s" : ""}`}
@@ -164,7 +167,7 @@ const PlaylistView = () => {
           style={{
             position: "absolute",
             marginRight: 16,
-            marginBottom: isFloatingPlayerNotVisible ? 16 : 90,
+            marginBottom: isFloatingPlayerNotVisible ? 16 : verticalScale(90),
             right: 0,
             bottom: 0,
             backgroundColor: "white",
@@ -185,7 +188,7 @@ const PlaylistView = () => {
 
 export default PlaylistView;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     padding: 15,
@@ -198,10 +201,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: "24@ms",
     fontWeight: "bold",
     color: Colors.text,
-    maxWidth: Dimensions.get("window").width - 90,
+    maxWidth: scale(360) - 90,
   },
   artworkImageContainer: {
     elevation: 20,
@@ -211,13 +214,13 @@ const styles = StyleSheet.create({
     shadowRadius: 11,
     borderRadius: 12,
     alignSelf: "center",
-    height: Dimensions.get("window").width - 120,
-    width: Dimensions.get("window").width - 120,
+    height: scale(360) - 120,
+    width: scale(360) - 120,
     marginBottom: 20,
   },
   artworkImage: {
-    width: Dimensions.get("window").width - 120,
-    height: Dimensions.get("window").width - 120,
+    width: scale(360) - 120,
+    height: scale(360) - 120,
     resizeMode: "cover",
     borderRadius: 12,
   },
@@ -229,30 +232,30 @@ const styles = StyleSheet.create({
   songItemTouchableArea: {
     flexDirection: "row",
     alignItems: "center",
-    width: Dimensions.get("window").width - 60,
+    width: scale(360) - 60,
   },
   resultThumbnail: {
-    width: 55,
-    height: 55,
+    width: "55@s",
+    height: "55@s",
     marginRight: 10,
     borderRadius: 8,
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 18,
-    left: 19,
-    width: 20,
-    height: 20,
+    top: "18@s",
+    left: "19@s",
+    width: "20@s",
+    height: "20@s",
   },
   resultText: {
     flex: 1,
   },
   resultTitle: {
     color: Colors.text,
-    fontSize: 16,
+    fontSize: "16@ms",
   },
   resultArtist: {
     color: "#999",
-    fontSize: 14,
+    fontSize: "14@ms",
   },
 });

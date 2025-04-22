@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import { Colors } from "@/constants/Colors";
 import { unknownTrackImageUri } from "@/constants/images";
@@ -19,6 +13,11 @@ import { Entypo } from "@expo/vector-icons";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
 import { defaultStyles } from "@/styles";
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
@@ -30,7 +29,6 @@ export default function PlaylistScreen() {
   const activeTrack = useActiveTrack();
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [isExtended, setIsExtended] = useState(true);
 
   const isFloatingPlayerNotVisible = !(activeTrack ?? lastActiveTrack);
 
@@ -85,7 +83,11 @@ export default function PlaylistScreen() {
         }}
         hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       >
-        <Entypo name="dots-three-vertical" size={15} color="white" />
+        <Entypo
+          name="dots-three-vertical"
+          size={moderateScale(15)}
+          color="white"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -112,7 +114,6 @@ export default function PlaylistScreen() {
             const currentScrollPosition =
               Math.floor(e.nativeEvent.contentOffset.y) || 0;
             setIsScrolling(currentScrollPosition > 0);
-            setIsExtended(currentScrollPosition <= 0);
           }}
         >
           {playlistArray.length === 0 ? (
@@ -127,7 +128,7 @@ export default function PlaylistScreen() {
                 style={{
                   color: Colors.text,
                   textAlign: "center",
-                  fontSize: 18,
+                  fontSize: moderateScale(18),
                 }}
               >
                 No playlists found! {"\n"}Create a playlist and start adding
@@ -142,7 +143,7 @@ export default function PlaylistScreen() {
               style={{
                 color: Colors.textMuted,
                 textAlign: "center",
-                fontSize: 15,
+                fontSize: moderateScale(15),
               }}
             >
               {playlistArray.length}{" "}
@@ -155,7 +156,7 @@ export default function PlaylistScreen() {
           style={{
             position: "absolute",
             marginRight: 16,
-            marginBottom: isFloatingPlayerNotVisible ? 16 : 90,
+            marginBottom: isFloatingPlayerNotVisible ? 16 : verticalScale(90),
             right: 0,
             bottom: 0,
             backgroundColor: "white",
@@ -164,7 +165,7 @@ export default function PlaylistScreen() {
           icon="plus"
           label="Create Playlist"
           color="black"
-          extended={isExtended}
+          extended={!isScrolling}
           animateFrom={"right"}
           onPress={() => setModalVisible(true)}
         />
@@ -179,16 +180,16 @@ export default function PlaylistScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   header: {
-    fontSize: 24,
+    fontSize: "24@ms",
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
   },
   scrollContainer: {
-    paddingBottom: 145,
+    paddingBottom: "145@vs",
   },
   playlistList: {
     flexDirection: "column",
@@ -206,13 +207,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   thumbnail: {
-    width: 55,
-    height: 55,
+    width: "55@s",
+    height: "55@s",
     borderRadius: 8,
     marginRight: 15,
   },
   playlistName: {
-    fontSize: 16,
+    fontSize: "16@ms",
     color: "white",
     flex: 1,
   },

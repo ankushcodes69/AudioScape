@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Alert,
-  View,
-  Text,
-  ScrollView,
-  Linking,
-} from "react-native";
+import { Alert, View, Text, ScrollView, Linking } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import { QuickPicksSection } from "@/components/QuickPicksSection";
@@ -20,6 +13,7 @@ import { useRouter } from "expo-router";
 import { Divider } from "react-native-paper";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { transparentIconUri } from "@/constants/images";
+import { ScaledSheet, moderateScale } from "react-native-size-matters/extend";
 
 interface FeedResult {
   id: string;
@@ -186,7 +180,7 @@ export default function HomeScreen() {
           >
             <SimpleLineIcons
               name="equalizer"
-              size={20}
+              size={moderateScale(20)}
               color="white"
               style={{ marginTop: 5 }}
               onPress={() => {
@@ -198,7 +192,7 @@ export default function HomeScreen() {
             <EvilIcons
               name={"search"}
               color={"white"}
-              size={35}
+              size={moderateScale(35)}
               onPress={() => {
                 router.navigate("/(tabs)/search");
               }}
@@ -215,7 +209,11 @@ export default function HomeScreen() {
         {isLoading ? (
           <View style={{ flex: 1, justifyContent: "center" }}>
             <LoaderKit
-              style={{ width: 50, height: 50, alignSelf: "center" }}
+              style={{
+                width: moderateScale(50),
+                height: moderateScale(50),
+                alignSelf: "center",
+              }}
               name="BallSpinFadeLoader"
               color="white"
             />
@@ -224,7 +222,7 @@ export default function HomeScreen() {
                 color: "white",
                 textAlign: "center",
                 flexWrap: "wrap",
-                fontSize: 16,
+                fontSize: moderateScale(16),
               }}
             >
               Please Wait Sometimes It May Take Longer Than Usual To Load
@@ -255,13 +253,13 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
   },
   scrollContainer: {
-    paddingBottom: 90,
+    paddingBottom: "90@vs",
     marginTop: 3,
   },
   header: {
@@ -271,13 +269,13 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: "18@ms",
     fontWeight: "bold",
     color: "white",
   },
   logo: {
-    width: 45,
-    height: 45,
+    width: "42@ms",
+    height: "42@ms",
     marginRight: 5,
     borderRadius: 50,
   },

@@ -1,8 +1,10 @@
+import { moderateScale } from "react-native-size-matters/extend";
+
 export const fontSize = {
-  xs: 12,
-  sm: 16,
-  base: 20,
-  lg: 24,
+  xs: moderateScale(12),
+  sm: moderateScale(16),
+  base: moderateScale(20),
+  lg: moderateScale(24),
 };
 
 export const screenPadding = {

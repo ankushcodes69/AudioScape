@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  ToastAndroid,
-} from "react-native";
+import { Text, View, TouchableOpacity, ToastAndroid } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { Divider } from "react-native-paper";
@@ -24,6 +17,12 @@ import { usePlaylists } from "@/store/library";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
 import TrackPlayer from "react-native-track-player";
+import {
+  ScaledSheet,
+  moderateScale,
+  scale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 interface Song {
   id: string;
@@ -31,8 +30,6 @@ interface Song {
   artist: string;
   thumbnail: string;
 }
-
-const { height: screenHeight } = Dimensions.get("window");
 
 export default function MenuModal() {
   const { bottom } = useSafeAreaInsets();
@@ -83,7 +80,7 @@ export default function MenuModal() {
 
       <FontAwesome
         name={isFavorite ? "heart" : "heart-o"}
-        size={22}
+        size={moderateScale(22)}
         color={isFavorite ? "#ff0000" : Colors.icon}
         onPress={() => {
           toggleFavoriteFunc(song);
@@ -116,7 +113,9 @@ export default function MenuModal() {
     {
       types: ["song", "playlistSong", "queueSong"],
       label: "Start radio",
-      icon: <Feather name="radio" size={24} color={Colors.text} />,
+      icon: (
+        <Feather name="radio" size={moderateScale(24)} color={Colors.text} />
+      ),
       onPress: async () => {
         if (selectedSong) await playAudio(selectedSong);
         router.back();
@@ -125,7 +124,13 @@ export default function MenuModal() {
     {
       types: ["song", "playlistSong", "queueSong"],
       label: "Add to playlist",
-      icon: <MaterialIcons name="playlist-add" size={26} color={Colors.text} />,
+      icon: (
+        <MaterialIcons
+          name="playlist-add"
+          size={moderateScale(26)}
+          color={Colors.text}
+        />
+      ),
       onPress: async () => {
         await router.push({
           pathname: "/(modals)/addToPlaylist",
@@ -139,7 +144,11 @@ export default function MenuModal() {
       types: ["song", "playlistSong", "queueSong"],
       label: "Play next",
       icon: (
-        <MaterialIcons name="playlist-play" size={26} color={Colors.text} />
+        <MaterialIcons
+          name="playlist-play"
+          size={moderateScale(26)}
+          color={Colors.text}
+        />
       ),
       onPress: async () => {
         await playNext(selectedSong ? [selectedSong] : null);
@@ -151,7 +160,11 @@ export default function MenuModal() {
       types: ["queueSong"],
       label: "Remove from queue",
       icon: (
-        <MaterialIcons name="playlist-remove" size={26} color={Colors.text} />
+        <MaterialIcons
+          name="playlist-remove"
+          size={moderateScale(26)}
+          color={Colors.text}
+        />
       ),
       onPress: async () => {
         if (selectedSong) {
@@ -168,7 +181,11 @@ export default function MenuModal() {
       types: ["playlistSong"],
       label: "Remove from playlist",
       icon: (
-        <MaterialIcons name="playlist-remove" size={26} color={Colors.text} />
+        <MaterialIcons
+          name="playlist-remove"
+          size={moderateScale(26)}
+          color={Colors.text}
+        />
       ),
       onPress: async () => {
         if (selectedSong) {
@@ -182,7 +199,11 @@ export default function MenuModal() {
       types: ["playlist"],
       label: "Play playlist",
       icon: (
-        <MaterialIcons name="playlist-play" size={26} color={Colors.text} />
+        <MaterialIcons
+          name="playlist-play"
+          size={moderateScale(26)}
+          color={Colors.text}
+        />
       ),
       onPress: async () => {
         if (selectedPlaylist) {
@@ -197,7 +218,11 @@ export default function MenuModal() {
       types: ["playlist"],
       label: "Play next",
       icon: (
-        <MaterialIcons name="playlist-play" size={26} color={Colors.text} />
+        <MaterialIcons
+          name="playlist-play"
+          size={moderateScale(26)}
+          color={Colors.text}
+        />
       ),
       onPress: async () => {
         if (selectedPlaylist) {
@@ -215,7 +240,7 @@ export default function MenuModal() {
       icon: (
         <MaterialCommunityIcons
           name="delete-forever-outline"
-          size={24}
+          size={moderateScale(24)}
           color={Colors.text}
         />
       ),
@@ -283,8 +308,8 @@ const DismissMenuModalSymbol = () => {
       <View
         accessible={false}
         style={{
-          width: 30,
-          height: 4.5,
+          width: scale(30),
+          height: verticalScale(4.5),
           borderRadius: 8,
           backgroundColor: "#fff",
           opacity: 0.7,
@@ -294,7 +319,7 @@ const DismissMenuModalSymbol = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalBackground: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -309,8 +334,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingTop: 16,
     paddingBottom: 8,
-    height: screenHeight * 0.6,
-    width: "95%",
+    height: verticalScale(736 * 0.6),
+    width: "342@s",
     alignSelf: "center",
   },
   menuHeaderItem: {
@@ -320,8 +345,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   thumbnail: {
-    width: 35,
-    height: 35,
+    width: "35@s",
+    height: "35@s",
     borderRadius: 8,
     marginRight: 15,
   },
@@ -330,11 +355,11 @@ const styles = StyleSheet.create({
   },
   menuHeaderTitle: {
     color: Colors.text,
-    fontSize: 16,
+    fontSize: "16@ms",
   },
   songArtist: {
     color: "#999",
-    fontSize: 14,
+    fontSize: "14@ms",
   },
   menuItem: {
     flexDirection: "row",
@@ -343,7 +368,7 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     color: Colors.text,
-    fontSize: 18,
+    fontSize: "18@ms",
     paddingLeft: 18,
     fontWeight: "400",
   },

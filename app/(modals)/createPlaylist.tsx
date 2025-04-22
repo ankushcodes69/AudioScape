@@ -5,10 +5,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   ToastAndroid,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { ScaledSheet } from "react-native-size-matters/extend";
 
 interface CreatePlaylistModalProps {
   visible: boolean;
@@ -54,9 +54,6 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
             onChangeText={setPlaylistName}
           />
           <View style={styles.modalButtons}>
-            <TouchableOpacity style={styles.modalButton} onPress={handleCreate}>
-              <Text style={styles.modalButtonText}>Create</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.modalButton, styles.cancelButton]}
               onPress={onCancel}
@@ -64,6 +61,9 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
               <Text style={[styles.modalButtonText, styles.cancelButtonText]}>
                 Cancel
               </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={handleCreate}>
+              <Text style={styles.modalButtonText}>Create</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -74,7 +74,7 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
 
 export default CreatePlaylistModal;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -82,20 +82,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: "80%",
+    width: "288@s",
     backgroundColor: "#101010",
     padding: 20,
     borderRadius: 10,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: "20@ms",
     color: Colors.text,
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
   },
   input: {
-    height: 40,
+    height: "40@ms",
     borderColor: "#333",
     borderWidth: 1,
     borderRadius: 5,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: "black",
-    fontSize: 16,
+    fontSize: "16@ms",
     fontWeight: "bold",
     textAlign: "center",
   },

@@ -1,11 +1,11 @@
 import React from "react";
-import { StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
   SharedValue,
 } from "react-native-reanimated";
+import { ScaledSheet } from "react-native-size-matters/extend";
 
 const DARK_LYRICS_COLOR = "rgba(255,255,255, 0.4)";
 const DEFAULT_COLOR = "#555555";
@@ -76,10 +76,10 @@ export default function Lyrics({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   text: {
     fontWeight: "700",
-    fontSize: 24,
+    fontSize: "24@ms",
     paddingVertical: 9,
   },
 });

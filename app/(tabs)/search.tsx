@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   TouchableOpacity,
-  StyleSheet,
   FlatList,
   Alert,
   SafeAreaView,
@@ -21,6 +20,11 @@ import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { EvilIcons, Entypo } from "@expo/vector-icons";
 import innertube from "@/youtube";
 import { Colors } from "@/constants/Colors";
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 interface SearchResult {
   id: string;
@@ -206,7 +210,11 @@ export default function SearchScreen() {
         }}
         hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       >
-        <Entypo name="dots-three-vertical" size={15} color="white" />
+        <Entypo
+          name="dots-three-vertical"
+          size={moderateScale(15)}
+          color="white"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -218,7 +226,7 @@ export default function SearchScreen() {
     >
       <EvilIcons
         name="search"
-        size={30}
+        size={moderateScale(30)}
         color={Colors.text}
         style={{ marginRight: 10, marginLeft: 10, marginTop: -3 }}
       />
@@ -270,13 +278,17 @@ export default function SearchScreen() {
             renderItem={renderSearchSuggestions}
             keyExtractor={(item) => item.text}
             style={styles.searchResults}
-            contentContainerStyle={{ paddingBottom: 90 }}
+            contentContainerStyle={{ paddingBottom: verticalScale(90) }}
             keyboardShouldPersistTaps="handled"
           />
         ) : isLoading ? (
           <View style={{ flex: 1, justifyContent: "center" }}>
             <LoaderKit
-              style={{ width: 50, height: 50, alignSelf: "center" }}
+              style={{
+                width: moderateScale(50),
+                height: moderateScale(50),
+                alignSelf: "center",
+              }}
               name="BallSpinFadeLoader"
               color="white"
             />
@@ -287,7 +299,7 @@ export default function SearchScreen() {
             renderItem={renderSearchResult}
             keyExtractor={(item) => item.id}
             style={styles.searchResults}
-            contentContainerStyle={{ paddingBottom: 90 }}
+            contentContainerStyle={{ paddingBottom: verticalScale(90) }}
             keyboardShouldPersistTaps="handled"
           />
         )}
@@ -296,18 +308,18 @@ export default function SearchScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
   },
   searchbar: {
-    width: "95%",
+    width: "342@s",
     backgroundColor: "#101010",
   },
   searchResults: {
-    width: "100%",
+    width: "360@s",
   },
   searchResult: {
     flexDirection: "row",
@@ -321,27 +333,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   resultThumbnail: {
-    width: 55,
-    height: 55,
+    width: "55@s",
+    height: "55@s",
     marginHorizontal: 10,
     borderRadius: 8,
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 17.5,
-    left: 28.5,
-    width: 20,
-    height: 20,
+    top: "17.5@s",
+    left: "27.5@s",
+    width: "20@s",
+    height: "20@s",
   },
   resultText: {
     flex: 1,
   },
   resultTitle: {
     color: Colors.text,
-    fontSize: 16,
+    fontSize: "16@ms",
   },
   resultArtist: {
     color: "#999",
-    fontSize: 14,
+    fontSize: "14@ms",
   },
 });

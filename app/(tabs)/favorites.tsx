@@ -3,7 +3,6 @@ import { useFavorites } from "@/store/library";
 import { defaultStyles } from "@/styles";
 import {
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   View,
   Text,
@@ -20,6 +19,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { Colors } from "@/constants/Colors";
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 interface Song {
   id: string;
@@ -105,7 +109,7 @@ const FavoritesScreen = () => {
                   style={{
                     color: Colors.text,
                     textAlign: "center",
-                    fontSize: 20,
+                    fontSize: moderateScale(20),
                   }}
                 >
                   No favorites yet! {"\n"}Start adding your favorite songs.
@@ -159,7 +163,7 @@ const FavoritesScreen = () => {
                   >
                     <Entypo
                       name="dots-three-vertical"
-                      size={15}
+                      size={moderateScale(15)}
                       color="white"
                     />
                   </TouchableOpacity>
@@ -171,7 +175,7 @@ const FavoritesScreen = () => {
                 style={{
                   color: Colors.textMuted,
                   textAlign: "center",
-                  fontSize: 15,
+                  fontSize: moderateScale(15),
                 }}
               >
                 {formattedTracks.length}{" "}
@@ -185,7 +189,7 @@ const FavoritesScreen = () => {
           style={{
             position: "absolute",
             marginRight: 16,
-            marginBottom: isFloatingPlayerNotVisible ? 16 : 90,
+            marginBottom: isFloatingPlayerNotVisible ? 16 : verticalScale(90),
             right: 0,
             bottom: 0,
             backgroundColor: "white",
@@ -206,16 +210,16 @@ const FavoritesScreen = () => {
 
 export default FavoritesScreen;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   header: {
-    fontSize: 24,
+    fontSize: "24@ms",
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
   },
   scrollContainer: {
-    paddingBottom: 145,
+    paddingBottom: "145@vs",
   },
   songList: {
     flexDirection: "column",
@@ -233,27 +237,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   resultThumbnail: {
-    width: 55,
-    height: 55,
+    width: "55@s",
+    height: "55@s",
     marginRight: 10,
     borderRadius: 8,
   },
   trackPlayingIconIndicator: {
     position: "absolute",
-    top: 17.5,
-    left: 18.5,
-    width: 20,
-    height: 20,
+    top: "18@s",
+    left: "19@s",
+    width: "20@s",
+    height: "20@s",
   },
   resultText: {
     flex: 1,
   },
   resultTitle: {
     color: Colors.text,
-    fontSize: 16,
+    fontSize: "16@ms",
   },
   resultArtist: {
     color: "#999",
-    fontSize: 14,
+    fontSize: "14@ms",
   },
 });

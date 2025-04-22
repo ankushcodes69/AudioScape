@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Linking,
-} from "react-native";
+import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
 import * as Application from "expo-application";
 import { Colors } from "@/constants/Colors";
+import { ScaledSheet } from "react-native-size-matters/extend";
 
 export const UpdateModal = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [latestVersion, setLatestVersion] = useState<string | null>(null);
   const [isUpToDate, setIsUpToDate] = useState(false);
+  const [message, setMessage] = useState<string>("");
 
   function compareVersions(v1: string, v2: string): number {
     const normalizeVersion = (version: string) => {
@@ -33,7 +27,7 @@ export const UpdateModal = () => {
     return 0;
   }
 
-  const message = `A new version of AudioScape is available!\n\nPlease update to version ${latestVersion} to get the latest features and bug fixes.\n\nDownload and install the latest version from "Assets" section from : https://github.com/ankushcodes69/AudioScape/releases/latest`;
+  //const message = `A new version of AudioScape is available!\n\nPlease update to version ${latestVersion} to get the latest features and bug fixes.\n\nDownload and install the latest version from "Assets" section from : https://github.com/ankushcodes69/AudioScape/releases/latest`;
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -53,13 +47,16 @@ export const UpdateModal = () => {
 
         const data = await response.json();
 
+        setMessage(
+          `A new version of AudioScape is available!\n\nPlease update to version ${data.tag_name} to get the latest features and bug fixes.\n\nDownload and install the latest version from the link below:\n${data.assets[0].browser_download_url}`
+        );
+
         if (
           compareVersions(
             `${Application.nativeApplicationVersion}`,
             data.tag_name
           ) === -1
         ) {
-          setLatestVersion(data.tag_name);
           setIsModalVisible(true);
         } else {
           setIsUpToDate(true);
@@ -121,7 +118,7 @@ export const UpdateModal = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
@@ -129,8 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   modalContent: {
-    width: "85%",
-    maxWidth: 300,
+    width: "300@s",
     padding: 10,
     backgroundColor: Colors.background,
     borderRadius: 10,
@@ -142,7 +138,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalText: {
-    fontSize: 16,
+    fontSize: "16@ms",
     color: Colors.text,
     marginBottom: 8,
     textAlign: "center",
@@ -154,15 +150,15 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     backgroundColor: "white",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: "8@s",
+    paddingHorizontal: "16@s",
     borderRadius: 50,
     flex: 1,
     marginHorizontal: 5,
   },
   modalButtonText: {
     color: "black",
-    fontSize: 15,
+    fontSize: "15@ms",
     fontWeight: "bold",
     textAlign: "center",
   },

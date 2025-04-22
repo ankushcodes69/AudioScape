@@ -1,12 +1,10 @@
 import React, { useState, useMemo } from "react";
 import {
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   FlatList,
   ToastAndroid,
-  Dimensions,
 } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,18 +12,23 @@ import { useActiveTrack } from "react-native-track-player";
 import { useLocalSearchParams } from "expo-router";
 import { usePlaylists } from "@/store/library";
 import { Colors } from "@/constants/Colors";
+import { Divider } from "react-native-paper";
 import { unknownTrackImageUri } from "@/constants/images";
 import VerticalDismiss from "@/components/navigation/VerticalArrowDismiss";
 import CreatePlaylistModal from "@/app/(modals)/createPlaylist";
 import { Entypo } from "@expo/vector-icons";
-
-const { height: screenHeight } = Dimensions.get("window");
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 export default function AddToPlaylistModal() {
   const { playlists, addTrackToPlaylist, createNewPlaylist } = usePlaylists();
   const { bottom } = useSafeAreaInsets();
   const params = useLocalSearchParams();
   const activeTrack = useActiveTrack();
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const playlistArray = Object.entries(playlists).map(([name, tracks]) => ({
@@ -88,7 +91,7 @@ export default function AddToPlaylistModal() {
             <View style={styles.header}>
               <Entypo
                 name="chevron-down"
-                size={28}
+                size={moderateScale(28)}
                 style={styles.dismissButton}
                 activeOpacity={0.7}
                 color={Colors.text}
@@ -105,6 +108,15 @@ export default function AddToPlaylistModal() {
               </TouchableOpacity>
             </View>
 
+            {isScrolling && (
+              <Divider
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.3)",
+                  height: 0.3,
+                }}
+              />
+            )}
+
             <View style={{ paddingBottom: bottom }}>
               <FlatList
                 data={playlistArray}
@@ -112,6 +124,11 @@ export default function AddToPlaylistModal() {
                 renderItem={(props) => renderPlaylistItem(props, handleDismiss)}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.flatListContent}
+                onScroll={(e) => {
+                  const currentScrollPosition =
+                    Math.floor(e.nativeEvent.contentOffset.y) || 0;
+                  setIsScrolling(currentScrollPosition > 0);
+                }}
               />
             </View>
 
@@ -127,7 +144,7 @@ export default function AddToPlaylistModal() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
@@ -137,23 +154,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#101010",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    padding: 20,
-    maxHeight: screenHeight * 0.6,
+    paddingVertical: 20,
+    maxHeight: verticalScale(736 * 0.6),
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 20,
   },
   dismissButton: {
     marginTop: -11,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: "18@ms",
     fontWeight: "bold",
     color: Colors.text,
     marginBottom: 10,
-    marginLeft: -20,
+    marginLeft: "-20@s",
   },
   flatListContent: {
     flexGrow: 1,
@@ -162,16 +180,17 @@ const styles = StyleSheet.create({
   playlistItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
   },
   thumbnail: {
-    width: 50,
-    height: 50,
+    width: "50@s",
+    height: "50@s",
     borderRadius: 8,
     marginRight: 15,
   },
   playlistName: {
-    fontSize: 16,
+    fontSize: "16@ms",
     color: Colors.text,
   },
   createButton: {
@@ -183,7 +202,7 @@ const styles = StyleSheet.create({
   },
   createButtonText: {
     color: "black",
-    fontSize: 12,
+    fontSize: "12@ms",
     fontWeight: "bold",
   },
 });

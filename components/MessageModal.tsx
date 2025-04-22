@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Linking,
-} from "react-native";
+import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { storage } from "@/storage";
 import { Colors } from "@/constants/Colors";
+import { ScaledSheet } from "react-native-size-matters/extend";
 
 // Firebase config
 const firebaseConfig = {
@@ -100,7 +94,7 @@ export const MessageModal = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
@@ -108,8 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   modalContent: {
-    width: "85%",
-    maxWidth: 300,
+    width: "300@s",
     padding: 10,
     backgroundColor: Colors.background,
     borderRadius: 10,
@@ -121,7 +114,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalText: {
-    fontSize: 16,
+    fontSize: "16@ms",
     color: Colors.text,
     marginBottom: 8,
     textAlign: "center",
@@ -133,15 +126,15 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     backgroundColor: "white",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: "8@s",
+    paddingHorizontal: "16@s",
     borderRadius: 50,
     flex: 1,
     marginHorizontal: 5,
   },
   modalButtonText: {
     color: "black",
-    fontSize: 15,
+    fontSize: "15@ms",
     fontWeight: "bold",
     textAlign: "center",
   },
