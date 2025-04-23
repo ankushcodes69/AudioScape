@@ -37,6 +37,7 @@
 - Create Playlists
 - Search for songs
 - Automatically check for updates
+- Synced Lyrics
 
 ## 📲 Installation
 
@@ -51,6 +52,7 @@
 ## 🫂 Acknowledgments
 
 - [**YouTube.js**](https://github.com/LuanRT/YouTube.js): A JavaScript client for YouTube's private API
+- [**react-native-spotify-lyrics**](https://github.com/uragirii/react-native-spotify-lyrics): Main logic for the synced lyrics feature
 
 ## ❗ Disclaimer
 
