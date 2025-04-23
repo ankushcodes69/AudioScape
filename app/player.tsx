@@ -192,8 +192,9 @@ const styles = ScaledSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 11,
     borderRadius: 12,
-    width: scale(360) - 50,
-    height: scale(360) - 50,
+    width: "310@s",
+    height: "310@s",
+    alignSelf: "center",
   },
   artworkImage: {
     width: "100%",
