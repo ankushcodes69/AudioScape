@@ -38,7 +38,7 @@ const FavoritesScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [formattedTracks, setFormattedTracks] = useState<Song[]>([]);
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const { playAudio, playPlaylist } = useMusicPlayer();
   const lastActiveTrack = useLastActiveTrack();
   const activeTrack = useActiveTrack();
@@ -87,7 +87,7 @@ const FavoritesScreen = () => {
           <ScrollView
             style={styles.songList}
             contentContainerStyle={[
-              styles.scrollContainer,
+              { paddingBottom: verticalScale(190) + bottom },
               formattedTracks.length === 0 && { flex: 1 },
             ]}
             showsVerticalScrollIndicator={false}
@@ -189,7 +189,8 @@ const FavoritesScreen = () => {
           style={{
             position: "absolute",
             marginRight: 16,
-            marginBottom: isFloatingPlayerNotVisible ? 16 : verticalScale(90),
+            marginBottom:
+              (isFloatingPlayerNotVisible ? 60 : verticalScale(138)) + bottom,
             right: 0,
             bottom: 0,
             backgroundColor: "white",
@@ -217,9 +218,6 @@ const styles = ScaledSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
-  },
-  scrollContainer: {
-    paddingBottom: "145@vs",
   },
   songList: {
     flexDirection: "column",

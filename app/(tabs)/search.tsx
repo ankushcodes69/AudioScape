@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { EvilIcons, Entypo } from "@expo/vector-icons";
-import innertube from "@/youtube";
+import innertube from "@/services/youtube";
 import { Colors } from "@/constants/Colors";
 import {
   ScaledSheet,
@@ -47,7 +47,7 @@ export default function SearchScreen() {
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const router = useRouter();
   const activeTrack = useActiveTrack();
   const { playAudio } = useMusicPlayer();
@@ -278,7 +278,9 @@ export default function SearchScreen() {
             renderItem={renderSearchSuggestions}
             keyExtractor={(item) => item.text}
             style={styles.searchResults}
-            contentContainerStyle={{ paddingBottom: verticalScale(90) }}
+            contentContainerStyle={{
+              paddingBottom: verticalScale(138) + bottom,
+            }}
             keyboardShouldPersistTaps="handled"
           />
         ) : isLoading ? (
@@ -299,7 +301,9 @@ export default function SearchScreen() {
             renderItem={renderSearchResult}
             keyExtractor={(item) => item.id}
             style={styles.searchResults}
-            contentContainerStyle={{ paddingBottom: verticalScale(90) }}
+            contentContainerStyle={{
+              paddingBottom: verticalScale(138) + bottom,
+            }}
             keyboardShouldPersistTaps="handled"
           />
         )}

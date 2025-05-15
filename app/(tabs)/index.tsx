@@ -4,7 +4,7 @@ import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import { QuickPicksSection } from "@/components/QuickPicksSection";
 import { TrendingSection } from "@/components/TrendingSection";
-import innertube from "@/youtube";
+import innertube from "@/services/youtube";
 import Innertube from "youtubei.js";
 import { EvilIcons, SimpleLineIcons } from "@expo/vector-icons";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
@@ -13,7 +13,11 @@ import { useRouter } from "expo-router";
 import { Divider } from "react-native-paper";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { transparentIconUri } from "@/constants/images";
-import { ScaledSheet, moderateScale } from "react-native-size-matters/extend";
+import {
+  ScaledSheet,
+  moderateScale,
+  verticalScale,
+} from "react-native-size-matters/extend";
 
 interface FeedResult {
   id: string;
@@ -46,7 +50,7 @@ export default function HomeScreen() {
   const [trendingResults, setTrendingResults] = useState<FeedResult[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const { playAudio } = useMusicPlayer();
   const router = useRouter();
 
@@ -231,7 +235,10 @@ export default function HomeScreen() {
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContainer}
+            contentContainerStyle={{
+              paddingBottom: verticalScale(138) + bottom,
+              marginTop: 3,
+            }}
             onScroll={(e) => {
               const currentScrollPosition =
                 Math.floor(e.nativeEvent.contentOffset.y) || 0;
@@ -257,10 +264,6 @@ const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-  },
-  scrollContainer: {
-    paddingBottom: "90@vs",
-    marginTop: 3,
   },
   header: {
     flexDirection: "row",

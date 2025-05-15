@@ -24,7 +24,7 @@ const gradientIndex = Math.floor(Math.random() * (19 + 1));
 export default function PlaylistScreen() {
   const { playlists, createNewPlaylist } = usePlaylists();
   const router = useRouter();
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const lastActiveTrack = useLastActiveTrack();
   const activeTrack = useActiveTrack();
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
@@ -106,7 +106,7 @@ export default function PlaylistScreen() {
         <ScrollView
           style={styles.playlistList}
           contentContainerStyle={[
-            styles.scrollContainer,
+            { paddingBottom: verticalScale(190) + bottom },
             playlistArray.length === 0 && { flex: 1 },
           ]}
           showsVerticalScrollIndicator={false}
@@ -156,7 +156,8 @@ export default function PlaylistScreen() {
           style={{
             position: "absolute",
             marginRight: 16,
-            marginBottom: isFloatingPlayerNotVisible ? 16 : verticalScale(90),
+            marginBottom:
+              (isFloatingPlayerNotVisible ? 60 : verticalScale(138)) + bottom,
             right: 0,
             bottom: 0,
             backgroundColor: "white",
@@ -187,9 +188,6 @@ const styles = ScaledSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 10,
-  },
-  scrollContainer: {
-    paddingBottom: "145@vs",
   },
   playlistList: {
     flexDirection: "column",

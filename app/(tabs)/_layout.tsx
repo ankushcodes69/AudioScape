@@ -4,8 +4,9 @@ import { Tabs } from "expo-router";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
+import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { moderateScale } from "react-native-size-matters/extend";
+import { moderateScale, verticalScale } from "react-native-size-matters/extend";
 
 function TabLayoutContent() {
   const { bottom } = useSafeAreaInsets();
@@ -15,13 +16,15 @@ function TabLayoutContent() {
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            borderTopLeftRadius: 25,
-            borderTopRightRadius: 25,
             borderTopWidth: 0,
-            paddingTop: 1,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            position: "absolute",
           },
           tabBarLabelStyle: {
             fontSize: moderateScale(10),
+            fontWeight: "900",
           },
           tabBarActiveTintColor: Colors.tint,
           headerShown: false,
@@ -29,12 +32,19 @@ function TabLayoutContent() {
             <View
               style={{
                 ...StyleSheet.absoluteFillObject,
-                overflow: "hidden",
-                borderTopLeftRadius: 25,
-                borderTopRightRadius: 25,
-                backgroundColor: "#101010",
               }}
-            />
+            >
+              <LinearGradient
+                colors={["transparent", "black"]}
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: verticalScale(150),
+                }}
+              />
+            </View>
           ),
         }}
       >

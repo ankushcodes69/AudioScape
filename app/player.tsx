@@ -29,7 +29,7 @@ const PlayerScreen = () => {
     activeTrack?.artwork ?? "https://placehold.co/50"
   );
 
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
 
   const { isFavorite, toggleFavoriteFunc } = useTrackPlayerFavorite();
 
@@ -44,7 +44,7 @@ const PlayerScreen = () => {
   return (
     <VerticalSwipeGesture>
       <LinearGradient
-        style={{ flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
+        style={{ flex: 1 }}
         colors={
           imageColors
             ? [imageColors.average, imageColors.dominant]
@@ -128,7 +128,10 @@ const PlayerScreen = () => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-                style={styles.bottomButton}
+                style={[
+                  styles.bottomButton,
+                  { bottom: verticalScale(20) + bottom },
+                ]}
                 onPress={() => router.push({ pathname: "/(modals)/queue" })}
               >
                 <Text style={styles.queueText}>QUEUE</Text>
@@ -136,7 +139,10 @@ const PlayerScreen = () => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-                style={styles.bottomButton}
+                style={[
+                  styles.bottomButton,
+                  { bottom: verticalScale(20) + bottom },
+                ]}
                 onPress={() => router.push({ pathname: "/(modals)/lyrics" })}
               >
                 <Text style={styles.queueText}> LYRICS</Text>
@@ -182,8 +188,6 @@ const styles = ScaledSheet.create({
     ...defaultStyles.container,
     paddingHorizontal: screenPadding.horizontal,
     backgroundColor: "rgba(0,0,0,0.5)",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
   },
   artworkImageContainer: {
     elevation: 20,
@@ -229,7 +233,6 @@ const styles = ScaledSheet.create({
     paddingVertical: "9@vs",
     paddingHorizontal: "15@s",
     borderRadius: 18,
-    bottom: "35@vs",
     alignSelf: "center",
   },
 });

@@ -117,13 +117,16 @@ export default function AddToPlaylistModal() {
               />
             )}
 
-            <View style={{ paddingBottom: bottom }}>
+            <View>
               <FlatList
                 data={playlistArray}
                 keyExtractor={(item) => item.name}
                 renderItem={(props) => renderPlaylistItem(props, handleDismiss)}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.flatListContent}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  paddingBottom: bottom + 10,
+                }}
                 onScroll={(e) => {
                   const currentScrollPosition =
                     Math.floor(e.nativeEvent.contentOffset.y) || 0;
@@ -172,10 +175,6 @@ const styles = ScaledSheet.create({
     color: Colors.text,
     marginBottom: 10,
     marginLeft: "-20@s",
-  },
-  flatListContent: {
-    flexGrow: 1,
-    paddingBottom: 25,
   },
   playlistItem: {
     flexDirection: "row",

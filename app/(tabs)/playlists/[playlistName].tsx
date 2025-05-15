@@ -31,7 +31,7 @@ const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 const PlaylistView = () => {
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const router = useRouter();
   const lastActiveTrack = useLastActiveTrack();
   const activeTrack = useActiveTrack();
@@ -73,7 +73,7 @@ const PlaylistView = () => {
         )}
 
         <ScrollView
-          contentContainerStyle={{ paddingBottom: verticalScale(145) }}
+          contentContainerStyle={{ paddingBottom: verticalScale(190) + bottom }}
           showsVerticalScrollIndicator={false}
           onScroll={(e) => {
             const currentScrollPosition =
@@ -167,7 +167,8 @@ const PlaylistView = () => {
           style={{
             position: "absolute",
             marginRight: 16,
-            marginBottom: isFloatingPlayerNotVisible ? 16 : verticalScale(90),
+            marginBottom:
+              (isFloatingPlayerNotVisible ? 60 : verticalScale(138)) + bottom,
             right: 0,
             bottom: 0,
             backgroundColor: "white",

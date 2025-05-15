@@ -37,7 +37,7 @@ export default function LyricsModal() {
   useKeepAwake();
   const { lyrics, heights, updateHeight } = useLyricsContext();
   const { height } = useWindowDimensions();
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const { position } = useProgress(250);
   const positionShared = useSharedValue(0);
   const halfScrollComponentHeight = 0.3 * height;
@@ -267,7 +267,7 @@ export default function LyricsModal() {
                   style={{ marginTop: 15, marginHorizontal: 20 }}
                 />
                 <ReducedPlayerControls
-                  style={{ marginBottom: verticalScale(35) }}
+                  style={{ marginBottom: verticalScale(20) + bottom }}
                 />
               </View>
             </View>
