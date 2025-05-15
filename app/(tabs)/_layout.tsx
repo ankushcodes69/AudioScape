@@ -27,6 +27,7 @@ function TabLayoutContent() {
             fontWeight: "900",
           },
           tabBarActiveTintColor: Colors.tint,
+          tabBarInactiveTintColor: "#afafaf",
           headerShown: false,
           tabBarBackground: () => (
             <View
