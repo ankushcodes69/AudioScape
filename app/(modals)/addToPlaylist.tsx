@@ -132,6 +132,7 @@ export default function AddToPlaylistModal() {
                     Math.floor(e.nativeEvent.contentOffset.y) || 0;
                   setIsScrolling(currentScrollPosition > 0);
                 }}
+                scrollEventThrottle={16}
               />
             </View>
 

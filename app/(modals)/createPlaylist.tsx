@@ -49,7 +49,7 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
           <TextInput
             style={styles.input}
             placeholder="Enter playlist name"
-            placeholderTextColor="#999"
+            placeholderTextColor={Colors.textMuted}
             value={playlistName}
             onChangeText={setPlaylistName}
           />

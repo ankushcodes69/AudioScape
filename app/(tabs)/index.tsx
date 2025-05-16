@@ -244,6 +244,7 @@ export default function HomeScreen() {
                 Math.floor(e.nativeEvent.contentOffset.y) || 0;
               setIsScrolling(currentScrollPosition > 0);
             }}
+            scrollEventThrottle={16}
           >
             <QuickPicksSection
               results={quickPicksResults}

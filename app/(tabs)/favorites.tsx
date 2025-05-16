@@ -96,6 +96,7 @@ const FavoritesScreen = () => {
                 Math.floor(e.nativeEvent.contentOffset.y) || 0;
               setIsScrolling(currentScrollPosition > 0);
             }}
+            scrollEventThrottle={16}
           >
             {formattedTracks.length === 0 ? (
               <View
@@ -190,7 +191,7 @@ const FavoritesScreen = () => {
             position: "absolute",
             marginRight: 16,
             marginBottom:
-              (isFloatingPlayerNotVisible ? 60 : verticalScale(138)) + bottom,
+              (isFloatingPlayerNotVisible ? 60 : moderateScale(138)) + bottom,
             right: 0,
             bottom: 0,
             backgroundColor: "white",
@@ -255,7 +256,7 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
   },
   resultArtist: {
-    color: "#999",
+    color: Colors.textMuted,
     fontSize: "14@ms",
   },
 });

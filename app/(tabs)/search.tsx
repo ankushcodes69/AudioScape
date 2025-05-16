@@ -263,7 +263,7 @@ export default function SearchScreen() {
           onSubmitEditing={() => handleSearch(searchQuery)}
           style={styles.searchbar}
           inputStyle={{ color: "white" }}
-          placeholderTextColor="#999"
+          placeholderTextColor={Colors.textMuted}
           theme={{
             colors: {
               primary: "white",
@@ -357,7 +357,7 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
   },
   resultArtist: {
-    color: "#999",
+    color: Colors.textMuted,
     fontSize: "14@ms",
   },
 });

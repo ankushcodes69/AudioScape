@@ -168,6 +168,7 @@ export default function QueueModal() {
                     Math.floor(e.nativeEvent.contentOffset.y) || 0;
                   setIsScrolling(currentScrollPosition > 0);
                 }}
+                scrollEventThrottle={16}
               />
             </View>
           </View>
@@ -251,7 +252,7 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
   },
   songArtist: {
-    color: "#999",
+    color: Colors.textMuted,
     fontSize: "14@ms",
   },
 });

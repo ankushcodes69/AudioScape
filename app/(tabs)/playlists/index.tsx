@@ -115,6 +115,7 @@ export default function PlaylistScreen() {
               Math.floor(e.nativeEvent.contentOffset.y) || 0;
             setIsScrolling(currentScrollPosition > 0);
           }}
+          scrollEventThrottle={16}
         >
           {playlistArray.length === 0 ? (
             <View
@@ -157,7 +158,7 @@ export default function PlaylistScreen() {
             position: "absolute",
             marginRight: 16,
             marginBottom:
-              (isFloatingPlayerNotVisible ? 60 : verticalScale(138)) + bottom,
+              (isFloatingPlayerNotVisible ? 60 : moderateScale(138)) + bottom,
             right: 0,
             bottom: 0,
             backgroundColor: "white",
