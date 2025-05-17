@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Alert, View, Text, ScrollView, Linking } from "react-native";
+import { Alert, View, Text, ScrollView } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import { QuickPicksSection } from "@/components/QuickPicksSection";
 import { TrendingSection } from "@/components/TrendingSection";
 import innertube from "@/services/youtube";
 import Innertube from "youtubei.js";
-import { EvilIcons, SimpleLineIcons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 import { useMusicPlayer } from "@/components/MusicPlayerContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -182,17 +182,6 @@ export default function HomeScreen() {
               gap: 12,
             }}
           >
-            <SimpleLineIcons
-              name="equalizer"
-              size={moderateScale(20)}
-              color="white"
-              style={{ marginTop: 5 }}
-              onPress={() => {
-                Linking.sendIntent(
-                  "android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL"
-                );
-              }}
-            />
             <EvilIcons
               name={"search"}
               color={"white"}
