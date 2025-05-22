@@ -14,8 +14,13 @@ import { unknownTrackImageUri } from "@/constants/images";
 import FastImage from "@d11/react-native-fast-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { usePlaylists } from "@/store/library";
-import { useMusicPlayer } from "@/components/MusicPlayerContext";
+import { useMusicPlayer, getInfo } from "@/components/MusicPlayerContext";
 import VerticalSwipeGesture from "@/components/navigation/VerticalGesture";
+import {
+  removeDownloadedSong,
+  downloadAndSaveSong,
+  isSongDownloaded,
+} from "@/services/download";
 import TrackPlayer from "react-native-track-player";
 import {
   ScaledSheet,
@@ -23,13 +28,7 @@ import {
   scale,
   verticalScale,
 } from "react-native-size-matters/extend";
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { Song } from "@/types/songItem";
 
 export default function MenuModal() {
   const { bottom } = useSafeAreaInsets();
@@ -141,7 +140,7 @@ export default function MenuModal() {
       },
     },
     {
-      types: ["song", "playlistSong", "queueSong"],
+      types: ["song", "playlistSong", "queueSong", "downloadedSong"], //incomplete
       label: "Play next",
       icon: (
         <MaterialIcons
@@ -170,7 +169,7 @@ export default function MenuModal() {
         if (selectedSong) {
           const queue = await TrackPlayer.getQueue();
           await TrackPlayer.remove(
-            queue.findIndex((item) => item.id === selectedSong.id)
+            queue.findIndex((item) => item.id === selectedSong.id),
           );
           ToastAndroid.show("Song removed from queue", ToastAndroid.SHORT);
         }
@@ -252,6 +251,57 @@ export default function MenuModal() {
         router.back();
       },
     },
+    {
+      types: ["downloadedSong"],
+      label: "Delete song",
+      icon: (
+        <MaterialCommunityIcons
+          name="delete-forever-outline"
+          size={moderateScale(24)}
+          color={Colors.text}
+        />
+      ),
+      onPress: async () => {
+        if (selectedSong) {
+          await removeDownloadedSong(selectedSong.id);
+          ToastAndroid.show("Song removed from downloads", ToastAndroid.SHORT);
+        }
+        router.back();
+      },
+    },
+    {
+      types: ["song", "playlistSong", "queueSong"],
+      label: "Download",
+      icon: (
+        <MaterialIcons
+          name="download"
+          size={moderateScale(24)}
+          color={Colors.text}
+        />
+      ),
+      onPress: async () => {
+        if (selectedSong) {
+          const isDownloaded = isSongDownloaded(selectedSong.id);
+          if (isDownloaded) {
+            ToastAndroid.show("Song already downloaded", ToastAndroid.SHORT);
+            return;
+          }
+
+          const info = await getInfo(selectedSong.id);
+          if (!info) return;
+
+          downloadAndSaveSong({
+            id: info.id,
+            title: info.title || "Unknown Title",
+            artist: info.artist || "Unknown Artist",
+            duration: info.duration,
+            url: info.url,
+            thumbnailUrl: info.artwork,
+          });
+        }
+        router.back();
+      },
+    },
   ];
 
   return (
@@ -264,8 +314,8 @@ export default function MenuModal() {
               {selectedSong !== null
                 ? renderSongItem(selectedSong)
                 : selectedPlaylist !== null && type === "playlist"
-                ? renderPlaylistItem({ item: selectedPlaylist })
-                : null}
+                  ? renderPlaylistItem({ item: selectedPlaylist })
+                  : null}
               <Divider
                 style={{
                   backgroundColor: "rgba(255,255,255,0.3)",
@@ -358,7 +408,7 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
   },
   songArtist: {
-    color: "#999",
+    color: Colors.textMuted,
     fontSize: "14@ms",
   },
   menuItem: {

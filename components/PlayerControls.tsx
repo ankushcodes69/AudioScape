@@ -1,3 +1,4 @@
+import React, { useCallback, ComponentProps } from "react";
 import { Colors } from "@/constants/Colors";
 import {
   FontAwesome6,
@@ -9,11 +10,13 @@ import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import TrackPlayer, {
   useIsPlaying,
   RepeatMode,
+  useActiveTrack,
 } from "react-native-track-player";
 import { useRouter } from "expo-router";
+import { downloadAndSaveSong } from "@/services/download";
 import { useTrackPlayerRepeatMode } from "@/hooks/useTrackPlayerRepeatMode";
-import { ComponentProps } from "react";
 import { match } from "ts-pattern";
+import { useIsSongDownloaded } from "@/store/library";
 import { moderateScale } from "react-native-size-matters/extend";
 
 type PlayerControlsProps = {
@@ -109,7 +112,7 @@ export const SkipToPreviousButton = ({
   );
 };
 
-export const AddToPlaylistButton = ({ iconSize = moderateScale(32) }) => {
+export const AddToPlaylistButton = ({ iconSize = moderateScale(30) }) => {
   const router = useRouter();
 
   return (
@@ -122,6 +125,41 @@ export const AddToPlaylistButton = ({ iconSize = moderateScale(32) }) => {
           name="playlist-add"
           size={iconSize}
           color={Colors.text}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export const DownloadSongButton = ({
+  style,
+  iconSize = moderateScale(27),
+}: PlayerButtonProps) => {
+  const activeTrack = useActiveTrack();
+  const downloaded = useIsSongDownloaded(activeTrack?.id || "");
+
+  const handleDownload = useCallback(async () => {
+    if (!activeTrack || downloaded) return;
+
+    await downloadAndSaveSong({
+      id: activeTrack.id,
+      title: activeTrack.title || "Unknown Title",
+      artist: activeTrack.artist || "Unknown Artist",
+      duration: activeTrack.duration,
+      url: activeTrack.url,
+      thumbnailUrl: activeTrack.artwork,
+    });
+
+    // no local setState—Redux update will re-render this hook
+  }, [activeTrack, downloaded]);
+
+  return (
+    <View style={[{ height: iconSize }, style]}>
+      <TouchableOpacity activeOpacity={0.5} onPress={handleDownload}>
+        <MaterialIcons
+          name={downloaded ? "download-done" : "download"}
+          size={iconSize}
+          color={downloaded ? "white" : Colors.icon}
         />
       </TouchableOpacity>
     </View>

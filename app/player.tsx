@@ -1,5 +1,8 @@
 import { MovingText } from "@/components/MovingText";
-import { PlayerControls } from "@/components/PlayerControls";
+import {
+  PlayerControls,
+  DownloadSongButton,
+} from "@/components/PlayerControls";
 import { PlayerProgressBar } from "@/components/PlayerProgressbar";
 import { screenPadding } from "@/constants/tokens";
 import { Colors } from "@/constants/Colors";
@@ -26,7 +29,7 @@ const PlayerScreen = () => {
   const router = useRouter();
 
   const { imageColors } = usePlayerBackground(
-    activeTrack?.artwork ?? "https://placehold.co/50"
+    activeTrack?.artwork ?? "https://placehold.co/50",
   );
 
   const { top, bottom } = useSafeAreaInsets();
@@ -90,12 +93,14 @@ const PlayerScreen = () => {
                       name={isFavorite ? "heart" : "heart-o"}
                       size={moderateScale(22)}
                       color={isFavorite ? "#ff0000" : Colors.icon}
-                      style={{ marginHorizontal: scale(14) }}
+                      style={{ marginRight: 13, marginLeft: 8 }}
                       onPress={() => {
                         toggleFavoriteFunc();
                       }}
                       hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                     />
+
+                    <DownloadSongButton style={{ paddingTop: 1 }} />
                   </View>
 
                   {/* Track artist */}

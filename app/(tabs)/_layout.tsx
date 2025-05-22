@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { moderateScale, verticalScale } from "react-native-size-matters/extend";
+import { moderateScale } from "react-native-size-matters/extend";
 
 function TabLayoutContent() {
   const { bottom } = useSafeAreaInsets();
@@ -42,7 +42,7 @@ function TabLayoutContent() {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: verticalScale(150),
+                  height: 115 + bottom,
                 }}
               />
             </View>
@@ -80,6 +80,18 @@ function TabLayoutContent() {
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon
                 name={focused ? "list" : "list-outline"}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="downloads"
+          options={{
+            title: "Downloads",
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon
+                name={focused ? "download" : "download-outline"}
                 color={color}
               />
             ),

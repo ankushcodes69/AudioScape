@@ -6,7 +6,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import innertube from "@/youtube";
+import innertube from "@/services/youtube";
 import TrackPlayer, {
   State,
   Track,
@@ -14,25 +14,22 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import { Helpers } from "youtubei.js";
 import { Alert } from "react-native";
-
-interface SongItem {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { DownloadedSongMetadata } from "@/store/library";
+import { Song } from "@/types/songItem";
 
 interface MusicPlayerContextType {
   isPlaying: boolean;
   isLoading: boolean;
-  playAudio: (song: SongItem) => Promise<void>;
-  playPlaylist: (songs: SongItem[]) => Promise<void>;
-  playNext: (song: SongItem[] | null) => Promise<void>;
+  playAudio: (song: Song) => Promise<void>;
+  playPlaylist: (songs: Song[]) => Promise<void>;
+  playNext: (song: Song[] | null) => Promise<void>;
+  playDownloadedSong: (song: DownloadedSongMetadata) => Promise<void>;
+  playDownloadedSongs: (songs: DownloadedSongMetadata[]) => Promise<void>;
   togglePlayPause: () => Promise<void>;
 }
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(
-  undefined
+  undefined,
 );
 
 function delay(ms: number) {
@@ -40,7 +37,7 @@ function delay(ms: number) {
 }
 
 const isValidUpNextItem = (
-  item: Helpers.YTNode
+  item: Helpers.YTNode,
 ): item is Helpers.YTNode & { video_id: string } => {
   return "video_id" in item && typeof item.video_id === "string";
 };
@@ -57,10 +54,10 @@ interface MusicPlayerProviderProps {
   children: ReactNode;
 }
 
-async function getInfo(
+export async function getInfo(
   inid: string,
   title?: string,
-  author?: string
+  author?: string,
 ): Promise<Track | null> {
   try {
     const yt = await innertube;
@@ -69,7 +66,7 @@ async function getInfo(
     // Check if the video is available
     if (info.playability_status?.status !== "OK") {
       console.log(
-        `[MusicPlayer] Video ${inid} is not available: ${info.playability_status?.reason}`
+        `[MusicPlayer] Video ${inid} is not available: ${info.playability_status?.reason}`,
       );
       return null;
     }
@@ -100,7 +97,7 @@ async function getInfo(
     console.log(
       `[MusicPlayer] Error getting info for ${inid}: ${
         error instanceof Error ? error.message : "Unknown error"
-      }`
+      }`,
     );
     return null;
   }
@@ -134,6 +131,122 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
     await TrackPlayer.reset();
     currentSongIdRef.current = null;
   }, [log]);
+
+  const playDownloadedSong = async (song: DownloadedSongMetadata) => {
+    try {
+      log(`Starting playback for song: ${song.title}`);
+      setIsLoading(true);
+
+      await resetPlayerState();
+
+      const info = {
+        id: song.id,
+        url: song.localTrackUri,
+        title: song.title,
+        artist: song.artist,
+        artwork: song.localArtworkUri,
+        duration: song.duration,
+      };
+
+      await TrackPlayer.add(info);
+      await TrackPlayer.play();
+
+      setIsPlaying(true);
+      currentSongIdRef.current = song.id;
+    } catch (error) {
+      log(
+        `Error in playAudio: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+      );
+      Alert.alert(
+        "Playback Error",
+        `Failed to play "${song.title}". Please try again later.`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const playDownloadedSongs = async (songs: DownloadedSongMetadata[]) => {
+    try {
+      log(`Starting playback for downloaded songs`);
+      setIsLoading(true);
+
+      if (!songs.length) {
+        Alert.alert("Playback Error", "The playlist appears to be empty.");
+        setIsLoading(false);
+        return;
+      }
+
+      await resetPlayerState();
+
+      const tracks = songs.map((song) => ({
+        id: song.id,
+        url: song.localTrackUri,
+        title: song.title,
+        artist: song.artist,
+        artwork: song.localArtworkUri,
+        duration: song.duration,
+      }));
+
+      await TrackPlayer.add(tracks);
+      await TrackPlayer.play();
+      setIsPlaying(true);
+      currentSongIdRef.current = songs[0].id;
+    } catch (error) {
+      log(
+        `Error in playDownloadedSongs: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+      );
+      Alert.alert(
+        "Playback Error",
+        "Failed to play the downloaded songs. Please try again.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const playAudio = async (song: Song) => {
+    try {
+      log(`Starting playback for song: ${song.title}`);
+      setIsLoading(true);
+
+      await resetPlayerState();
+
+      const info = await getInfo(song.id);
+      if (!info) {
+        Alert.alert(
+          "Playback Error",
+          `The selected song "${song.title}" is unavailable. It may have been removed or restricted.`,
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      await TrackPlayer.add(info);
+      await TrackPlayer.play();
+
+      setIsPlaying(true);
+      currentSongIdRef.current = song.id;
+
+      addUpNextSongs(song.id);
+    } catch (error) {
+      log(
+        `Error in playAudio: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+      );
+      Alert.alert(
+        "Playback Error",
+        `Failed to play "${song.title}". Please try again later.`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const addUpNextSongs = useCallback(
     async (songId: string) => {
@@ -173,7 +286,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
                 log(
                   `Error with song ${item.video_id}, skipping: ${
                     error instanceof Error ? error.message : "Unknown error"
-                  }`
+                  }`,
                 );
               }
             }
@@ -186,57 +299,18 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         log(
           `Error adding up-next songs: ${
             error instanceof Error ? error.message : "Unknown error"
-          }`
+          }`,
         );
       } finally {
         isAddingToQueueRef.current = false;
         log("Finished adding up-next songs");
       }
     },
-    [log]
+    [log],
   );
 
-  const playAudio = async (song: SongItem) => {
-    try {
-      log(`Starting playback for song: ${song.title}`);
-      setIsLoading(true);
-
-      await resetPlayerState();
-
-      const info = await getInfo(song.id);
-      if (!info) {
-        Alert.alert(
-          "Playback Error",
-          `The selected song "${song.title}" is unavailable. It may have been removed or restricted.`
-        );
-        setIsLoading(false);
-        return;
-      }
-
-      await TrackPlayer.add(info);
-      await TrackPlayer.play();
-
-      setIsPlaying(true);
-      currentSongIdRef.current = song.id;
-
-      addUpNextSongs(song.id);
-    } catch (error) {
-      log(
-        `Error in playAudio: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
-      Alert.alert(
-        "Playback Error",
-        `Failed to play "${song.title}". Please try again later.`
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const addPlaylistSongs = useCallback(
-    async (songs: SongItem[]) => {
+    async (songs: Song[]) => {
       log(`Starting to add songs from playlist`);
       isAddingToQueueRef.current = true;
       abortControllerRef.current = new AbortController();
@@ -268,7 +342,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
               log(
                 `Error with playlist song ${songs[i].title}, skipping: ${
                   error instanceof Error ? error.message : "Unknown error"
-                }`
+                }`,
               );
             }
 
@@ -280,17 +354,17 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         log(
           `Error adding playlist songs: ${
             error instanceof Error ? error.message : "Unknown error"
-          }`
+          }`,
         );
       } finally {
         isAddingToQueueRef.current = false;
         log("Finished adding playlist songs");
       }
     },
-    [log]
+    [log],
   );
 
-  const playPlaylist = async (songs: SongItem[]) => {
+  const playPlaylist = async (songs: Song[]) => {
     try {
       log(`Starting playback for playlist`);
       setIsLoading(true);
@@ -332,7 +406,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         if (!foundValidTrack) {
           Alert.alert(
             "Playback Error",
-            "None of the songs in this playlist are currently available."
+            "None of the songs in this playlist are currently available.",
           );
           setIsLoading(false);
           return;
@@ -348,18 +422,18 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       log(
         `Error in playPlaylist: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`
+        }`,
       );
       Alert.alert(
         "Playback Error",
-        "Failed to play the playlist. Please try again later."
+        "Failed to play the playlist. Please try again later.",
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const playNext = async (songs: SongItem[] | null) => {
+  const playNext = async (songs: Song[] | null) => {
     if (!songs || songs.length === 0) {
       log("No songs provided for playNext");
       return;
@@ -383,7 +457,19 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         const queue = await TrackPlayer.getQueue(); // Refresh the queue on each iteration
         const existingIndex = queue.findIndex((item) => item.id === song.id);
 
-        const info = await getInfo(song.id);
+        let info: Track | null = null;
+
+        if (song.url && song.duration !== undefined)
+          info = {
+            id: song.id,
+            url: song.url,
+            title: song.title,
+            artist: song.artist,
+            artwork: song.thumbnail,
+            duration: song.duration,
+          };
+        else info = await getInfo(song.id);
+
         if (!info) {
           log(`Skipping unavailable song: ${song.title}`);
           continue;
@@ -391,7 +477,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
 
         if (existingIndex !== -1) {
           log(
-            `Song already in queue at index ${existingIndex}, removing and re-adding at ${insertIndex}`
+            `Song already in queue at index ${existingIndex}, removing and re-adding at ${insertIndex}`,
           );
           await TrackPlayer.remove(existingIndex);
         }
@@ -405,7 +491,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       log(`Error in playNext: ${errorMessage}`);
       Alert.alert(
         "Playback Error",
-        `Failed to queue one or more songs. Please try again later.`
+        `Failed to queue one or more songs. Please try again later.`,
       );
     }
   };
@@ -427,11 +513,11 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       log(
         `Error in togglePlayPause: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`
+        }`,
       );
       Alert.alert(
         "Playback Error",
-        "Failed to toggle playback state. Please try again."
+        "Failed to toggle playback state. Please try again.",
       );
     }
   };
@@ -444,6 +530,8 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         playAudio,
         playPlaylist,
         playNext,
+        playDownloadedSong,
+        playDownloadedSongs,
         togglePlayPause,
       }}
     >
