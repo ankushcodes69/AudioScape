@@ -1,5 +1,5 @@
-const IS_DEV = process.env.APP_VARIANT === 'development';
-const packageJson = require('./package.json');
+const IS_DEV = process.env.APP_VARIANT === "development";
+const packageJson = require("./package.json");
 
 export default {
   name: IS_DEV ? "AudioScape (Dev)" : "AudioScape",
@@ -14,7 +14,7 @@ export default {
   splash: {
     image: "./assets/images/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#000"
+    backgroundColor: "#000",
   },
   android: {
     softwareKeyboardLayoutMode: "pan",
@@ -22,29 +22,47 @@ export default {
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",
       "android.permission.MANAGE_EXTERNAL_STORAGE",
-      "android.permission.FOREGROUND_SERVICE"
+      "android.permission.FOREGROUND_SERVICE",
     ],
     icon: "./assets/images/icon.png",
-    package: IS_DEV ? "com.ankushsarkar.audioscape.dev" : "com.ankushsarkar.audioscape",
+    package: IS_DEV
+      ? "com.ankushsarkar.audioscape.dev"
+      : "com.ankushsarkar.audioscape",
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon-foreground.png",
-      backgroundImage: "./assets/images/adaptive-icon-background.png"
+      backgroundImage: "./assets/images/adaptive-icon-background.png",
     },
-    backgroundColor: "#000"
+    backgroundColor: "#000",
   },
-  androidNavigationBar: {
-    backgroundColor: "#000"
-  },
-  plugins: ["expo-router", "expo-font"],
+  plugins: [
+    "expo-router",
+    "expo-font",
+    [
+      "expo-notifications",
+      {
+        icon: "./assets/images/notification-icon.png",
+        color: "#d17603",
+      },
+    ],
+    [
+      "react-native-edge-to-edge",
+      {
+        android: {
+          parentTheme: "Default",
+          enforceNavigationBarContrast: false,
+        },
+      },
+    ],
+  ],
   experiments: {
-    typedRoutes: true
+    typedRoutes: true,
   },
   extra: {
     router: {
-      origin: false
+      origin: false,
     },
     eas: {
-      projectId: "5b2ff856-818a-42fc-b589-5287fa676098"
-    }
-  }
-}
+      projectId: "5b2ff856-818a-42fc-b589-5287fa676098",
+    },
+  },
+};

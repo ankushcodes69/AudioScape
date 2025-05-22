@@ -8,11 +8,10 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from "react-native-reanimated";
-import * as StatusBar from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import * as NavigationBar from "expo-navigation-bar";
 import { useSetupTrackPlayer } from "@/hooks/useSetupTrackPlayer";
+import { SystemBars } from "react-native-edge-to-edge";
 import { useLogTrackPlayerState } from "@/hooks/useLogTrackPlayerState";
 import useNotificationClickHandler from "@/hooks/useNotificationClickHandler";
 import TrackPlayer from "react-native-track-player";
@@ -23,6 +22,7 @@ import { MusicPlayerProvider } from "@/components/MusicPlayerContext";
 import { LyricsProvider } from "@/hooks/useLyricsContext";
 import { initializeLibrary, store } from "@/store/library";
 import { Provider } from "react-redux";
+import { setupNotificationChannel } from "@/services/download";
 import { install } from "react-native-quick-crypto";
 
 install();
@@ -56,11 +56,12 @@ export default function RootLayout() {
 
   useEffect(() => {
     const initialize = async () => {
+      await setupNotificationChannel();
       await initializeLibrary();
-      NavigationBar.setPositionAsync("absolute");
-      NavigationBar.setBackgroundColorAsync("#ffffff01");
-      NavigationBar.setButtonStyleAsync("light");
-      StatusBar.setStatusBarBackgroundColor("transparent");
+      await SystemBars.setStyle({
+        statusBar: "light",
+        navigationBar: "light",
+      });
       if (fontsLoaded && trackPlayerLoaded) {
         await SplashScreen.hideAsync();
       }
