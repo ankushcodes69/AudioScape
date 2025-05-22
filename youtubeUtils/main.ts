@@ -33,7 +33,7 @@ async function getYouTubeTVClientConfig(): Promise<ClientConfig> {
       headers: {
         "User-Agent": "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version",
       },
-    }
+    },
   );
 
   const tvConfig = await tvConfigResponse.text();
@@ -50,7 +50,7 @@ async function getYouTubeTVClientConfig(): Promise<ClientConfig> {
   const clientKeyData = base64ToU8(onesieHotConfig.clientKey);
   const encryptedClientKey = base64ToU8(onesieHotConfig.encryptedClientKey);
   const onesieUstreamerConfig = base64ToU8(
-    onesieHotConfig.onesieUstreamerConfig
+    onesieHotConfig.onesieUstreamerConfig,
   );
   const baseUrl = onesieHotConfig.baseUrl;
 
@@ -66,13 +66,13 @@ async function getYouTubeTVClientConfig(): Promise<ClientConfig> {
  * Prepares a Onesie request.
  */
 async function prepareOnesieRequest(
-  args: OnesieRequestArgs
+  args: OnesieRequestArgs,
 ): Promise<OnesieRequest> {
   const { videoId, poToken, clientConfig, innertube } = args;
   const { clientKeyData, encryptedClientKey, onesieUstreamerConfig } =
     clientConfig;
   const clonedInnerTubeContext: Context = JSON.parse(
-    JSON.stringify(innertube.session.context)
+    JSON.stringify(innertube.session.context),
   );
 
   clonedInnerTubeContext.client.clientName = Constants.CLIENTS.TV.NAME;
@@ -126,7 +126,7 @@ async function prepareOnesieRequest(
 
   const { encrypted, hmac, iv } = await encryptRequest(
     clientKeyData,
-    onesieRequest
+    onesieRequest,
   );
 
   const body = Protos.OnesieRequest.encode({
@@ -179,13 +179,13 @@ async function prepareOnesieRequest(
  */
 export async function getBasicInfo(
   innertube: Innertube,
-  videoId: string
+  videoId: string,
 ): Promise<YT.VideoInfo> {
   const redirectorResponse = await fetch(
     `https://redirector.googlevideo.com/initplayback?source=youtube&itag=0&pvi=0&pai=0&owc=yes&cmo:sensitive_content=yes&alr=yes&id=${Math.round(
-      Math.random() * 1e5
+      Math.random() * 1e5,
     )}`,
-    { method: "GET" }
+    { method: "GET" },
   );
   const redirectorResponseUrl = await redirectorResponse.text();
 
@@ -224,7 +224,7 @@ export async function getBasicInfo(
 
   const arrayBuffer = await response.arrayBuffer();
   const googUmp = new GoogleVideo.UMP(
-    new GoogleVideo.ChunkedDataBuffer([new Uint8Array(arrayBuffer)])
+    new GoogleVideo.ChunkedDataBuffer([new Uint8Array(arrayBuffer)]),
   );
 
   const onesie: (Protos.OnesieHeader & { data?: Uint8Array })[] = [];
@@ -247,7 +247,7 @@ export async function getBasicInfo(
   });
 
   const onesiePlayerResponse = onesie.find(
-    (header) => header.type === Protos.OnesieHeaderType.PLAYER_RESPONSE
+    (header) => header.type === Protos.OnesieHeaderType.PLAYER_RESPONSE,
   );
 
   if (onesiePlayerResponse) {
@@ -262,7 +262,7 @@ export async function getBasicInfo(
       iv,
       hmac,
       encrypted,
-      clientConfig.clientKeyData
+      clientConfig.clientKeyData,
     );
     const response = Protos.OnesiePlayerResponse.decode(decryptedData);
 
@@ -287,11 +287,11 @@ function base64ToU8(base64: string): Uint8Array {
   const standard_base64 = base64.replace(/-/g, "+").replace(/_/g, "/");
   const padded_base64 = standard_base64.padEnd(
     standard_base64.length + ((4 - (standard_base64.length % 4)) % 4),
-    "="
+    "=",
   );
   return new Uint8Array(
     atob(padded_base64)
       .split("")
-      .map((char) => char.charCodeAt(0))
+      .map((char) => char.charCodeAt(0)),
   );
 }

@@ -5,17 +5,11 @@ import LoaderKit from "react-native-loader-kit";
 import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
 import { ScaledSheet } from "react-native-size-matters/extend";
-
-interface SongItem {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { Song } from "@/types/songItem";
 
 interface QuickPicksSectionProps {
-  results: SongItem[];
-  onItemClick: (item: SongItem) => void;
+  results: Song[];
+  onItemClick: (item: Song) => void;
 }
 
 export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
@@ -24,7 +18,7 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
 }) => {
   const activeTrack = useActiveTrack();
 
-  const renderItem = (item: SongItem) => (
+  const renderItem = (item: Song) => (
     <TouchableOpacity
       key={item.id}
       style={styles.itemContainer}

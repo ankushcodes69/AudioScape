@@ -5,5 +5,5 @@ export const Colors = {
   textMuted: "#9ca3af",
   background: "#000",
   tint: "#fff",
-  icon: "#9BA1A6"
+  icon: "#9BA1A6",
 };

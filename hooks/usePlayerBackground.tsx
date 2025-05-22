@@ -5,7 +5,7 @@ import { AndroidImageColors } from "react-native-image-colors/build/types";
 
 export const usePlayerBackground = (imageUrl: string) => {
   const [imageColors, setImageColors] = useState<AndroidImageColors | null>(
-    null
+    null,
   );
 
   useEffect(() => {

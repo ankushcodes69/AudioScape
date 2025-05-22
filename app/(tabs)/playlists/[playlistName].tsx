@@ -19,13 +19,7 @@ import {
   verticalScale,
   scale,
 } from "react-native-size-matters/extend";
-
-interface TrackInfo {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { Song } from "@/types/songItem";
 
 const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
@@ -44,7 +38,7 @@ const PlaylistView = () => {
 
   const isFloatingPlayerNotVisible = !(activeTrack ?? lastActiveTrack);
 
-  const handleSongSelect = (song: TrackInfo) => {
+  const handleSongSelect = (song: Song) => {
     playAudio(song);
   };
 
@@ -94,7 +88,7 @@ const PlaylistView = () => {
           </View>
 
           <View>
-            {playlist.map((item: TrackInfo) => (
+            {playlist.map((item: Song) => (
               <View key={item.id} style={styles.songItem}>
                 <TouchableOpacity
                   style={styles.songItemTouchableArea}

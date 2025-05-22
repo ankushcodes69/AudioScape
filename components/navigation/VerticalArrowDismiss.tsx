@@ -32,7 +32,7 @@ const VerticalDismiss: React.FC<VerticalDismissProps> = ({ children }) => {
       },
       () => {
         runOnJS(goBack)();
-      }
+      },
     );
   };
 

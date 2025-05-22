@@ -38,7 +38,7 @@ global.CustomEvent = CustomEvent as any;
 
 // Create and export a promise that resolves to an Innertube instance
 const innertube: Promise<Innertube> = (async () => {
-  const res = await fetch(process.env.EXPO_PUBLIC_PO_TOKEN_API);
+  const res = await fetch(`${process.env.EXPO_PUBLIC_PO_TOKEN_API}`);
   const data = await res.json();
   const poToken = data.poToken;
   const visitorData = data.visitorData;

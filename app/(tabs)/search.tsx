@@ -25,13 +25,7 @@ import {
   moderateScale,
   verticalScale,
 } from "react-native-size-matters/extend";
-
-interface SearchResult {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { Song } from "@/types/songItem";
 
 interface SearchSuggestions {
   text: string;
@@ -41,7 +35,7 @@ const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<Song[]>([]);
   const [searchSuggestions, setSearchSuggestions] = useState<
     SearchSuggestions[]
   >([]);
@@ -73,23 +67,22 @@ export default function SearchScreen() {
         searchResults.contents.length > 0 &&
         searchResults.contents[0].contents
       ) {
-        const formattedResults: SearchResult[] =
-          searchResults.contents[0].contents
-            .filter((item: any) => item && item.id && item.title)
-            .map((item: any) => ({
-              id: item.id,
-              title: item.title,
-              artist:
-                item.artists && item.artists[0]
-                  ? item.artists[0].name
-                  : "Unknown Artist",
-              thumbnail:
-                item.thumbnail &&
-                item.thumbnail.contents &&
-                item.thumbnail.contents[0]
-                  ? item.thumbnail.contents[0].url
-                  : "https://placehold.co/50",
-            }));
+        const formattedResults: Song[] = searchResults.contents[0].contents
+          .filter((item: any) => item && item.id && item.title)
+          .map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            artist:
+              item.artists && item.artists[0]
+                ? item.artists[0].name
+                : "Unknown Artist",
+            thumbnail:
+              item.thumbnail &&
+              item.thumbnail.contents &&
+              item.thumbnail.contents[0]
+                ? item.thumbnail.contents[0].url
+                : "https://placehold.co/50",
+          }));
 
         setSearchResults(formattedResults);
       } else {
@@ -100,7 +93,7 @@ export default function SearchScreen() {
       console.error("Error searching:", error);
       Alert.alert(
         "Error",
-        "An error occurred while searching. Please try again."
+        "An error occurred while searching. Please try again.",
       );
     }
     setIsLoading(false);
@@ -112,9 +105,8 @@ export default function SearchScreen() {
     setIsSearching(true);
     try {
       const yt = await innertube;
-      const searchSuggestions = await yt.music.getSearchSuggestions(
-        searchQuery
-      );
+      const searchSuggestions =
+        await yt.music.getSearchSuggestions(searchQuery);
 
       if (
         searchSuggestions &&
@@ -125,7 +117,7 @@ export default function SearchScreen() {
         const formattedResults: SearchSuggestions[] =
           searchSuggestions[0].contents
             .filter(
-              (item: any) => item && item.suggestion && item.suggestion.text
+              (item: any) => item && item.suggestion && item.suggestion.text,
             )
             .map((item: any) => ({
               text: item.suggestion.text,
@@ -140,7 +132,7 @@ export default function SearchScreen() {
       console.error("Error searching:", error);
       Alert.alert(
         "Error",
-        "An error occurred while searching. Please try again."
+        "An error occurred while searching. Please try again.",
       );
     }
   }, [searchQuery]);
@@ -153,19 +145,19 @@ export default function SearchScreen() {
     fetchResults();
   }, [handleSearchSuggestions]);
 
-  const handleSongSelect = (song: SearchResult) => {
+  const handleSongSelect = (song: Song) => {
     playAudio(song);
   };
 
   const handleSearchSuggestionsSelect = async (
-    suggestion: SearchSuggestions
+    suggestion: SearchSuggestions,
   ) => {
     Keyboard.dismiss();
     await setSearchQuery(suggestion.text);
     await handleSearch(suggestion.text);
   };
 
-  const renderSearchResult = ({ item }: { item: SearchResult }) => (
+  const renderSearchResult = ({ item }: { item: Song }) => (
     <View key={item.id} style={styles.searchResult}>
       <TouchableOpacity
         style={styles.searchResultTouchableArea}
@@ -239,7 +231,7 @@ export default function SearchScreen() {
       if (searchBarRef.current) {
         searchBarRef.current.focus();
       }
-    }, [])
+    }, []),
   );
 
   return (

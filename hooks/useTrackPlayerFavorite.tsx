@@ -10,7 +10,7 @@ export const useTrackPlayerFavorite = () => {
   useEffect(() => {
     if (activeTrack) {
       setIsFavorite(
-        favoriteTracks.some((track) => track.id === activeTrack.id)
+        favoriteTracks.some((track) => track.id === activeTrack.id),
       );
     }
   }, [activeTrack, favoriteTracks]);
@@ -19,7 +19,7 @@ export const useTrackPlayerFavorite = () => {
     async (id: string) => {
       return favoriteTracks.some((track) => track.id === id);
     },
-    [favoriteTracks]
+    [favoriteTracks],
   );
 
   const toggleFavoriteFunc = useCallback(
@@ -31,7 +31,7 @@ export const useTrackPlayerFavorite = () => {
             artist: activeTrack.artist || "",
             thumbnail: activeTrack.artwork || "",
           }
-        : undefined
+        : undefined,
     ) => {
       if (!track) return;
 
@@ -55,7 +55,7 @@ export const useTrackPlayerFavorite = () => {
         console.error("Error updating track metadata:", error);
       }
     },
-    [activeTrack, isFavorite, toggleFavoriteTrack]
+    [activeTrack, isFavorite, toggleFavoriteTrack],
   );
 
   return { isFavorite, toggleFavoriteFunc, checkIfFavorite };

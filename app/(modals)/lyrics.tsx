@@ -44,7 +44,7 @@ export default function LyricsModal() {
 
   const activeTrack = useActiveTrack();
   const { imageColors } = usePlayerBackground(
-    activeTrack?.artwork ?? "https://placehold.co/50"
+    activeTrack?.artwork ?? "https://placehold.co/50",
   );
 
   // Shared values for performance
@@ -101,7 +101,7 @@ export default function LyricsModal() {
 
     const maxIndex = Math.min(
       currentLyrics.length - 2,
-      currentLyrics.length - 1
+      currentLyrics.length - 1,
     );
 
     for (let index = 1; index < maxIndex; index++) {

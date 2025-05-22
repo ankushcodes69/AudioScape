@@ -7,18 +7,11 @@ import { useRouter } from "expo-router";
 import { useActiveTrack } from "react-native-track-player";
 import { Colors } from "@/constants/Colors";
 import { ScaledSheet, moderateScale } from "react-native-size-matters/extend";
-
-interface SongItem {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-  rank?: number;
-}
+import { Song } from "@/types/songItem";
 
 interface TrendingSectionProps {
-  results: SongItem[];
-  onItemClick: (item: SongItem) => void;
+  results: Song[];
+  onItemClick: (item: Song) => void;
 }
 
 export const TrendingSection: React.FC<TrendingSectionProps> = ({

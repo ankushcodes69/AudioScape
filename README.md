@@ -51,7 +51,8 @@
 
 - You can either host the api locally or use "https://render.com/" to host the api (recommended), either way add the link to a **.env** (reffer to .env.example) file and **don't forget to give '/data' at the end of the api link**.
 
-*Example :*
+_Example :_
+
 ```
 EXPO_PUBLIC_PO_TOKEN_API="https://<your render project name>.onrender.com/data"
 ```

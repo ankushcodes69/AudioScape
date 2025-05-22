@@ -40,7 +40,7 @@ async function decryptResponse(iv, hmac, data, clientKeyData) {
     .digest();
 
   if (!hmacCalculated.every((byte, i) => byte === hmac[i])) {
-    throw new Error('HMAC verification failed');
+    throw new Error("HMAC verification failed");
   }
 
   const aesKey = crypto.createDecipheriv("aes-128-ctr", aesKeyData, iv);

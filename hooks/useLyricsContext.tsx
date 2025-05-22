@@ -40,7 +40,7 @@ export const LyricsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLyricsLoaded, setIsLyricsLoaded] = useState(false);
   const [heights, setHeights] = useState<number[]>([]);
   const [lastLoadedTrackId, setLastLoadedTrackId] = useState<string | null>(
-    null
+    null,
   );
 
   const activeTrack = useActiveTrack();
@@ -77,7 +77,7 @@ export const LyricsProvider: React.FC<{ children: React.ReactNode }> = ({
         if (syncedLyrics && syncedLyrics.length > 0) {
           // Sort lyrics by startTime to ensure proper ordering
           const sortedLyrics = [...syncedLyrics].sort(
-            (a, b) => (a.startTime || 0) - (b.startTime || 0)
+            (a, b) => (a.startTime || 0) - (b.startTime || 0),
           );
 
           setLyrics(sortedLyrics);

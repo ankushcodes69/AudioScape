@@ -13,18 +13,13 @@ import { useRouter } from "expo-router";
 import { Divider } from "react-native-paper";
 import { FullScreenGradientBackground } from "@/components/GradientBackground";
 import { transparentIconUri } from "@/constants/images";
+import { Colors } from "@/constants/Colors";
 import {
   ScaledSheet,
   moderateScale,
   verticalScale,
 } from "react-native-size-matters/extend";
-
-interface FeedResult {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { Song } from "@/types/songItem";
 
 interface FeedType {
   sections?: (MusicCarouselShelf | MusicTasteBuilderShelf)[];
@@ -38,7 +33,7 @@ interface MusicCarouselShelf {
 interface MusicTasteBuilderShelf {}
 
 function isMusicCarouselShelf(
-  section: MusicCarouselShelf | MusicTasteBuilderShelf
+  section: MusicCarouselShelf | MusicTasteBuilderShelf,
 ): section is MusicCarouselShelf {
   return "contents" in section;
 }
@@ -46,8 +41,8 @@ function isMusicCarouselShelf(
 const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
 export default function HomeScreen() {
-  const [quickPicksResults, setQuickPicksResults] = useState<FeedResult[]>([]);
-  const [trendingResults, setTrendingResults] = useState<FeedResult[]>([]);
+  const [quickPicksResults, setQuickPicksResults] = useState<Song[]>([]);
+  const [trendingResults, setTrendingResults] = useState<Song[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const { top, bottom } = useSafeAreaInsets();
@@ -65,7 +60,7 @@ export default function HomeScreen() {
           isMusicCarouselShelf(quickPicks) &&
           Array.isArray(quickPicks.contents)
         ) {
-          const formattedResults: FeedResult[] = quickPicks.contents
+          const formattedResults: Song[] = quickPicks.contents
             .filter((item: any) => item?.id && item?.title)
             .map((item: any) => ({
               id: item.id,
@@ -86,7 +81,7 @@ export default function HomeScreen() {
     } catch (error) {
       Alert.alert(
         "Error",
-        "An error occurred while fetching the home feed. Please try again."
+        "An error occurred while fetching the home feed. Please try again.",
       );
 
       console.error("Quick picks fetch error:", error);
@@ -108,9 +103,9 @@ export default function HomeScreen() {
           isMusicCarouselShelf(trending) &&
           Array.isArray(trending.contents)
         ) {
-          const formattedResults: FeedResult[] = trending.contents
+          const formattedResults: Song[] = trending.contents
             .filter(
-              (item: any) => item?.id && (item?.title || item?.title.text)
+              (item: any) => item?.id && (item?.title || item?.title.text),
             )
             .map((item: any) => ({
               id: item.id,
@@ -139,7 +134,7 @@ export default function HomeScreen() {
     } catch (error) {
       Alert.alert(
         "Error",
-        "An error occurred while fetching the home feed. Please try again."
+        "An error occurred while fetching the home feed. Please try again.",
       );
 
       console.error("Trending fetch error:", error);
@@ -158,7 +153,7 @@ export default function HomeScreen() {
     getHomeFeed();
   }, []);
 
-  const handleSongSelect = (song: FeedResult) => {
+  const handleSongSelect = (song: Song) => {
     playAudio(song);
   };
 
@@ -200,7 +195,7 @@ export default function HomeScreen() {
         )}
 
         {isLoading ? (
-          <View style={{ flex: 1, justifyContent: "center" }}>
+          <View style={styles.centeredMessageContainer}>
             <LoaderKit
               style={{
                 width: moderateScale(50),
@@ -210,14 +205,7 @@ export default function HomeScreen() {
               name="BallSpinFadeLoader"
               color="white"
             />
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                flexWrap: "wrap",
-                fontSize: moderateScale(16),
-              }}
-            >
+            <Text style={styles.centeredMessageText}>
               Please Wait Sometimes It May Take Longer Than Usual To Load
             </Text>
           </View>
@@ -271,5 +259,17 @@ const styles = ScaledSheet.create({
     height: "42@ms",
     marginRight: 5,
     borderRadius: 50,
+  },
+  centeredMessageContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: "70%",
+    paddingHorizontal: "20@s",
+  },
+  centeredMessageText: {
+    color: Colors.text,
+    textAlign: "center",
+    fontSize: "16@ms",
+    lineHeight: "26@ms",
   },
 });

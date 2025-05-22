@@ -45,7 +45,7 @@ const SwipeToDismissPlayer: React.FC<SwipeToDismissPlayerProps> = ({
           },
           () => {
             runOnJS(goBack)();
-          }
+          },
         );
       } else {
         translateY.value = withSpring(0);

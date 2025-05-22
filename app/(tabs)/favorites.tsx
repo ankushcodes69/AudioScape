@@ -24,13 +24,7 @@ import {
   moderateScale,
   verticalScale,
 } from "react-native-size-matters/extend";
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  thumbnail: string;
-}
+import { Song } from "@/types/songItem";
 
 const gradientIndex = Math.floor(Math.random() * (19 + 1));
 
