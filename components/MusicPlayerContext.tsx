@@ -214,22 +214,30 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         };
 
         const songsAfter = fullPlaylist.slice(targetSongIndexInPlaylist + 1);
-        for (const song of songsAfter) {
-          if (!(await addTrackToPlayerIfValid(song, "after"))) return;
-          await delay(150);
-        }
+        const songsBefore = fullPlaylist.slice(0, targetSongIndexInPlaylist);
+
+        const addAfterTracks = async () => {
+          for (const song of songsAfter) {
+            if (!(await addTrackToPlayerIfValid(song, "after"))) return;
+            await delay(150);
+          }
+        };
+
+        const addBeforeTracks = async () => {
+          for (const song of songsBefore) {
+            if (!(await addTrackToPlayerIfValid(song, "before"))) return;
+            await delay(150);
+          }
+        };
 
         if (
           abortSignal.aborted ||
           currentSongIdRef.current !== initialPlayedSongId
-        )
+        ) {
           return;
-
-        const songsBefore = fullPlaylist.slice(0, targetSongIndexInPlaylist);
-        for (const song of [...songsBefore].reverse()) {
-          if (!(await addTrackToPlayerIfValid(song, "before"))) return;
-          await delay(150);
         }
+
+        await Promise.all([addAfterTracks(), addBeforeTracks()]);
 
         log(
           `BG Queue (Online): Finished playlist addition for ${initialPlayedSongTitle}`,
@@ -328,10 +336,21 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         };
 
         const songsAfter = fullPlaylist.slice(targetSongIndexInPlaylist + 1);
-        for (const song of songsAfter) {
-          if (!(await addTrackToPlayerIfValid(song, "after"))) return;
-          await delay(50);
-        }
+        const songsBefore = fullPlaylist.slice(0, targetSongIndexInPlaylist);
+
+        const addAfterTracks = async () => {
+          for (const song of songsAfter) {
+            if (!(await addTrackToPlayerIfValid(song, "after"))) return;
+            await delay(50);
+          }
+        };
+
+        const addBeforeTracks = async () => {
+          for (const song of [...songsBefore].reverse()) {
+            if (!(await addTrackToPlayerIfValid(song, "before"))) return;
+            await delay(50);
+          }
+        };
 
         if (
           abortSignal.aborted ||
@@ -339,11 +358,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         )
           return;
 
-        const songsBefore = fullPlaylist.slice(0, targetSongIndexInPlaylist);
-        for (const song of [...songsBefore].reverse()) {
-          if (!(await addTrackToPlayerIfValid(song, "before"))) return;
-          await delay(50);
-        }
+        await Promise.all([addAfterTracks(), addBeforeTracks()]);
 
         log(
           `BG Queue (Downloaded): Finished playlist addition for ${initialPlayedSongTitle}`,

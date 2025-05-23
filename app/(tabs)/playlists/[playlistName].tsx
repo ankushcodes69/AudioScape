@@ -158,25 +158,27 @@ const PlaylistView = () => {
           )}
         </ScrollView>
 
-        <FAB
-          style={{
-            position: "absolute",
-            marginRight: 16,
-            marginBottom:
-              (isFloatingPlayerNotVisible ? 60 : moderateScale(138)) + bottom,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "white",
-          }}
-          theme={{ roundness: 7 }}
-          icon="play"
-          color="black"
-          onPress={async () => {
-            if (playlist.length === 0) return;
-            await playPlaylist(playlist);
-            await router.navigate("/player");
-          }}
-        />
+        {playlist.length > 0 && (
+          <FAB
+            style={{
+              position: "absolute",
+              marginRight: 16,
+              marginBottom:
+                (isFloatingPlayerNotVisible ? 60 : moderateScale(138)) + bottom,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "white",
+            }}
+            theme={{ roundness: 7 }}
+            icon="play"
+            color="black"
+            onPress={async () => {
+              if (playlist.length === 0) return;
+              await playPlaylist(playlist);
+              await router.navigate("/player");
+            }}
+          />
+        )}
       </View>
     </FullScreenGradientBackground>
   );
