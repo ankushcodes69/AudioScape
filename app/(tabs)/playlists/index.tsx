@@ -130,6 +130,7 @@ export default function PlaylistScreen() {
                   color: Colors.text,
                   textAlign: "center",
                   fontSize: moderateScale(18),
+                  paddingHorizontal: 20,
                 }}
               >
                 No playlists found! {"\n"}Create a playlist and start adding

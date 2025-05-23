@@ -17,14 +17,18 @@ import { Alert } from "react-native";
 import { DownloadedSongMetadata } from "@/store/library";
 import { Song } from "@/types/songItem";
 
+// Interface for the Music Player Context
 interface MusicPlayerContextType {
   isPlaying: boolean;
   isLoading: boolean;
-  playAudio: (song: Song) => Promise<void>;
+  playAudio: (songToPlay: Song, playlist?: Song[]) => Promise<void>;
   playPlaylist: (songs: Song[]) => Promise<void>;
-  playNext: (song: Song[] | null) => Promise<void>;
-  playDownloadedSong: (song: DownloadedSongMetadata) => Promise<void>;
-  playDownloadedSongs: (songs: DownloadedSongMetadata[]) => Promise<void>;
+  playNext: (songs: Song[] | null) => Promise<void>;
+  playDownloadedSong: (
+    songToPlay: DownloadedSongMetadata,
+    playlist?: DownloadedSongMetadata[],
+  ) => Promise<void>;
+  playAllDownloadedSongs: (songs: DownloadedSongMetadata[]) => Promise<void>;
   togglePlayPause: () => Promise<void>;
 }
 
@@ -32,7 +36,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(
   undefined,
 );
 
-function delay(ms: number) {
+function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -63,7 +67,6 @@ export async function getInfo(
     const yt = await innertube;
     const info = await yt.getBasicInfo(inid);
 
-    // Check if the video is available
     if (info.playability_status?.status !== "OK") {
       console.log(
         `[MusicPlayer] Video ${inid} is not available: ${info.playability_status?.reason}`,
@@ -80,7 +83,7 @@ export async function getInfo(
     const streamUrl = `${format.decipher(yt.session.player)}`;
     const item = info.basic_info;
 
-    const res = {
+    const res: Track = {
       id: inid,
       url: streamUrl,
       title: title || item.title || "Unknown title",
@@ -89,7 +92,7 @@ export async function getInfo(
       artwork:
         item.thumbnail && item.thumbnail[0]
           ? item.thumbnail[0].url
-          : "https://placehold.co/50",
+          : "https://placehold.co/512x512/000000/FFFFFF?text=Music",
       duration: item.duration,
     };
     return res;
@@ -108,417 +111,571 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const isAddingToQueueRef = useRef<boolean>(false);
   const currentSongIdRef = useRef<string | null>(null);
   const activeTrack = useActiveTrack();
+  const backgroundQueueOperationsAbortControllerRef =
+    useRef<AbortController | null>(null);
 
   const log = useCallback((message: string) => {
     console.log(`[MusicPlayer] ${message}`);
   }, []);
 
   const resetPlayerState = useCallback(async () => {
-    log("Resetting player state");
-    if (isAddingToQueueRef.current) {
-      log("Stopping ongoing queue additions");
-      isAddingToQueueRef.current = false;
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    }
-    // Wait for any ongoing operations to complete
-    await delay(200);
+    log("Core Reset: TrackPlayer.reset() and clearing currentSongIdRef");
     await TrackPlayer.reset();
     currentSongIdRef.current = null;
   }, [log]);
 
-  const playDownloadedSong = async (song: DownloadedSongMetadata) => {
-    try {
-      log(`Starting playback for song: ${song.title}`);
-      setIsLoading(true);
-
-      await resetPlayerState();
-
-      const info = {
-        id: song.id,
-        url: song.localTrackUri,
-        title: song.title,
-        artist: song.artist,
-        artwork: song.localArtworkUri,
-        duration: song.duration,
-      };
-
-      await TrackPlayer.add(info);
-      await TrackPlayer.play();
-
-      setIsPlaying(true);
-      currentSongIdRef.current = song.id;
-    } catch (error) {
+  const addPlaylistTracksInBackground = useCallback(
+    async (
+      initialPlayedSong: Song,
+      fullPlaylist: Song[],
+      abortSignal: AbortSignal,
+    ) => {
+      const { id: initialPlayedSongId, title: initialPlayedSongTitle } =
+        initialPlayedSong;
       log(
-        `Error in playAudio: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
+        `BG Queue (Online): Starting playlist addition for context of ${initialPlayedSongTitle}`,
       );
-      Alert.alert(
-        "Playback Error",
-        `Failed to play "${song.title}". Please try again later.`,
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const playDownloadedSongs = async (songs: DownloadedSongMetadata[]) => {
-    try {
-      log(`Starting playback for downloaded songs`);
-      setIsLoading(true);
-
-      if (!songs.length) {
-        Alert.alert("Playback Error", "The playlist appears to be empty.");
-        setIsLoading(false);
-        return;
-      }
-
-      await resetPlayerState();
-
-      const tracks = songs.map((song) => ({
-        id: song.id,
-        url: song.localTrackUri,
-        title: song.title,
-        artist: song.artist,
-        artwork: song.localArtworkUri,
-        duration: song.duration,
-      }));
-
-      await TrackPlayer.add(tracks);
-      await TrackPlayer.play();
-      setIsPlaying(true);
-      currentSongIdRef.current = songs[0].id;
-    } catch (error) {
-      log(
-        `Error in playDownloadedSongs: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-      Alert.alert(
-        "Playback Error",
-        "Failed to play the downloaded songs. Please try again.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const playAudio = async (song: Song) => {
-    try {
-      log(`Starting playback for song: ${song.title}`);
-      setIsLoading(true);
-
-      await resetPlayerState();
-
-      const info = await getInfo(song.id);
-      if (!info) {
-        Alert.alert(
-          "Playback Error",
-          `The selected song "${song.title}" is unavailable. It may have been removed or restricted.`,
+      try {
+        const targetSongIndexInPlaylist = fullPlaylist.findIndex(
+          (s) => s.id === initialPlayedSongId,
         );
-        setIsLoading(false);
-        return;
+        if (targetSongIndexInPlaylist === -1) {
+          log(
+            `BG Queue (Online): ${initialPlayedSongTitle} not found in playlist. Aborting background add.`,
+          );
+          return;
+        }
+
+        const addTrackToPlayerIfValid = async (
+          songInfo: Song,
+          position: "before" | "after",
+        ) => {
+          if (
+            abortSignal.aborted ||
+            currentSongIdRef.current !== initialPlayedSongId
+          ) {
+            log(
+              `BG Queue (Online): Aborted or context changed before processing ${songInfo.title}.`,
+            );
+            return false;
+          }
+          try {
+            const trackInfo = await getInfo(
+              songInfo.id,
+              songInfo.title,
+              songInfo.artist,
+            );
+            if (
+              abortSignal.aborted ||
+              currentSongIdRef.current !== initialPlayedSongId
+            ) {
+              log(
+                `BG Queue (Online): Aborted or context changed after fetching ${songInfo.title}.`,
+              );
+              return false;
+            }
+            if (trackInfo) {
+              const queue = await TrackPlayer.getQueue();
+              if (!queue.some((t) => t.id === trackInfo.id)) {
+                if (position === "after") {
+                  await TrackPlayer.add(trackInfo);
+                  log(
+                    `BG Queue (Online): Added (after ${initialPlayedSongTitle}): ${trackInfo.title}`,
+                  );
+                } else {
+                  const indexOfPlayingTrack = queue.findIndex(
+                    (t) => t.id === initialPlayedSongId,
+                  );
+                  if (indexOfPlayingTrack !== -1) {
+                    await TrackPlayer.add(trackInfo, indexOfPlayingTrack);
+                    log(
+                      `BG Queue (Online): Added (before ${initialPlayedSongTitle}): ${trackInfo.title}`,
+                    );
+                  } else {
+                    log(
+                      `BG Queue (Online): Could not find ${initialPlayedSongTitle} to insert ${trackInfo.title} before. Adding to end.`,
+                    );
+                    await TrackPlayer.add(trackInfo);
+                  }
+                }
+              } else {
+                log(`BG Queue (Online): Skipped duplicate ${trackInfo.title}`);
+              }
+            }
+          } catch (e) {
+            log(
+              `BG Queue (Online): Error processing ${songInfo.title} (${position} ${initialPlayedSongTitle}): ${e}`,
+            );
+          }
+          return true;
+        };
+
+        const songsAfter = fullPlaylist.slice(targetSongIndexInPlaylist + 1);
+        for (const song of songsAfter) {
+          if (!(await addTrackToPlayerIfValid(song, "after"))) return;
+          await delay(150);
+        }
+
+        if (
+          abortSignal.aborted ||
+          currentSongIdRef.current !== initialPlayedSongId
+        )
+          return;
+
+        const songsBefore = fullPlaylist.slice(0, targetSongIndexInPlaylist);
+        for (const song of [...songsBefore].reverse()) {
+          if (!(await addTrackToPlayerIfValid(song, "before"))) return;
+          await delay(150);
+        }
+
+        log(
+          `BG Queue (Online): Finished playlist addition for ${initialPlayedSongTitle}`,
+        );
+      } catch (error) {
+        log(
+          `BG Queue (Online): Major error for ${initialPlayedSongTitle}: ${error}`,
+        );
       }
+    },
+    [log],
+  );
 
-      await TrackPlayer.add(info);
-      await TrackPlayer.play();
-
-      setIsPlaying(true);
-      currentSongIdRef.current = song.id;
-
-      addUpNextSongs(song.id);
-    } catch (error) {
+  const addDownloadedPlaylistTracksInBackground = useCallback(
+    async (
+      initialPlayedSong: DownloadedSongMetadata,
+      fullPlaylist: DownloadedSongMetadata[],
+      abortSignal: AbortSignal,
+    ) => {
+      const { id: initialPlayedSongId, title: initialPlayedSongTitle } =
+        initialPlayedSong;
       log(
-        `Error in playAudio: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
+        `BG Queue (Downloaded): Starting playlist addition for context of ${initialPlayedSongTitle}`,
       );
-      Alert.alert(
-        "Playback Error",
-        `Failed to play "${song.title}". Please try again later.`,
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+      try {
+        const targetSongIndexInPlaylist = fullPlaylist.findIndex(
+          (s) => s.id === initialPlayedSongId,
+        );
+        if (targetSongIndexInPlaylist === -1) {
+          log(
+            `BG Queue (Downloaded): ${initialPlayedSongTitle} not found in playlist. Aborting background add.`,
+          );
+          return;
+        }
+
+        const addTrackToPlayerIfValid = async (
+          songMeta: DownloadedSongMetadata,
+          position: "before" | "after",
+        ) => {
+          if (
+            abortSignal.aborted ||
+            currentSongIdRef.current !== initialPlayedSongId
+          ) {
+            log(
+              `BG Queue (Downloaded): Aborted or context changed before processing ${songMeta.title}.`,
+            );
+            return false;
+          }
+          const trackInfo: Track = {
+            id: songMeta.id,
+            url: songMeta.localTrackUri,
+            title: songMeta.title,
+            artist: songMeta.artist,
+            artwork: songMeta.localArtworkUri,
+            duration: songMeta.duration,
+          };
+
+          if (
+            abortSignal.aborted ||
+            currentSongIdRef.current !== initialPlayedSongId
+          ) {
+            log(
+              `BG Queue (Downloaded): Aborted or context changed for ${songMeta.title}.`,
+            );
+            return false;
+          }
+
+          const queue = await TrackPlayer.getQueue();
+          if (!queue.some((t) => t.id === trackInfo.id)) {
+            if (position === "after") {
+              await TrackPlayer.add(trackInfo);
+              log(
+                `BG Queue (Downloaded): Added (after ${initialPlayedSongTitle}): ${trackInfo.title}`,
+              );
+            } else {
+              const indexOfPlayingTrack = queue.findIndex(
+                (t) => t.id === initialPlayedSongId,
+              );
+              if (indexOfPlayingTrack !== -1) {
+                await TrackPlayer.add(trackInfo, indexOfPlayingTrack);
+                log(
+                  `BG Queue (Downloaded): Added (before ${initialPlayedSongTitle}): ${trackInfo.title}`,
+                );
+              } else {
+                log(
+                  `BG Queue (Downloaded): Could not find ${initialPlayedSongTitle} to insert ${trackInfo.title} before. Adding to end.`,
+                );
+                await TrackPlayer.add(trackInfo);
+              }
+            }
+          } else {
+            log(`BG Queue (Downloaded): Skipped duplicate ${trackInfo.title}`);
+          }
+          return true;
+        };
+
+        const songsAfter = fullPlaylist.slice(targetSongIndexInPlaylist + 1);
+        for (const song of songsAfter) {
+          if (!(await addTrackToPlayerIfValid(song, "after"))) return;
+          await delay(50);
+        }
+
+        if (
+          abortSignal.aborted ||
+          currentSongIdRef.current !== initialPlayedSongId
+        )
+          return;
+
+        const songsBefore = fullPlaylist.slice(0, targetSongIndexInPlaylist);
+        for (const song of [...songsBefore].reverse()) {
+          if (!(await addTrackToPlayerIfValid(song, "before"))) return;
+          await delay(50);
+        }
+
+        log(
+          `BG Queue (Downloaded): Finished playlist addition for ${initialPlayedSongTitle}`,
+        );
+      } catch (error) {
+        log(
+          `BG Queue (Downloaded): Major error for ${initialPlayedSongTitle}: ${error}`,
+        );
+      }
+    },
+    [log],
+  );
 
   const addUpNextSongs = useCallback(
-    async (songId: string) => {
-      log(`Starting to add up-next songs for ${songId}`);
-      isAddingToQueueRef.current = true;
-      abortControllerRef.current = new AbortController();
+    async (songId: string, abortSignal: AbortSignal) => {
+      log(`Up Next: Starting for ${songId}`);
+      if (abortSignal.aborted) {
+        log(`Up Next: Aborted at start for ${songId}.`);
+        return;
+      }
 
       try {
         const yt = await innertube;
-        const upNextResponse = await yt.music.getUpNext(songId);
-        const upNext = upNextResponse?.contents;
+        if (currentSongIdRef.current !== songId || abortSignal.aborted) {
+          log(
+            `Up Next: Aborted or song changed before API call for ${songId}.`,
+          );
+          return;
+        }
 
+        const upNextResponse = await yt.music.getUpNext(songId);
+
+        if (abortSignal.aborted || currentSongIdRef.current !== songId) {
+          log(`Up Next: Aborted or song changed after API call for ${songId}.`);
+          return;
+        }
+
+        const upNext = upNextResponse?.contents;
         if (upNext && Array.isArray(upNext) && upNext.length > 0) {
-          for (let i = 1; i < upNext.length; i++) {
-            if (
-              !isAddingToQueueRef.current ||
-              abortControllerRef.current.signal.aborted
-            ) {
-              log("Up-next addition stopped");
+          for (const item of upNext) {
+            if (abortSignal.aborted || currentSongIdRef.current !== songId) {
+              log(
+                `Up Next: Aborted or song changed during loop for ${songId}.`,
+              );
               break;
             }
-
-            const item = upNext[i];
             if (isValidUpNextItem(item)) {
               try {
-                const id = item.video_id;
-                const info = await getInfo(id);
-
-                if (info) {
-                  log(`Adding to queue: ${info.title}`);
-                  await TrackPlayer.add(info);
-                } else {
-                  log(`Skipping unavailable song with ID: ${id}`);
+                const queue = await TrackPlayer.getQueue();
+                if (queue.some((track) => track.id === item.video_id)) {
+                  log(
+                    `Up Next: Skipping duplicate ${item.video_id} for ${songId}.`,
+                  );
+                  continue;
                 }
-              } catch (error) {
-                // If error occurs with one song, log it and continue with next
+
+                if (abortSignal.aborted || currentSongIdRef.current !== songId)
+                  break;
+                const info = await getInfo(item.video_id);
+
+                if (abortSignal.aborted || currentSongIdRef.current !== songId)
+                  break;
+                if (info) {
+                  await TrackPlayer.add(info);
+                  log(`Up Next: Added ${info.title} for ${songId}.`);
+                }
+              } catch (e) {
                 log(
-                  `Error with song ${item.video_id}, skipping: ${
-                    error instanceof Error ? error.message : "Unknown error"
-                  }`,
+                  `Up Next: Error processing item ${item.video_id} for ${songId}: ${e}`,
                 );
               }
             }
-
-            // Add a small delay between each addition to allow for interruption
-            await delay(100);
+            await delay(150);
           }
         }
       } catch (error) {
-        log(
-          `Error adding up-next songs: ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`,
-        );
+        log(`Up Next: Error for ${songId}: ${error}`);
       } finally {
-        isAddingToQueueRef.current = false;
-        log("Finished adding up-next songs");
+        log(`Up Next: Finished process for ${songId}.`);
       }
     },
     [log],
   );
 
-  const addPlaylistSongs = useCallback(
-    async (songs: Song[]) => {
-      log(`Starting to add songs from playlist`);
-      isAddingToQueueRef.current = true;
-      abortControllerRef.current = new AbortController();
-
-      try {
-        if (Array.isArray(songs) && songs.length > 1) {
-          for (let i = 1; i < songs.length; i++) {
-            if (
-              !isAddingToQueueRef.current ||
-              abortControllerRef.current.signal.aborted
-            ) {
-              log("Playlist song addition stopped");
-              break;
-            }
-
-            try {
-              const item = songs[i];
-              const id = item.id;
-              const info = await getInfo(id);
-
-              if (info) {
-                log(`Adding to queue: ${info.title}`);
-                await TrackPlayer.add(info);
-              } else {
-                log(`Skipping unavailable playlist song: ${item.title}`);
-              }
-            } catch (error) {
-              // If error occurs with one song, log it and continue with next
-              log(
-                `Error with playlist song ${songs[i].title}, skipping: ${
-                  error instanceof Error ? error.message : "Unknown error"
-                }`,
-              );
-            }
-
-            // Add a small delay between each addition to allow for interruption
-            await delay(100);
-          }
-        }
-      } catch (error) {
-        log(
-          `Error adding playlist songs: ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`,
-        );
-      } finally {
-        isAddingToQueueRef.current = false;
-        log("Finished adding playlist songs");
-      }
-    },
-    [log],
-  );
-
-  const playPlaylist = async (songs: Song[]) => {
+  const playAudio = async (songToPlay: Song, playlist?: Song[]) => {
     try {
-      log(`Starting playback for playlist`);
+      log(
+        `Play request: ${songToPlay.title}${
+          playlist ? ` (in playlist of ${playlist.length} songs)` : ""
+        }`,
+      );
       setIsLoading(true);
 
-      if (!songs.length) {
-        Alert.alert("Playback Error", "The playlist appears to be empty.");
+      if (backgroundQueueOperationsAbortControllerRef.current) {
+        log("Aborting previous background queue operation.");
+        backgroundQueueOperationsAbortControllerRef.current.abort();
+      }
+      backgroundQueueOperationsAbortControllerRef.current =
+        new AbortController();
+      const currentAbortSignal =
+        backgroundQueueOperationsAbortControllerRef.current.signal;
+
+      await resetPlayerState();
+
+      const targetSongInfo = await getInfo(
+        songToPlay.id,
+        songToPlay.title,
+        songToPlay.artist,
+      );
+
+      if (currentAbortSignal.aborted) {
+        log(`Playback for ${songToPlay.title} aborted during/after getInfo.`);
         setIsLoading(false);
         return;
       }
 
-      await resetPlayerState();
+      if (!targetSongInfo) {
+        Alert.alert(
+          "Playback Error",
+          `The song "${songToPlay.title}" is unavailable.`,
+        );
+        setIsLoading(false);
+        return;
+      }
 
-      const info = await getInfo(songs[0].id);
-      if (!info) {
-        // First song unavailable, try the next one if available
-        log(`First song in playlist unavailable, looking for alternatives`);
+      await TrackPlayer.add(targetSongInfo);
+      await TrackPlayer.play();
+      setIsPlaying(true);
+      currentSongIdRef.current = targetSongInfo.id;
+      log(`Playing: ${targetSongInfo.title}`);
 
-        let foundValidTrack = false;
-        for (let i = 1; i < songs.length; i++) {
-          const nextInfo = await getInfo(songs[i].id);
-          if (nextInfo) {
-            log(`Found alternative starting track: ${nextInfo.title}`);
-            await TrackPlayer.add(nextInfo);
-            await TrackPlayer.play();
-            setIsPlaying(true);
-            currentSongIdRef.current = songs[i].id;
-            foundValidTrack = true;
-
-            // Start adding from the track after this one
-            const remainingSongs = [
-              ...songs.slice(0, i),
-              ...songs.slice(i + 1),
-            ];
-            addPlaylistSongs(remainingSongs);
-            break;
-          }
-        }
-
-        if (!foundValidTrack) {
-          Alert.alert(
-            "Playback Error",
-            "None of the songs in this playlist are currently available.",
-          );
-          setIsLoading(false);
-          return;
-        }
+      if (playlist && playlist.length > 0) {
+        log(`Initiating background playlist addition for ${songToPlay.title}.`);
+        addPlaylistTracksInBackground(
+          songToPlay,
+          playlist,
+          currentAbortSignal,
+        ).catch((e) =>
+          log(`Error in detached addPlaylistTracksInBackground call: ${e}`),
+        );
+      } else if (playlist === undefined) {
+        log(`No playlist context. Initiating up-next for ${songToPlay.title}.`);
+        addUpNextSongs(songToPlay.id, currentAbortSignal).catch((e) =>
+          log(`Error in detached addUpNextSongs call: ${e}`),
+        );
       } else {
-        await TrackPlayer.add(info);
-        await TrackPlayer.play();
-        setIsPlaying(true);
-        currentSongIdRef.current = songs[0].id;
-        addPlaylistSongs(songs);
+        log(
+          `Empty playlist provided for ${songToPlay.title}. No further queue additions.`,
+        );
       }
     } catch (error) {
-      log(
-        `Error in playPlaylist: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
+      log(`Major error in playAudio for "${songToPlay.title}": ${error}`);
       Alert.alert(
         "Playback Error",
-        "Failed to play the playlist. Please try again later.",
+        `Failed to play "${songToPlay.title}". Please try again.`,
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const playNext = async (songs: Song[] | null) => {
+  const playDownloadedSong = async (
+    songToPlay: DownloadedSongMetadata,
+    playlist?: DownloadedSongMetadata[],
+  ) => {
+    try {
+      log(
+        `Play downloaded: ${songToPlay.title}${
+          playlist ? ` (in playlist of ${playlist.length})` : ""
+        }`,
+      );
+      setIsLoading(true);
+
+      if (backgroundQueueOperationsAbortControllerRef.current) {
+        log(
+          "Aborting previous background queue operation (for downloaded song).",
+        );
+        backgroundQueueOperationsAbortControllerRef.current.abort();
+      }
+      backgroundQueueOperationsAbortControllerRef.current =
+        new AbortController();
+      const currentAbortSignal =
+        backgroundQueueOperationsAbortControllerRef.current.signal;
+
+      await resetPlayerState();
+
+      const targetTrack: Track = {
+        id: songToPlay.id,
+        url: songToPlay.localTrackUri,
+        title: songToPlay.title,
+        artist: songToPlay.artist,
+        artwork: songToPlay.localArtworkUri,
+        duration: songToPlay.duration,
+      };
+
+      if (currentAbortSignal.aborted) {
+        log(
+          `Playback for downloaded ${songToPlay.title} aborted before adding to player.`,
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      await TrackPlayer.add(targetTrack);
+      await TrackPlayer.play();
+      setIsPlaying(true);
+      currentSongIdRef.current = targetTrack.id;
+      log(`Playing downloaded: ${targetTrack.title}`);
+
+      if (playlist && playlist.length > 0) {
+        log(
+          `Initiating background downloaded playlist addition for ${songToPlay.title}.`,
+        );
+        addDownloadedPlaylistTracksInBackground(
+          songToPlay,
+          playlist,
+          currentAbortSignal,
+        ).catch((e) =>
+          log(
+            `Error in detached addDownloadedPlaylistTracksInBackground call: ${e}`,
+          ),
+        );
+      }
+    } catch (error) {
+      log(
+        `Major error in playDownloadedSong for "${songToPlay.title}": ${error}`,
+      );
+      Alert.alert(
+        "Playback Error",
+        `Failed to play downloaded "${songToPlay.title}".`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const playPlaylist = async (songs: Song[]) => {
+    log(`Play playlist request with ${songs.length} songs.`);
     if (!songs || songs.length === 0) {
-      log("No songs provided for playNext");
+      Alert.alert("Playback Error", "The playlist is empty.");
       return;
     }
+    await playAudio(songs[0], songs);
+  };
 
+  const playAllDownloadedSongs = async (songs: DownloadedSongMetadata[]) => {
+    log(`Play all downloaded with ${songs.length} songs.`);
+    if (!songs || songs.length === 0) {
+      Alert.alert("Playback Error", "Downloaded songs list is empty.");
+      return;
+    }
+    await playDownloadedSong(songs[0], songs);
+  };
+
+  const playNext = async (songsToAdd: Song[] | null) => {
+    if (!songsToAdd || songsToAdd.length === 0) {
+      log("No songs for playNext");
+      return;
+    }
     try {
-      const currentIndex = await TrackPlayer.getActiveTrackIndex();
-      const initialQueue = await TrackPlayer.getQueue();
+      const activeTrackId = activeTrack?.id;
 
-      // Fallback to queue length if currentIndex is undefined
-      let insertIndex =
-        typeof currentIndex === "number"
-          ? currentIndex + 1
-          : initialQueue.length;
-
-      for (const song of songs) {
-        if (song.id === activeTrack?.id) {
-          continue; // Skip if the song is currently playing
-        }
-
-        const queue = await TrackPlayer.getQueue(); // Refresh the queue on each iteration
-        const existingIndex = queue.findIndex((item) => item.id === song.id);
-
-        let info: Track | null = null;
-
-        if (song.url && song.duration !== undefined)
-          info = {
-            id: song.id,
-            url: song.url,
-            title: song.title,
-            artist: song.artist,
-            artwork: song.thumbnail,
-            duration: song.duration,
-          };
-        else info = await getInfo(song.id);
-
-        if (!info) {
-          log(`Skipping unavailable song: ${song.title}`);
+      for (const song of songsToAdd) {
+        if (song.id === activeTrackId) {
+          log(`PlayNext: Song "${song.title}" is currently playing, skipping.`);
           continue;
         }
 
-        if (existingIndex !== -1) {
-          log(
-            `Song already in queue at index ${existingIndex}, removing and re-adding at ${insertIndex}`,
-          );
-          await TrackPlayer.remove(existingIndex);
+        const currentQueue = await TrackPlayer.getQueue();
+        const existingTrackIndex = currentQueue.findIndex(
+          (t) => t.id === song.id,
+        );
+
+        let insertBeforeIndex: number | undefined = undefined; // Initialize as undefined
+        const currentActivePlayerTrackIndex =
+          await TrackPlayer.getActiveTrackIndex();
+        if (typeof currentActivePlayerTrackIndex === "number") {
+          insertBeforeIndex = currentActivePlayerTrackIndex + 1;
         }
 
-        await TrackPlayer.add(info, insertIndex);
-        insertIndex++; // Move insert index forward for the next song
+        if (existingTrackIndex !== -1) {
+          log(
+            `PlayNext: Removing ${song.title} from index ${existingTrackIndex} to re-add.`,
+          );
+          await TrackPlayer.remove(existingTrackIndex);
+          if (
+            insertBeforeIndex !== undefined &&
+            existingTrackIndex < insertBeforeIndex
+          ) {
+            // Check for undefined
+            insertBeforeIndex--;
+          }
+        }
+
+        const info = await getInfo(song.id, song.title, song.artist);
+        if (info) {
+          // Re-fetch active track index just before adding, as queue might have changed by remove or other async ops.
+          let finalInsertBeforeIndex: number | undefined = undefined;
+          const currentActiveIdx = await TrackPlayer.getActiveTrackIndex();
+          if (typeof currentActiveIdx === "number") {
+            finalInsertBeforeIndex = currentActiveIdx + 1;
+          }
+          await TrackPlayer.add(info, finalInsertBeforeIndex);
+          log(`PlayNext: Added ${info.title}`);
+        }
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      log(`Error in playNext: ${errorMessage}`);
-      Alert.alert(
-        "Playback Error",
-        `Failed to queue one or more songs. Please try again later.`,
-      );
+      log(`Error in playNext: ${error}`);
+      Alert.alert("Playback Error", "Failed to queue next song(s).");
     }
   };
 
   const togglePlayPause = async () => {
     try {
-      const currentState = (await TrackPlayer.getPlaybackState()).state;
+      const playbackState = await TrackPlayer.getPlaybackState();
+      const currentState = playbackState.state;
 
-      if (currentState === State.Playing) {
+      if (currentState === State.Playing || currentState === State.Buffering) {
         await TrackPlayer.pause();
         setIsPlaying(false);
-        log("Playback paused");
       } else {
-        await TrackPlayer.play();
-        setIsPlaying(true);
-        log("Playback resumed");
+        const queue = await TrackPlayer.getQueue();
+        if (queue.length > 0) {
+          await TrackPlayer.play();
+          setIsPlaying(true);
+        } else {
+          Alert.alert("Playback Info", "Queue is empty.");
+        }
       }
     } catch (error) {
-      log(
-        `Error in togglePlayPause: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-      Alert.alert(
-        "Playback Error",
-        "Failed to toggle playback state. Please try again.",
-      );
+      log(`Error togglePlayPause: ${error}`);
+      Alert.alert("Playback Error", "Failed to toggle playback.");
     }
   };
 
@@ -531,7 +688,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         playPlaylist,
         playNext,
         playDownloadedSong,
-        playDownloadedSongs,
+        playAllDownloadedSongs,
         togglePlayPause,
       }}
     >

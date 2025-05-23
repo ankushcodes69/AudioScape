@@ -59,7 +59,7 @@ const FavoritesScreen = () => {
   }, [favoritesTracks]);
 
   const handleSongSelect = (song: Song) => {
-    playAudio(song);
+    playAudio(song, formattedTracks);
   };
 
   return (
@@ -105,6 +105,7 @@ const FavoritesScreen = () => {
                     color: Colors.text,
                     textAlign: "center",
                     fontSize: moderateScale(20),
+                    paddingHorizontal: 20,
                   }}
                 >
                   No favorites yet! {"\n"}Start adding your favorite songs.

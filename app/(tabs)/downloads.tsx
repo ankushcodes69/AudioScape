@@ -36,7 +36,7 @@ const DownloadsScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const { top, bottom } = useSafeAreaInsets();
-  const { playDownloadedSong, playDownloadedSongs } = useMusicPlayer();
+  const { playDownloadedSong, playAllDownloadedSongs } = useMusicPlayer();
   const lastActiveTrack = useLastActiveTrack();
   const activeTrack = useActiveTrack();
   const router = useRouter();
@@ -56,12 +56,12 @@ const DownloadsScreen = () => {
   }, [downloadedTracksMeta]);
 
   const handleSongSelect = (song: DownloadedSongMetadata) => {
-    playDownloadedSong(song);
+    playDownloadedSong(song, formattedTracks);
   };
 
   const handlePlayAllDownloads = async () => {
     if (formattedTracks.length === 0) return;
-    await playDownloadedSongs(formattedTracks);
+    await playAllDownloadedSongs(formattedTracks);
     await router.navigate("/player");
   };
 

@@ -1,7 +1,7 @@
 {
   "name": "audioscape",
   "main": "expo-router/entry",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -35,7 +35,7 @@
     "expo-notifications": "~0.29.14",
     "expo-router": "~4.0.21",
     "expo-splash-screen": "~0.29.24",
-    "firebase": "^11.8.0",
+    "firebase": "^11.8.1",
     "googlevideo": "^2.0.0",
     "lrclib-api": "^2.0.0",
     "react": "18.3.1",

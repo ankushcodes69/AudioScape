@@ -39,7 +39,7 @@ const PlaylistView = () => {
   const isFloatingPlayerNotVisible = !(activeTrack ?? lastActiveTrack);
 
   const handleSongSelect = (song: Song) => {
-    playAudio(song);
+    playAudio(song, playlist);
   };
 
   return (
