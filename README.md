@@ -64,6 +64,7 @@ EXPO_PUBLIC_PO_TOKEN_API="https://<your render project name>.onrender.com/data"
 ## 🫂 Acknowledgments
 
 - [**YouTube.js**](https://github.com/LuanRT/YouTube.js): A JavaScript client for YouTube's private API
+- [**LrcLib**](https://lrclib.net): Lyrics provider
 - [**react-native-spotify-lyrics**](https://github.com/uragirii/react-native-spotify-lyrics): Main logic for the synced lyrics feature
 
 ## ❗ Disclaimer
