@@ -38,6 +38,7 @@
 - Search for songs
 - Automatically check for updates
 - Synced Lyrics
+- Download Songs
 
 ## 📲 Installation
 
