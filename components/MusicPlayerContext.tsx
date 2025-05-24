@@ -14,6 +14,7 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import { Helpers } from "youtubei.js";
 import { Alert } from "react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { DownloadedSongMetadata } from "@/store/library";
 import { Song } from "@/types/songItem";
 
@@ -113,6 +114,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentSongIdRef = useRef<string | null>(null);
   const activeTrack = useActiveTrack();
+  const netInfo = useNetInfo();
   const backgroundQueueOperationsAbortControllerRef =
     useRef<AbortController | null>(null);
 
@@ -346,7 +348,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
         };
 
         const addBeforeTracks = async () => {
-          for (const song of [...songsBefore].reverse()) {
+          for (const song of songsBefore) {
             if (!(await addTrackToPlayerIfValid(song, "before"))) return;
             await delay(50);
           }
@@ -444,6 +446,13 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
   );
 
   const playAudio = async (songToPlay: Song, playlist?: Song[]) => {
+    if (netInfo.isInternetReachable === false) {
+      Alert.alert(
+        "Network Error",
+        "You are currently offline. Please connect to the internet to play songs.",
+      );
+      return;
+    }
     try {
       log(
         `Play request: ${songToPlay.title}${

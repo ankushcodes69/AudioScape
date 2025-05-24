@@ -59,7 +59,8 @@
     "text-encoding-polyfill": "^0.6.7",
     "ts-pattern": "^5.7.1",
     "web-streams-polyfill": "^3.3.3",
-    "youtubei.js": "^13.4.0"
+    "youtubei.js": "^13.4.0",
+    "@react-native-community/netinfo": "11.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

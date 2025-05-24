@@ -3,6 +3,7 @@ import { ScrollView, TouchableOpacity, View, Text } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import LoaderKit from "react-native-loader-kit";
 import { useActiveTrack } from "react-native-track-player";
+import { useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { ScaledSheet } from "react-native-size-matters/extend";
 import { Song } from "@/types/songItem";
@@ -16,6 +17,7 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
   results,
   onItemClick,
 }) => {
+  const router = useRouter();
   const activeTrack = useActiveTrack();
 
   const renderItem = (item: Song) => (
@@ -23,6 +25,20 @@ export const QuickPicksSection: React.FC<QuickPicksSectionProps> = ({
       key={item.id}
       style={styles.itemContainer}
       onPress={() => onItemClick(item)}
+      onLongPress={() => {
+        // Convert the song object to a JSON string
+        const songData = JSON.stringify({
+          id: item.id,
+          title: item.title,
+          artist: item.artist,
+          thumbnail: item.thumbnail,
+        });
+
+        router.push({
+          pathname: "/(modals)/menu",
+          params: { songData: songData, type: "song" },
+        });
+      }}
     >
       <View style={styles.imageContainer}>
         <FastImage source={{ uri: item.thumbnail }} style={styles.thumbnail} />
