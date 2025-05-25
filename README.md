@@ -68,8 +68,27 @@ EXPO_PUBLIC_PO_TOKEN_API="https://<your render project name>.onrender.com/data"
 - [**LrcLib**](https://lrclib.net): Lyrics provider
 - [**react-native-spotify-lyrics**](https://github.com/uragirii/react-native-spotify-lyrics): Main logic for the synced lyrics feature
 
+## 📝 License
+```
+AudioScape is a free software licensed under GPL v3.0 with following condition.
+
+- Copied/Modified version of this software can not be used for 'non-free' and profit purposes.
+- You can not publish copied/modified version of this app on closed source app repository
+  like PlayStore/AppStore.
+
+```
+
 ## ❗ Disclaimer
+```
+This project has been created while learning & learning is the main intention.
+This project is not sponsored or affiliated with, funded, authorized, endorsed by any content provider.
+Any Song, content, trademark used in this app are intellectual property of their respective owners.
+AudioScape is not responsible for any infringement of copyright or other intellectual property rights that may result
+from the use of the songs and other content available through this app.
 
-This project and its contents are not affiliated with, funded, authorized, endorsed by, or in any way associated with YouTube, Google LLC or any of its affiliates and subsidiaries.
-
-Any trademark, service mark, trade name, or other intellectual property rights used in this project are owned by the respective owners.
+This Software is released "as-is", without any warranty, responsibility or liability.
+In no event shall the Author of this Software be liable for any special, consequential,
+incidental or indirect damages whatsoever (including, without limitation, any 
+other pecuniary loss) arising out of the use of inability to use this product, even if
+Author of this Sotware is aware of the possibility of such damages and known defect.
+```
