@@ -1,3 +1,5 @@
+//test pr
+
 import React from "react";
 import Animated, {
   useAnimatedStyle,
@@ -35,10 +37,10 @@ export default function Lyrics({
     }
 
     // Note: seekTime (position) is in seconds
-    const thresholdInSeconds = 0.1; // 100ms in seconds
+    const thresholdInSeconds = 0.2; // 200ms in seconds
 
     // Determine when this line ends - either using the next line's start time or a calculated duration
-    const endTime = nextLineStartTime || data.endTime || startTime + 5; // Default to 5 seconds if no end time
+    const endTime = nextLineStartTime || data.endTime || startTime + 10; // Default to 5 seconds if no end time
 
     // Current line is active when seekTime is between startTime and endTime
     if (
@@ -47,7 +49,7 @@ export default function Lyrics({
     ) {
       // Animate to white when approaching or at the current line
       return withTiming("white", {
-        duration: 100,
+        duration: 150,
       });
     } else {
       // Line is either not yet reached or already passed
