@@ -30,7 +30,7 @@ import {
   useActiveDownloads,
 } from "@/store/library";
 
-const gradientIndex = Math.floor(Math.random() * (19 + 1));
+const gradientIndex = Math.floor(Math.random() * 12);
 
 const DownloadsScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -86,8 +86,16 @@ const DownloadsScreen = () => {
 
   return (
     <FullScreenGradientBackground index={gradientIndex}>
-      <View style={[defaultStyles.container, { paddingTop: top }]}>
-        <Text style={styles.header}>Downloads</Text>
+      <View style={defaultStyles.container}>
+        <Text
+          style={[
+            styles.header,
+            isScrolling ? styles.headerScrolled : {},
+            { paddingTop: top },
+          ]}
+        >
+          Downloads
+        </Text>
 
         {isScrolling && (
           <Divider
@@ -112,7 +120,7 @@ const DownloadsScreen = () => {
             onScroll={(e) => {
               const currentScrollPosition =
                 Math.floor(e.nativeEvent.contentOffset.y) || 0;
-              setIsScrolling(currentScrollPosition > 0);
+              setIsScrolling(currentScrollPosition > 5);
             }}
             scrollEventThrottle={16}
           >
@@ -241,7 +249,10 @@ const styles = ScaledSheet.create({
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
-    marginVertical: 10,
+    paddingVertical: 10,
+  },
+  headerScrolled: {
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   songList: {
     flexDirection: "column",

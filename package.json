@@ -17,6 +17,7 @@
     "@animatereactnative/marquee": "^0.5.2",
     "@d11/react-native-fast-image": "^8.9.2",
     "@expo/vector-icons": "^14.1.0",
+    "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/native": "^7.0.14",
     "@reduxjs/toolkit": "^2.8.2",
     "babel-plugin-dotenv-import": "^3.0.1",
@@ -42,7 +43,7 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
     "react-native-awesome-slider": "^3.1.0",
-    "react-native-edge-to-edge": "^1.6.0",
+    "react-native-edge-to-edge": "^1.6.1",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-image-colors": "^2.4.0",
     "react-native-loader-kit": "^2.0.8",
@@ -59,8 +60,7 @@
     "text-encoding-polyfill": "^0.6.7",
     "ts-pattern": "^5.7.1",
     "web-streams-polyfill": "^3.3.3",
-    "youtubei.js": "^13.4.0",
-    "@react-native-community/netinfo": "11.4.1"
+    "youtubei.js": "^13.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

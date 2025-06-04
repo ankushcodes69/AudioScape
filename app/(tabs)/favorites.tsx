@@ -26,7 +26,7 @@ import {
 } from "react-native-size-matters/extend";
 import { Song } from "@/types/songItem";
 
-const gradientIndex = Math.floor(Math.random() * (19 + 1));
+const gradientIndex = Math.floor(Math.random() * 12);
 
 const FavoritesScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -64,9 +64,17 @@ const FavoritesScreen = () => {
 
   return (
     <FullScreenGradientBackground index={gradientIndex}>
-      <View style={[defaultStyles.container, { paddingTop: top }]}>
+      <View style={defaultStyles.container}>
         {/* Header */}
-        <Text style={styles.header}>Favorites</Text>
+        <Text
+          style={[
+            styles.header,
+            isScrolling ? styles.headerScrolled : {},
+            { paddingTop: top },
+          ]}
+        >
+          Favorites
+        </Text>
 
         {isScrolling && (
           <Divider
@@ -88,7 +96,7 @@ const FavoritesScreen = () => {
             onScroll={(e) => {
               const currentScrollPosition =
                 Math.floor(e.nativeEvent.contentOffset.y) || 0;
-              setIsScrolling(currentScrollPosition > 0);
+              setIsScrolling(currentScrollPosition > 5);
             }}
             scrollEventThrottle={16}
           >
@@ -215,7 +223,10 @@ const styles = ScaledSheet.create({
     color: Colors.text,
     fontWeight: "bold",
     textAlign: "center",
-    marginVertical: 10,
+    paddingVertical: 10,
+  },
+  headerScrolled: {
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   songList: {
     flexDirection: "column",

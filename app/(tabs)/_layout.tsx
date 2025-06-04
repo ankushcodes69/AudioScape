@@ -21,6 +21,7 @@ function TabLayoutContent() {
             left: 0,
             right: 0,
             position: "absolute",
+            elevation: 0,
           },
           tabBarLabelStyle: {
             fontSize: moderateScale(10),

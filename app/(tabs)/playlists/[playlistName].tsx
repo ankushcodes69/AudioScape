@@ -21,7 +21,7 @@ import {
 } from "react-native-size-matters/extend";
 import { Song } from "@/types/songItem";
 
-const gradientIndex = Math.floor(Math.random() * (19 + 1));
+const gradientIndex = Math.floor(Math.random() * 12);
 
 const PlaylistView = () => {
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
@@ -44,13 +44,24 @@ const PlaylistView = () => {
 
   return (
     <FullScreenGradientBackground index={gradientIndex}>
-      <View style={[styles.container, { paddingTop: top }]}>
-        <View style={styles.header}>
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.header,
+            isScrolling ? styles.headerScrolled : {},
+            { paddingTop: top },
+          ]}
+        >
           <MaterialCommunityIcons
             name="arrow-left"
             size={moderateScale(28)}
             color={Colors.text}
-            style={{ position: "absolute", left: 0 }}
+            style={{
+              position: "absolute",
+              left: 0,
+              paddingTop: top,
+              paddingLeft: 15,
+            }}
             onPress={() => router.back()}
           />
           <Text style={styles.headerText}>{playlistName}</Text>
@@ -67,7 +78,10 @@ const PlaylistView = () => {
         )}
 
         <ScrollView
-          contentContainerStyle={{ paddingBottom: verticalScale(190) + bottom }}
+          contentContainerStyle={{
+            paddingBottom: verticalScale(190) + bottom,
+            paddingHorizontal: 15,
+          }}
           showsVerticalScrollIndicator={false}
           onScroll={(e) => {
             const currentScrollPosition =
@@ -189,20 +203,21 @@ export default PlaylistView;
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    paddingBottom: 0,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 8,
+    paddingBottom: 10,
   },
   headerText: {
     fontSize: "24@ms",
     fontWeight: "bold",
     color: Colors.text,
-    marginHorizontal: "30@s",
+    marginHorizontal: scale(30) + 15,
+  },
+  headerScrolled: {
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   artworkImageContainer: {
     elevation: 20,

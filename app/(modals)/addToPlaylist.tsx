@@ -130,7 +130,7 @@ export default function AddToPlaylistModal() {
                 onScroll={(e) => {
                   const currentScrollPosition =
                     Math.floor(e.nativeEvent.contentOffset.y) || 0;
-                  setIsScrolling(currentScrollPosition > 0);
+                  setIsScrolling(currentScrollPosition > 5);
                 }}
                 scrollEventThrottle={16}
               />

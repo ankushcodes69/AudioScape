@@ -31,7 +31,7 @@ interface SearchSuggestions {
   text: string;
 }
 
-const gradientIndex = Math.floor(Math.random() * (19 + 1));
+const gradientIndex = Math.floor(Math.random() * 12);
 
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>("");

@@ -46,14 +46,15 @@ function isMusicCarouselShelf(
   return "contents" in section;
 }
 
-const gradientIndex = Math.floor(Math.random() * (19 + 1));
-
 export default function HomeScreen() {
   const [quickPicksResults, setQuickPicksResults] = useState<Song[]>([]);
   const [trendingResults, setTrendingResults] = useState<Song[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const [gradientIndex, setGradientIndex] = useState(
+    Math.floor(Math.random() * 12),
+  );
   const { top, bottom } = useSafeAreaInsets();
   const { playAudio } = useMusicPlayer();
   const router = useRouter();
@@ -168,6 +169,7 @@ export default function HomeScreen() {
     const yt = await innertube;
     await getQuickPicks(yt);
     await getTrending(yt);
+    setGradientIndex(Math.floor(Math.random() * 12));
     setRefreshing(false);
   }, []);
 
@@ -177,7 +179,13 @@ export default function HomeScreen() {
 
   const headerView = () => {
     return (
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isScrolling ? styles.headerScrolled : {},
+          { paddingTop: top },
+        ]}
+      >
         <FastImage
           source={{
             uri: transparentIconUri,
@@ -210,7 +218,7 @@ export default function HomeScreen() {
   if (netInfo.isInternetReachable === false) {
     return (
       <FullScreenGradientBackground index={gradientIndex}>
-        <View style={[styles.container, { paddingTop: top }]}>
+        <View style={styles.container}>
           {headerView()}
           <View style={styles.centeredMessageContainer}>
             <Ionicons name="cloud-offline-outline" size={40} color="white" />
@@ -246,7 +254,7 @@ export default function HomeScreen() {
 
   return (
     <FullScreenGradientBackground index={gradientIndex}>
-      <View style={[styles.container, { paddingTop: top }]}>
+      <View style={styles.container}>
         {headerView()}
 
         {isScrolling && (
@@ -280,11 +288,15 @@ export default function HomeScreen() {
             onScroll={(e) => {
               const currentScrollPosition =
                 Math.floor(e.nativeEvent.contentOffset.y) || 0;
-              setIsScrolling(currentScrollPosition > 0);
+              setIsScrolling(currentScrollPosition > 5);
             }}
             scrollEventThrottle={16}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["orange"]}
+              />
             }
           >
             <QuickPicksSection
@@ -313,6 +325,9 @@ const styles = ScaledSheet.create({
     justifyContent: "space-between",
     padding: 10,
   },
+  headerScrolled: {
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
   headerText: {
     fontSize: "18@ms",
     fontWeight: "bold",
@@ -322,7 +337,7 @@ const styles = ScaledSheet.create({
     width: "42@ms",
     height: "42@ms",
     marginRight: 5,
-    borderRadius: 50,
+    borderRadius: 8,
   },
   centeredMessageContainer: {
     flex: 1,
