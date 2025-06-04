@@ -1,19 +1,32 @@
 <div align="center">
     <img src="./assets/images/transparent-icon.png" width="180" height="180" style="display: block; margin: 0 auto"/>
     <h1>AudioScape</h1>
-    <p>An Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.</p>
 
-![GitHub Release](https://img.shields.io/github/v/release/ankushcodes69/AudioScape?label=latest%20release)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/ankushcodes69/AudioScape/total)
+**An Android Application For Streaming Music From YouTube Music Build With React-Native Using Expo.**
+
+![GitHub Release](https://img.shields.io/github/v/release/ankushcodes69/AudioScape?label=Latest%20Release&logo=github&logoColor=white)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/ankushcodes69/AudioScape/total?label=Downloads&logo=refinedgithub&logoColor=white)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/ankushcodes69/AudioScape/latest)
-![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?label=license)
-![CodeFactor Grade](https://www.codefactor.io/repository/github/ankushcodes69/audioscape/badge)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/AudioScape/main)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?label=total%20commits)
-![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/AudioScape?label=languages%20used)
-![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/AudioScape)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/AudioScape)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/AudioScape)
+![GitHub License](https://img.shields.io/github/license/ankushcodes69/AudioScape?label=License&logo=gnu&logoColor=white)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/ankushcodes69/AudioScape?label=Code%20Quality&logo=codefactor&logoColor=white)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/ankushcodes69/AudioScape/main?label=Last%20Commit&logo=Git&logoColor=white)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/ankushcodes69/AudioScape?label=Total%20Commits)
+![GitHub top language](https://img.shields.io/github/languages/top/ankushcodes69/AudioScape?label=TypeScript&logo=typescript&logoColor=white)
+![GitHub language count](https://img.shields.io/github/languages/count/ankushcodes69/AudioScape?label=Languages%20Used)
+![GitHub issues](https://img.shields.io/github/issues/ankushcodes69/AudioScape?label=Issues)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/ankushcodes69/AudioScape?label=Pull%20Requests)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ankushcodes69/AudioScape?label=Code%20Size)
+
+**Built With The Tools & Technologies:**
+
+![Expo](https://img.shields.io/badge/Expo-000020?logo=expo&logoColor=#D04A37)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC?logo=typescript&logoColor=white)
+![React Native](https://img.shields.io/badge/React_Native-61DAFB?logo=react&logoColor=black)
+![Firebase](https://img.shields.io/badge/Firebase-a08021?logo=firebase&logoColor=ffcd34)
+![NPM](https://img.shields.io/badge/NPM-CB3837?logo=npm&logoColor=white)
+![Redux](https://img.shields.io/badge/Redux-593d88?logo=redux&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)
 
 </div>
 
@@ -69,6 +82,7 @@ EXPO_PUBLIC_PO_TOKEN_API="https://<your render project name>.onrender.com/data"
 - [**react-native-spotify-lyrics**](https://github.com/uragirii/react-native-spotify-lyrics): Main logic for the synced lyrics feature
 
 ## 📝 License
+
 ```
 AudioScape is a free software licensed under GPL v3.0 with following condition.
 
@@ -79,6 +93,7 @@ AudioScape is a free software licensed under GPL v3.0 with following condition.
 ```
 
 ## ❗ Disclaimer
+
 ```
 This project has been created while learning & learning is the main intention.
 This project is not sponsored or affiliated with, funded, authorized, endorsed by any content provider.
@@ -88,7 +103,7 @@ from the use of the songs and other content available through this app.
 
 This Software is released "as-is", without any warranty, responsibility or liability.
 In no event shall the Author of this Software be liable for any special, consequential,
-incidental or indirect damages whatsoever (including, without limitation, any 
+incidental or indirect damages whatsoever (including, without limitation, any
 other pecuniary loss) arising out of the use of inability to use this product, even if
 Author of this Sotware is aware of the possibility of such damages and known defect.
 ```
