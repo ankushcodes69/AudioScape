@@ -19,14 +19,17 @@
 
 **Built With The Tools & Technologies:**
 
-![Expo](https://img.shields.io/badge/Expo-000020?logo=expo&logoColor=#D04A37)
+![Expo](https://img.shields.io/badge/Expo-1C2024?logo=expo&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC?logo=typescript&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![React Native](https://img.shields.io/badge/React_Native-61DAFB?logo=react&logoColor=black)
-![Firebase](https://img.shields.io/badge/Firebase-a08021?logo=firebase&logoColor=ffcd34)
+![Firebase](https://img.shields.io/badge/Firebase-DD2C0D?logo=firebase&logoColor=white)
 ![NPM](https://img.shields.io/badge/NPM-CB3837?logo=npm&logoColor=white)
-![Redux](https://img.shields.io/badge/Redux-593d88?logo=redux&logoColor=white)
+![Babel](https://img.shields.io/badge/Babel-F9DC3E?logo=babel&logoColor=black)
+![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black)
+![Render](https://img.shields.io/badge/Render-000000?logo=render&logoColor=white)
 
 </div>
 
