@@ -66,7 +66,7 @@ export async function getInfo(
 ): Promise<Track | null> {
   try {
     const yt = await innertube;
-    const info = await yt.getBasicInfo(inid);
+    const info = await yt.getBasicInfo(inid, "MWEB");
 
     if (info.playability_status?.status !== "OK") {
       console.log(
