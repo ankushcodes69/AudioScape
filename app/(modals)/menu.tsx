@@ -39,9 +39,8 @@ export default function MenuModal() {
     playlistName: string;
   }>();
   const { playNext, playAudio, playPlaylist } = useMusicPlayer();
+  const { playlists, removeTrackFromPlaylist } = usePlaylists();
   const router = useRouter();
-  const { playlists, removeTrackFromPlaylist, deleteExistingPlaylist } =
-    usePlaylists();
 
   const { checkIfFavorite, toggleFavoriteFunc } = useTrackPlayerFavorite();
 
@@ -245,10 +244,11 @@ export default function MenuModal() {
       ),
       onPress: async () => {
         if (selectedPlaylist) {
-          await deleteExistingPlaylist(selectedPlaylist.name);
-          ToastAndroid.show("Playlist deleted", ToastAndroid.SHORT);
+          router.push({
+            pathname: "/(modals)/deletePlaylist",
+            params: { playlistName: selectedPlaylist.name },
+          });
         }
-        router.back();
       },
     },
     {

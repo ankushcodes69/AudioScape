@@ -101,6 +101,13 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="(modals)/deletePlaylist"
+                    options={{
+                      presentation: "transparentModal",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
                     name="(modals)/queue"
                     options={{
                       presentation: "transparentModal",
