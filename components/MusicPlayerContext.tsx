@@ -487,7 +487,7 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       if (!targetSongInfo) {
         Alert.alert(
           "Playback Error",
-          `The song "${songToPlay.title}" is unavailable.`,
+          `The song "${songToPlay.title}" is unavailable.\n\nPlease try restarting the app.`,
         );
         setIsLoading(false);
         return;
@@ -628,25 +628,34 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
       return;
     }
     try {
-      const activeTrackId = activeTrack?.id;
+      const activeTrackIdFromHook = activeTrack?.id;
+
+      let currentActivePlayerTrackIndex =
+        await TrackPlayer.getActiveTrackIndex();
+      let insertAtIndex: number | undefined;
+
+      if (typeof currentActivePlayerTrackIndex === "number") {
+        insertAtIndex = currentActivePlayerTrackIndex + 1;
+      } else {
+        // If no active track, or queue is empty, prepare to add to the end.
+        // TrackPlayer.add with undefined insertBeforeIndex adds to the end.
+        insertAtIndex = undefined;
+      }
 
       for (const song of songsToAdd) {
-        if (song.id === activeTrackId) {
-          log(`PlayNext: Song "${song.title}" is currently playing, skipping.`);
+        if (song.id === activeTrackIdFromHook) {
+          // Check against the initially active track
+          log(
+            `PlayNext: Song "${song.title}" is (or was initially) the active track, skipping.`,
+          );
           continue;
         }
 
+        // Get fresh queue state for accurate duplicate check and removal index
         const currentQueue = await TrackPlayer.getQueue();
         const existingTrackIndex = currentQueue.findIndex(
           (t) => t.id === song.id,
         );
-
-        let insertBeforeIndex: number | undefined = undefined; // Initialize as undefined
-        const currentActivePlayerTrackIndex =
-          await TrackPlayer.getActiveTrackIndex();
-        if (typeof currentActivePlayerTrackIndex === "number") {
-          insertBeforeIndex = currentActivePlayerTrackIndex + 1;
-        }
 
         if (existingTrackIndex !== -1) {
           log(
@@ -654,24 +663,29 @@ export const MusicPlayerProvider: React.FC<MusicPlayerProviderProps> = ({
           );
           await TrackPlayer.remove(existingTrackIndex);
           if (
-            insertBeforeIndex !== undefined &&
-            existingTrackIndex < insertBeforeIndex
+            insertAtIndex !== undefined &&
+            existingTrackIndex < insertAtIndex
           ) {
-            // Check for undefined
-            insertBeforeIndex--;
+            insertAtIndex--;
           }
         }
 
         const info = await getInfo(song.id, song.title, song.artist);
         if (info) {
-          // Re-fetch active track index just before adding, as queue might have changed by remove or other async ops.
-          let finalInsertBeforeIndex: number | undefined = undefined;
-          const currentActiveIdx = await TrackPlayer.getActiveTrackIndex();
-          if (typeof currentActiveIdx === "number") {
-            finalInsertBeforeIndex = currentActiveIdx + 1;
+          await TrackPlayer.add(info, insertAtIndex);
+          log(
+            `PlayNext: Added "${info.title}"${
+              insertAtIndex !== undefined
+                ? ` at index ${insertAtIndex}`
+                : " to the end"
+            }.`,
+          );
+
+          // If we inserted at a specific index (not at the end), increment for the next song.
+          if (insertAtIndex !== undefined) {
+            insertAtIndex++;
           }
-          await TrackPlayer.add(info, finalInsertBeforeIndex);
-          log(`PlayNext: Added ${info.title}`);
+          // If insertAtIndex was undefined, the next song will also be added to the new end.
         }
       }
     } catch (error) {
