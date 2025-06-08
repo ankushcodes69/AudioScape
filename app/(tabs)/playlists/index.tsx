@@ -195,7 +195,7 @@ const styles = ScaledSheet.create({
   header: {
     fontSize: "24@ms",
     color: Colors.text,
-    fontWeight: "bold",
+    fontFamily: "Meriva",
     textAlign: "center",
     paddingVertical: 10,
   },

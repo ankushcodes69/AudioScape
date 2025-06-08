@@ -54,12 +54,12 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
           <MovingText
             style={styles.trackTitle}
             text={displayedTrack.title ?? ""}
-            animationThreshold={20}
+            animationThreshold={18}
           />
           <MovingText
             style={styles.trackArtist}
             text={displayedTrack.artist ?? ""}
-            animationThreshold={50}
+            animationThreshold={48}
           />
         </View>
       </TouchableOpacity>
@@ -102,12 +102,12 @@ const styles = ScaledSheet.create({
   trackTitle: {
     color: "#f2f2f0",
     fontSize: "18@ms",
-    fontWeight: "600",
+    fontFamily: "Meriva",
   },
   trackArtist: {
     color: "#a9a9a9",
     fontSize: "12@ms",
-    fontWeight: "500",
+    fontFamily: "Meriva",
   },
   trackControlsContainer: {
     flexDirection: "row",

@@ -336,7 +336,7 @@ const styles = ScaledSheet.create({
   songTitle: {
     fontSize: "18@ms",
     color: Colors.text,
-    fontWeight: "bold",
+    fontFamily: "Meriva",
     textAlign: "center",
     marginTop: 10,
     marginHorizontal: 20,
@@ -344,7 +344,7 @@ const styles = ScaledSheet.create({
   artistName: {
     fontSize: "14@ms",
     color: Colors.text,
-    fontWeight: "bold",
+    fontFamily: "Meriva",
     textAlign: "center",
     marginBottom: 10,
     marginHorizontal: 20,

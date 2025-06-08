@@ -83,7 +83,7 @@ const PlayerScreen = () => {
                     <View style={styles.trackTitleContainer}>
                       <MovingText
                         text={activeTrack.title ?? ""}
-                        animationThreshold={30}
+                        animationThreshold={28}
                         style={styles.trackTitleText}
                       />
                     </View>
@@ -218,12 +218,13 @@ const styles = ScaledSheet.create({
   trackTitleText: {
     ...defaultStyles.text,
     fontSize: "22@ms",
-    fontWeight: "700",
+    fontFamily: "Meriva",
   },
   trackArtistText: {
     ...defaultStyles.text,
     fontSize: "20@ms",
-    opacity: 0.8,
+    opacity: 0.6,
+    fontFamily: "Meriva",
     maxWidth: "90%",
   },
   queueText: {

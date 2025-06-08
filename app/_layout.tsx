@@ -39,6 +39,7 @@ configureReanimatedLogger({
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Meriva: require("../assets/fonts/Meriva.ttf"),
   });
   const [trackPlayerLoaded, setTrackPlayerLoaded] = useState(false);
 

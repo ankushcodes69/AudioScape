@@ -329,8 +329,8 @@ const styles = ScaledSheet.create({
     backgroundColor: "rgba(0,0,0,0.3)",
   },
   headerText: {
+    fontFamily: "Meriva",
     fontSize: "18@ms",
-    fontWeight: "bold",
     color: "white",
   },
   logo: {
