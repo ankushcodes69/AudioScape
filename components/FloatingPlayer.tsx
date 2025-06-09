@@ -102,12 +102,12 @@ const styles = ScaledSheet.create({
   trackTitle: {
     color: "#f2f2f0",
     fontSize: "18@ms",
-    fontFamily: "Meriva",
+    fontWeight: "600",
   },
   trackArtist: {
     color: "#a9a9a9",
     fontSize: "12@ms",
-    fontFamily: "Meriva",
+    fontWeight: "500",
   },
   trackControlsContainer: {
     flexDirection: "row",

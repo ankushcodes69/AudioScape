@@ -200,6 +200,7 @@ export default function LyricsModal() {
                     activeOpacity={0.7}
                     color={Colors.text}
                     onPress={handleDismiss}
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
                   />
                 </View>
 
@@ -332,6 +333,8 @@ const styles = ScaledSheet.create({
   },
   dismissButton: {
     marginTop: -11,
+    backgroundColor: "red",
+    elevation: 3,
   },
   songTitle: {
     fontSize: "18@ms",

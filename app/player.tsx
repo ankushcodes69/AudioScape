@@ -139,7 +139,7 @@ const PlayerScreen = () => {
                 ]}
                 onPress={() => router.push({ pathname: "/(modals)/queue" })}
               >
-                <Text style={styles.queueText}>QUEUE</Text>
+                <Text style={styles.bottomButtonText}>QUEUE</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.5}
@@ -150,7 +150,7 @@ const PlayerScreen = () => {
                 ]}
                 onPress={() => router.push({ pathname: "/(modals)/lyrics" })}
               >
-                <Text style={styles.queueText}> LYRICS</Text>
+                <Text style={styles.bottomButtonText}> LYRICS</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -218,16 +218,15 @@ const styles = ScaledSheet.create({
   trackTitleText: {
     ...defaultStyles.text,
     fontSize: "22@ms",
-    fontFamily: "Meriva",
+    fontWeight: "700",
   },
   trackArtistText: {
     ...defaultStyles.text,
     fontSize: "20@ms",
-    opacity: 0.6,
-    fontFamily: "Meriva",
+    opacity: 0.8,
     maxWidth: "90%",
   },
-  queueText: {
+  bottomButtonText: {
     textAlign: "center",
     color: Colors.text,
     flexShrink: 1,
